@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Panier — Les Cinq Frères</title>
+  <meta name="description" content="Finalisez votre commande — paiement à la livraison, livraison partout en Tunisie.">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Les Cinq Frères">
+  <meta property="og:title"       content="Mon Panier — Les Cinq Frères">
+  <meta property="og:description" content="Finalisez votre commande — paiement à la livraison, livraison partout en Tunisie.">
+  <meta property="og:image"       content="https://www.lescinqfreres.com/logo.png">
+  <meta name="twitter:card"       content="summary_large_image">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    body { background:var(--gray-50); }
+
+    .panier-nav {
+      background:var(--white); border-bottom:1px solid var(--gray-100);
+      padding:0 28px; height:64px;
+      display:flex; align-items:center; justify-content:space-between;
+      position:sticky; top:0; z-index:200; box-shadow:var(--shadow-sm);
+    }
+    .panier-nav .logo { display:flex; align-items:center; gap:12px; }
+    .panier-nav .logo img { height:40px; border-radius:6px; }
+    .panier-nav .logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.95rem; color:var(--navy-dark); }
+    .panier-nav .logo .sub   { font-size:.7rem; color:var(--teal-dark); }
+
+    .panier-layout { max-width:1200px; margin:32px auto; padding:0 24px; display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start; }
+
+    /* --- Cart Table --- */
+    .cart-section { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .cart-section-head { padding:20px 24px; border-bottom:1px solid var(--gray-100); display:flex; align-items:center; justify-content:space-between; }
+    .cart-section-head h2 { font-family:'Raleway',sans-serif; font-size:1.1rem; font-weight:800; color:var(--navy-dark); display:flex; align-items:center; gap:10px; }
+
+    .cart-table { width:100%; border-collapse:collapse; }
+    .cart-table th { text-align:left; font-size:.72rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.06em; padding:12px 20px; background:var(--gray-50); }
+    .cart-table td { padding:16px 20px; border-top:1px solid var(--gray-100); vertical-align:middle; }
+    .cart-table tr:hover td { background:rgba(43,190,200,.03); }
+
+    .item-info { display:flex; align-items:center; gap:14px; }
+    .item-icon { width:50px; height:50px; background:linear-gradient(135deg,rgba(43,190,200,.12),rgba(27,78,122,.08)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+    .item-name { font-size:.88rem; font-weight:700; color:var(--navy-dark); margin-bottom:3px; }
+    .item-variant { font-size:.76rem; color:var(--gray-600); }
+    .item-note { font-size:.73rem; color:var(--teal-dark); margin-top:3px; font-style:italic; }
+
+    .qty-ctrl { display:flex; align-items:center; gap:6px; }
+    .qty-btn { width:28px; height:28px; border:1.5px solid var(--gray-200); border-radius:7px; background:var(--white); cursor:pointer; font-size:.95rem; display:flex; align-items:center; justify-content:center; color:var(--gray-800); transition:var(--transition); }
+    .qty-btn:hover { border-color:var(--teal); color:var(--teal); }
+    .qty-val { font-size:.88rem; font-weight:700; color:var(--navy-dark); min-width:28px; text-align:center; }
+
+    .price-cell { font-size:.9rem; font-weight:700; color:var(--navy-dark); }
+    .del-btn { background:rgba(229,62,62,.08); border:none; color:var(--error); width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
+    .del-btn:hover { background:var(--error); color:var(--white); }
+
+    .cart-empty { text-align:center; padding:72px 20px; }
+    .cart-empty .e-icon { font-size:4rem; opacity:.3; margin-bottom:20px; }
+    .cart-empty h3 { font-size:1.1rem; font-weight:700; color:var(--gray-600); margin-bottom:8px; }
+    .cart-empty p  { font-size:.88rem; color:var(--gray-400); margin-bottom:24px; }
+
+    /* --- Order Summary --- */
+    .order-summary { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); position:sticky; top:80px; }
+    .summary-head { background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark)); padding:18px 22px; border-radius:var(--radius-lg) var(--radius-lg) 0 0; }
+    .summary-head h3 { font-family:'Raleway',sans-serif; font-size:1rem; font-weight:800; color:var(--white); margin-bottom:2px; }
+    .summary-head p  { font-size:.75rem; color:rgba(255,255,255,.7); }
+    .summary-body { padding:20px 22px; }
+    .summary-row { display:flex; justify-content:space-between; align-items:center; font-size:.85rem; margin-bottom:12px; }
+    .summary-row .lbl { color:var(--gray-600); }
+    .summary-row .val { font-weight:600; color:var(--gray-800); }
+    .summary-total { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-top:2px solid var(--gray-200); margin-top:8px; }
+    .summary-total .lbl { font-size:.95rem; font-weight:700; color:var(--navy-dark); }
+    .summary-total .val { font-family:'Raleway',sans-serif; font-size:1.3rem; font-weight:800; color:var(--teal-dark); }
+
+    /* --- Client Info --- */
+    .client-info-card { background:rgba(43,190,200,.06); border:1.5px solid rgba(43,190,200,.2); border-radius:var(--radius); padding:14px 16px; margin-bottom:16px; }
+    .client-info-card.not-logged { background:rgba(229,62,62,.05); border-color:rgba(229,62,62,.2); }
+    .client-badge { display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:600; margin-bottom:8px; }
+    .client-badge.ok  { color:var(--success); }
+    .client-badge.err { color:var(--error); }
+
+    /* --- Checkout form --- */
+    .checkout-form { padding:0 22px 20px; }
+    .cf-group { margin-bottom:14px; }
+    .cf-group label { display:block; font-size:.78rem; font-weight:600; color:var(--gray-800); margin-bottom:5px; }
+    .cf-input { width:100%; padding:9px 12px; border:1.5px solid var(--gray-200); border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:.85rem; outline:none; transition:var(--transition); }
+    .cf-input:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(43,190,200,.1); }
+    .cf-select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%239BAFC5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+
+    .order-btn { width:100%; padding:14px; background:linear-gradient(135deg,var(--teal),var(--navy-light)); color:var(--white); border:none; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(43,190,200,.3); transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; }
+    .order-btn:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(43,190,200,.4); }
+    .order-btn:disabled { background:var(--gray-200); box-shadow:none; cursor:not-allowed; transform:none; }
+
+    /* --- Success overlay --- */
+    .order-success { display:none; position:fixed; inset:0; background:rgba(18,47,75,.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(6px); }
+    .order-success.show { display:flex; }
+    .success-modal { background:var(--white); border-radius:var(--radius-lg); padding:48px 40px; text-align:center; max-width:460px; width:90%; box-shadow:var(--shadow-lg); animation:modalIn .3s ease; }
+    .success-modal .s-icon { width:80px; height:80px; background:linear-gradient(135deg,var(--teal),var(--navy-light)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.2rem; margin:0 auto 20px; animation:pop .4s cubic-bezier(.34,1.56,.64,1) .1s both; }
+    .success-modal h2 { font-family:'Raleway',sans-serif; font-size:1.5rem; font-weight:800; color:var(--navy-dark); margin-bottom:8px; }
+    .success-modal p  { color:var(--gray-600); font-size:.88rem; line-height:1.7; margin-bottom:24px; }
+    .success-modal .order-ref { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius); padding:10px 16px; font-size:.9rem; font-weight:700; color:var(--navy-dark); margin-bottom:24px; }
+
+    @keyframes modalIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+    @keyframes pop     { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ── Bon de Livraison ── */
+    .bon-overlay { display:none; position:fixed; inset:0; background:rgba(10,20,40,.75); z-index:10000; align-items:flex-start; justify-content:center; overflow-y:auto; padding:30px 16px; backdrop-filter:blur(4px); }
+    .bon-overlay.show { display:flex; }
+    .bon-page {
+      background:#fff; width:100%; max-width:720px; border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);
+      font-family:'Poppins',sans-serif; color:#1a2740;
+    }
+    .bon-actions {
+      display:flex; gap:10px; justify-content:flex-end;
+      padding:14px 20px; background:#f8fafc; border-radius:12px 12px 0 0;
+      border-bottom:1px solid #e5e7eb;
+    }
+    .bon-body { padding:36px 40px; }
+    .bon-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; padding-bottom:20px; border-bottom:2px solid #e5e7eb; }
+    .bon-logo-side { display:flex; align-items:center; gap:14px; }
+    .bon-logo-side img { height:52px; border-radius:8px; }
+    .bon-company-name { font-family:'Raleway',sans-serif; font-size:1.05rem; font-weight:800; color:#1B4E7A; line-height:1.3; }
+    .bon-company-sub  { font-size:.73rem; color:#64748b; margin-top:2px; }
+    .bon-title-side { text-align:right; }
+    .bon-title { font-family:'Raleway',sans-serif; font-size:1.3rem; font-weight:900; color:#1B4E7A; letter-spacing:.06em; text-transform:uppercase; }
+    .bon-num   { font-size:.78rem; color:#64748b; margin-top:4px; }
+    .bon-date  { font-size:.78rem; color:#64748b; }
+
+    .bon-section { margin-bottom:22px; }
+    .bon-section-title { font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#94a3b8; margin-bottom:10px; border-bottom:1px solid #f1f5f9; padding-bottom:6px; }
+
+    .bon-client-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+    .bon-client-row  { font-size:.83rem; }
+    .bon-client-row span:first-child { color:#64748b; font-weight:600; }
+
+    .bon-table { width:100%; border-collapse:collapse; font-size:.83rem; }
+    .bon-table thead tr { background:#1B4E7A; color:#fff; }
+    .bon-table th { padding:9px 14px; text-align:left; font-weight:600; font-size:.75rem; }
+    .bon-table th:last-child, .bon-table td:last-child { text-align:right; }
+    .bon-table td { padding:9px 14px; border-bottom:1px solid #f1f5f9; }
+    .bon-table tbody tr:nth-child(even) td { background:#f8fafc; }
+    .bon-table tfoot tr { background:#f1f5f9; font-weight:700; }
+    .bon-table tfoot td { padding:11px 14px; font-size:.9rem; }
+
+    .bon-footer { display:flex; align-items:flex-end; justify-content:space-between; margin-top:28px; padding-top:20px; border-top:2px solid #e5e7eb; flex-wrap:wrap; gap:20px; }
+    .bon-payment { background:#e8f5e9; border:1.5px solid #a5d6a7; border-radius:10px; padding:12px 18px; }
+    .bon-payment .lbl { font-size:.7rem; color:#2e7d32; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+    .bon-payment .val { font-size:.95rem; font-weight:800; color:#1b5e20; }
+
+    /* Impression */
+    @media print {
+      body > *:not(.bon-overlay):not(.fac-overlay) { display:none !important; }
+      .bon-overlay { display:flex !important; position:static !important; background:none !important; padding:0 !important; }
+      .fac-overlay { display:flex !important; position:static !important; background:none !important; padding:0 !important; }
+      .bon-actions { display:none !important; }
+      .bon-page { box-shadow:none !important; border-radius:0 !important; max-width:100% !important; }
+      @page { margin:1.5cm; }
+    }
+
+    @media(max-width:900px) {
+      .panier-layout { grid-template-columns:1fr; }
+      .order-summary { position:static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="panier-nav">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="Logo">
+    <div><div class="brand">Les Cinq Frères</div><div class="sub">Mon Panier</div></div>
+  </a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="commandes.html" class="btn btn-outline-navy" style="padding:8px 14px;font-size:.83rem;position:relative">
+      📋 Mes Commandes
+      <span id="pnrCmdCount" style="display:none;position:absolute;top:-5px;right:-5px;background:#e53e3e;color:#fff;font-size:.6rem;font-weight:800;padding:2px 5px;border-radius:50px;min-width:16px;text-align:center"></span>
+    </a>
+    <a href="catalogue.html" class="btn btn-outline-navy" style="padding:8px 14px;font-size:.83rem">← Catalogue</a>
+  </div>
+</nav>
+<script>
+(function(){
+  const s = JSON.parse(localStorage.getItem('5f_session') || 'null');
+  if (!s || s.role === 'admin') return;
+  const orders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+  const count = orders.filter(o => o.clientId === s.id).length;
+  if (count > 0) {
+    const b = document.getElementById('pnrCmdCount');
+    b.textContent = count; b.style.display = '';
+  }
+})();
+</script>
+
+<!-- Breadcrumb -->
+<div style="max-width:1200px;margin:20px auto;padding:0 24px">
+  <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--gray-400)">
+    <a href="index.html" style="color:var(--teal-dark)">Accueil</a>
+    <span>›</span>
+    <a href="catalogue.html" style="color:var(--teal-dark)">Catalogue</a>
+    <span>›</span>
+    <span style="color:var(--gray-600);font-weight:600">Mon Panier</span>
+  </div>
+</div>
+
+<!-- Steps -->
+<div style="max-width:1200px;margin:0 auto 24px;padding:0 24px">
+  <div style="display:flex;align-items:center;gap:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:16px 24px;box-shadow:var(--shadow-sm)">
+    <div style="display:flex;align-items:center;gap:10px;flex:1">
+      <div style="width:32px;height:32px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:.8rem;font-weight:700">1</div>
+      <span style="font-size:.85rem;font-weight:700;color:var(--teal-dark)">Panier</span>
+    </div>
+    <div style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
+    <div style="display:flex;align-items:center;gap:10px;flex:1">
+      <div style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700" id="step2Num">2</div>
+      <span style="font-size:.85rem;font-weight:600;color:var(--gray-600)" id="step2Label">Coordonnées</span>
+    </div>
+    <div style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
+    <div style="display:flex;align-items:center;gap:10px;flex:1">
+      <div style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700">3</div>
+      <span style="font-size:.85rem;font-weight:600;color:var(--gray-600)">Confirmation</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="panier-layout">
+
+  <!-- CART TABLE -->
+  <div class="cart-section">
+    <div class="cart-section-head">
+      <h2>🛒 Articles <span id="cartCountLabel" style="background:var(--teal);color:var(--white);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:50px;margin-left:4px">0</span></h2>
+      <button onclick="Cart.clear()" style="font-size:.8rem;color:var(--error);background:none;border:none;cursor:pointer;font-family:'Poppins',sans-serif">🗑️ Vider le panier</button>
+    </div>
+    <div id="cartTableWrap">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ORDER SUMMARY + CHECKOUT -->
+  <div>
+    <div class="order-summary">
+      <div class="summary-head">
+        <h3>📋 Récapitulatif</h3>
+        <p>Votre demande de devis / commande</p>
+      </div>
+      <div class="summary-body">
+        <!-- Client info -->
+        <div id="clientInfoCard"></div>
+
+        <div class="summary-row"><span class="lbl">Articles</span><span class="val" id="sum-count">0</span></div>
+        <div class="summary-row"><span class="lbl">Quantité totale</span><span class="val" id="sum-qty">0</span></div>
+        <div class="summary-row"><span class="lbl">Sous-total articles</span><span class="val" id="sum-subtotal">—</span></div>
+        <div class="summary-row" style="background:rgba(43,190,200,.06);margin:0 -4px;padding:6px 4px;border-radius:8px">
+          <span class="lbl" style="display:flex;align-items:center;gap:5px">🚚 Frais de livraison</span>
+          <span class="val" style="color:var(--teal-dark);font-weight:700" id="sum-livraison">9,000 DT</span>
+        </div>
+        <div class="summary-total">
+          <span class="lbl">Total TTC</span>
+          <span class="val" id="sum-total">—</span>
+        </div>
+        <div style="font-size:.74rem;color:var(--gray-400);margin-top:6px;margin-bottom:16px;text-align:center">Paiement à la livraison • Livraison sur toute la Tunisie</div>
+      </div>
+
+      <!-- Checkout form -->
+      <div class="checkout-form">
+        <div style="font-size:.82rem;font-weight:700;color:var(--navy-dark);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--gray-100)">📦 Informations de livraison</div>
+
+        <div class="cf-group">
+          <label>Nom complet *</label>
+          <input class="cf-input" type="text" id="cf-name" placeholder="Mohamed Ben Ali">
+        </div>
+        <div class="cf-group">
+          <label>Téléphone *</label>
+          <input class="cf-input" type="tel" id="cf-phone" placeholder="+216 XX XXX XXX">
+        </div>
+        <div class="cf-group">
+          <label>Email *</label>
+          <input class="cf-input" type="email" id="cf-email" placeholder="exemple@email.com">
+        </div>
+        <div class="cf-group">
+          <label>Ville *</label>
+          <select class="cf-input cf-select" id="cf-city">
+            <option value="">-- Votre ville --</option>
+            <option>Tunis</option><option>Sfax</option><option>Sousse</option>
+            <option>Kairouan</option><option>Bizerte</option><option>Gabès</option>
+            <option>Ariana</option><option>Ben Arous</option><option>Monastir</option>
+            <option>Nabeul</option><option>Gafsa</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="cf-group">
+          <label>Adresse de livraison</label>
+          <input class="cf-input" type="text" id="cf-address" placeholder="Rue, quartier, bâtiment…">
+        </div>
+        <div class="cf-group">
+          <label>Notes / Instructions</label>
+          <textarea class="cf-input" id="cf-notes" rows="2" placeholder="Instructions spéciales, délai souhaité…" style="resize:none"></textarea>
+        </div>
+
+        <button class="order-btn" id="orderBtn" onclick="placeOrder()">
+          ✅ Confirmer ma Commande
+        </button>
+        <div style="text-align:center;margin-top:10px;font-size:.75rem;color:var(--gray-400)">
+          Notre équipe vous contactera pour confirmer et livrer
+        </div>
+        <div style="text-align:center;margin-top:8px;font-size:.72rem;color:var(--gray-400)">
+          En commandant, vous acceptez nos <a href="conditions.html" target="_blank" style="color:var(--teal-dark);text-decoration:underline">conditions de vente & livraison</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY — CHOIX DOCUMENT + REÇU CLIENT -->
+<div class="order-success" id="orderSuccess">
+  <div class="success-modal" style="max-width:540px;max-height:92vh;overflow-y:auto;padding:28px 28px 24px">
+
+    <div class="s-icon" style="width:60px;height:60px;font-size:1.7rem;margin-bottom:14px">✅</div>
+    <h2 style="font-size:1.25rem;margin-bottom:6px">Commande enregistrée !</h2>
+    <p style="margin-bottom:20px;font-size:.84rem">Notre équipe vous contactera sous 24h pour confirmer.</p>
+
+    <!-- ── ÉTAPE 1 : Choix du document ── -->
+    <div id="stepChoice">
+      <div style="font-size:.82rem;font-weight:700;color:var(--navy-dark);margin-bottom:12px">📄 Choisissez votre type de document :</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <button onclick="selectDoc('bon')" id="docBonBtn"
+          style="padding:16px 10px;border:2px solid var(--teal);border-radius:12px;background:rgba(43,190,200,.08);cursor:pointer;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:700;color:var(--teal-dark);transition:.2s;line-height:1.6">
+          🚚<br>Bon de Livraison
+        </button>
+        <button onclick="selectDoc('fac')" id="docFacBtn"
+          style="padding:16px 10px;border:2px solid var(--gray-200);border-radius:12px;background:var(--white);cursor:pointer;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:700;color:var(--gray-600);transition:.2s;line-height:1.6">
+          🧾<br>Facture
+        </button>
+      </div>
+
+      <!-- Champs facture -->
+      <div id="facFields" style="display:none;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:16px;text-align:left">
+        <div style="font-size:.76rem;font-weight:700;color:var(--navy-dark);margin-bottom:10px">Informations fiscales requises :</div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:.74rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:4px">Nom de la Société *</label>
+          <input id="fac-societe" type="text" placeholder="Ex : SARL Ben Ali Meubles" class="cf-input" style="width:100%;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:.74rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:4px">Matricule Fiscale *</label>
+          <input id="fac-matricule" type="text" placeholder="Ex : 1234567/A/M/000" class="cf-input" style="width:100%;box-sizing:border-box">
+        </div>
+      </div>
+
+      <button onclick="confirmerChoixDoc()" class="btn btn-primary" style="width:100%;padding:12px;font-size:.9rem">
+        📄 Voir mon reçu →
+      </button>
+    </div>
+
+    <!-- ── ÉTAPE 2 : Reçu détaillé ── -->
+    <div id="stepReceipt" style="display:none">
+
+      <!-- En-tête reçu -->
+      <div style="background:#f8fafc;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;text-align:left;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:10px;border-bottom:1.5px dashed var(--gray-200)">
+          <div>
+            <div id="receiptDocType" style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-dark);margin-bottom:3px">—</div>
+            <div id="receiptCode" style="font-family:'Raleway',sans-serif;font-size:.95rem;font-weight:800;color:var(--navy-dark)">—</div>
+            <div id="receiptDate" style="font-size:.72rem;color:var(--gray-500);margin-top:2px">—</div>
+          </div>
+          <div style="text-align:right">
+            <div style="background:#e8f5e9;color:#2e7d32;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:50px">🚚 À la livraison</div>
+          </div>
+        </div>
+
+        <!-- Infos fiscales (facture seulement) -->
+        <div id="receiptFiscal" style="display:none;background:#fef9ee;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:.78rem">
+          <div style="font-weight:700;color:#92400e;margin-bottom:4px">Informations Fiscales</div>
+          <div id="receiptFiscalContent"></div>
+        </div>
+
+        <!-- Client -->
+        <div id="receiptClient" style="font-size:.78rem;color:var(--gray-600);margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--gray-200)"></div>
+
+        <!-- Articles -->
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);margin-bottom:7px">Articles commandés</div>
+        <div id="receiptItems" style="margin-bottom:12px"></div>
+
+        <!-- Totaux -->
+        <div style="background:var(--white);border-radius:10px;padding:10px 12px;border:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px">
+            <span style="color:var(--gray-600)">Sous-total</span>
+            <span id="receiptSubtotal" style="font-weight:600;color:var(--gray-800)">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:10px">
+            <span style="color:var(--teal-dark)">🚚 Livraison</span>
+            <span id="receiptLivraison" style="font-weight:600;color:var(--teal-dark)">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:2px solid var(--gray-200)">
+            <span style="font-size:.9rem;font-weight:800;color:var(--navy-dark)">Total TTC</span>
+            <span id="receiptTotal" style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:900;color:var(--teal-dark)">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(43,190,200,.06);border:1px solid rgba(43,190,200,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--teal-dark);display:flex;align-items:center;gap:8px">
+        <span>📞</span><span>Notre équipe vous contactera pour confirmer et planifier la livraison.</span>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="commandes.html" class="btn btn-primary" style="flex:1;text-align:center;padding:11px;font-size:.85rem">📋 Mes commandes</a>
+        <a href="catalogue.html" class="btn btn-outline-navy" style="flex:1;text-align:center;padding:11px;font-size:.85rem">🛍️ Continuer</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BON DE LIVRAISON -->
+<div class="bon-overlay" id="bonOverlay">
+  <div class="bon-page">
+
+    <!-- Boutons (masqués à l'impression) -->
+    <div class="bon-actions" style="justify-content:space-between;align-items:center">
+      <span style="font-size:.78rem;color:var(--gray-500);font-style:italic">Reçu — document transmis à notre équipe</span>
+      <button onclick="closeBon()" style="background:var(--gray-100);border:none;padding:8px 18px;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;cursor:pointer;color:var(--gray-700)">✕ Fermer</button>
+    </div>
+
+    <div class="bon-body">
+
+      <!-- En-tête -->
+      <div class="bon-header">
+        <div class="bon-logo-side">
+          <img src="logo.png" alt="Logo">
+          <div>
+            <div class="bon-company-name">Les Cinq Frères</div>
+            <div class="bon-company-sub">Sté Magasin Les Cinq Frères</div>
+            <div class="bon-company-sub">Soukra — Av. Fatouma Bourguiba, Tunisie</div>
+            <div class="bon-company-sub">Tél : +216 29 940 186 / +216 29 940 495</div>
+          </div>
+        </div>
+        <div class="bon-title-side">
+          <div class="bon-title">Bon de Livraison</div>
+          <div class="bon-num" id="bl-num">N° —</div>
+          <div class="bon-date" id="bl-date">Date : —</div>
+        </div>
+      </div>
+
+      <!-- Informations client -->
+      <div class="bon-section">
+        <div class="bon-section-title">Informations Client</div>
+        <div class="bon-client-grid" id="bl-client"></div>
+      </div>
+
+      <!-- Articles -->
+      <div class="bon-section">
+        <div class="bon-section-title">Détail de la Commande</div>
+        <table class="bon-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th style="width:45%">Article</th>
+              <th>Désignation</th>
+              <th>Qté</th>
+              <th>Prix Unit.</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="bl-items"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" style="text-align:right;color:#1B4E7A;font-size:.85rem">TOTAL GÉNÉRAL</td>
+              <td id="bl-total" style="color:#1B4E7A;font-size:1rem">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Pied de page : paiement + tampon -->
+      <div class="bon-footer">
+        <div class="bon-payment">
+          <div class="lbl">Mode de paiement</div>
+          <div class="val">🚚 À la livraison</div>
+        </div>
+
+        <!-- Zone cachet & signature -->
+        <div style="border:1.5px solid #cbd5e1;border-radius:8px;width:240px;height:130px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 12px;">
+          <span style="font-size:.68rem;color:#94a3b8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Cachet &amp; Signature</span>
+        </div>
+      </div>
+
+    </div><!-- end bon-body -->
+  </div><!-- end bon-page -->
+</div><!-- end bon-overlay -->
+
+<!-- FACTURE OVERLAY -->
+<div class="bon-overlay fac-overlay" id="facOverlay">
+  <div class="bon-page">
+    <div class="bon-actions" style="justify-content:space-between;align-items:center">
+      <span style="font-size:.78rem;color:var(--gray-500);font-style:italic">Facture — document transmis à notre équipe</span>
+      <button onclick="closeFac()" style="background:var(--gray-100);border:none;padding:8px 18px;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;cursor:pointer;color:var(--gray-700)">✕ Fermer</button>
+    </div>
+    <div class="bon-body">
+      <!-- En-tête -->
+      <div class="bon-header">
+        <div class="bon-logo-side">
+          <img src="logo.png" alt="Logo">
+          <div>
+            <div class="bon-company-name">Les Cinq Frères</div>
+            <div class="bon-company-sub">Sté Magasin Les Cinq Frères</div>
+            <div class="bon-company-sub">Soukra — Av. Fatouma Bourguiba, Tunisie</div>
+            <div class="bon-company-sub">Tél : +216 29 940 186 / +216 29 940 495</div>
+          </div>
+        </div>
+        <div class="bon-title-side">
+          <div class="bon-title" style="color:#b45309">FACTURE</div>
+          <div class="bon-num" id="fac-num">N° —</div>
+          <div class="bon-date" id="fac-date">Date : —</div>
+        </div>
+      </div>
+
+      <!-- Informations fiscales client -->
+      <div class="bon-section" style="background:#fef9ee;border:1.5px solid #fde68a;border-radius:10px;padding:14px 18px">
+        <div class="bon-section-title" style="color:#92400e">Informations Fiscales Client</div>
+        <div class="bon-client-grid" id="fac-fiscal"></div>
+      </div>
+
+      <!-- Informations client livraison -->
+      <div class="bon-section" style="margin-top:14px">
+        <div class="bon-section-title">Informations de Livraison</div>
+        <div class="bon-client-grid" id="fac-client"></div>
+      </div>
+
+      <!-- Articles -->
+      <div class="bon-section">
+        <div class="bon-section-title">Détail de la Commande</div>
+        <table class="bon-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th style="width:45%">Article</th>
+              <th>Désignation</th>
+              <th>Qté</th>
+              <th>Prix Unit. HT</th>
+              <th>Total HT</th>
+            </tr>
+          </thead>
+          <tbody id="fac-items"></tbody>
+          <tfoot>
+            <tr style="background:#fef9ee">
+              <td colspan="5" style="text-align:right;color:#92400e;font-size:.85rem">TOTAL GÉNÉRAL TTC</td>
+              <td id="fac-total" style="color:#92400e;font-size:1rem">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Pied de page -->
+      <div class="bon-footer">
+        <div class="bon-payment" style="background:#fef9ee;border-color:#fde68a">
+          <div class="lbl" style="color:#92400e">Mode de paiement</div>
+          <div class="val" style="color:#78350f">🚚 À la livraison</div>
+        </div>
+        <div style="border:1.5px solid #cbd5e1;border-radius:8px;width:240px;height:130px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 12px;">
+          <span style="font-size:.68rem;color:#94a3b8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Cachet &amp; Signature</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end fac-overlay -->
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script>
+  function getLivraisonFee() {
+    return parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
+  }
+
+  function renderCartPage(user) {
+    const items = Cart.get();
+    const wrap  = document.getElementById('cartTableWrap');
+    const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (user === undefined) user = null;
+    if (!user && session) {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      user = clients.find(c => c.id === session.id) || null;
+    }
+
+    // Update count badge
+    document.getElementById('cartCountLabel').textContent = items.reduce((s,i)=>s+i.qty,0);
+
+    // Client info card
+    const clientCard = document.getElementById('clientInfoCard');
+    if (user) {
+      clientCard.innerHTML = `<div class="client-info-card">
+        <div class="client-badge ok">✅ Connecté en tant que ${user.firstName} ${user.lastName}</div>
+        <div style="font-size:.78rem;color:var(--gray-600)">${user.email} • ${user.city||'—'}</div>
+      </div>`;
+      // Pre-fill form
+      document.getElementById('cf-name').value    = user.firstName + ' ' + user.lastName;
+      document.getElementById('cf-phone').value   = user.phone || '';
+      document.getElementById('cf-email').value   = user.email || '';
+      document.getElementById('cf-city').value    = user.city  || '';
+      document.getElementById('cf-address').value = user.address || '';
+    } else {
+      clientCard.innerHTML = `<div class="client-info-card not-logged">
+        <div class="client-badge err">⚠️ Vous n'êtes pas connecté</div>
+        <div style="font-size:.78rem;color:#9C4221;margin-bottom:8px">Connectez-vous pour un suivi complet de votre commande.</div>
+        <div style="display:flex;gap:8px">
+          <a href="login.html" style="flex:1;text-align:center;padding:7px;background:var(--navy-dark);color:var(--white);border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none">Se connecter</a>
+          <a href="register.html" style="flex:1;text-align:center;padding:7px;background:var(--gray-100);color:var(--navy-dark);border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none">Créer un compte</a>
+        </div>
+      </div>`;
+    }
+
+    // Empty state
+    if (!items.length) {
+      wrap.innerHTML = `<div class="cart-empty">
+        <div class="e-icon">🛒</div>
+        <h3>Votre panier est vide</h3>
+        <p>Explorez notre catalogue et ajoutez des articles à votre panier.</p>
+        <a href="catalogue.html" class="btn btn-primary">📦 Voir le Catalogue</a>
+      </div>`;
+      document.getElementById('orderBtn').disabled = true;
+      document.getElementById('sum-count').textContent = '0';
+      document.getElementById('sum-qty').textContent   = '0';
+      document.getElementById('sum-total').textContent = '—';
+      return;
+    }
+
+    // Table
+    wrap.innerHTML = `<table class="cart-table">
+      <thead><tr>
+        <th style="width:45%">Article</th>
+        <th>Prix unit.</th>
+        <th>Quantité</th>
+        <th>Sous-total</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="cartTbody">
+        ${items.map(item => `
+        <tr id="row-${item.cartId}">
+          <td>
+            <div class="item-info">
+              <div class="item-icon">${item.icon}</div>
+              <div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="item-name">${item.name}</div>
+                  ${item.code ? `<span style="font-size:.62rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 5px;white-space:nowrap">${item.code}</span>` : ''}
+                </div>
+                ${item.variant ? `<div class="item-variant">📐 ${item.variant}</div>` : ''}
+                ${item.note    ? `<div class="item-note">💬 ${item.note}</div>` : ''}
+                <div style="font-size:.7rem;color:var(--gray-400);margin-top:2px">Ajouté le ${item.addedAt}</div>
+              </div>
+            </div>
+          </td>
+          <td class="price-cell">${item.price}</td>
+          <td>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="pageUpdateQty('${item.cartId}', ${item.qty - 1})">−</button>
+              <span class="qty-val">${item.qty}</span>
+              <button class="qty-btn" onclick="pageUpdateQty('${item.cartId}', ${item.qty + 1})">+</button>
+            </div>
+          </td>
+          <td class="price-cell">${item.priceNum > 0 ? (item.priceNum * item.qty).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis'}</td>
+          <td><button class="del-btn" onclick="pageRemove('${item.cartId}')" title="Supprimer">🗑️</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+
+    // Summary
+    const LIVRAISON = getLivraisonFee();
+    const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
+    const totalNum  = subTotal > 0 ? subTotal + LIVRAISON : 0;
+    const totalQty  = items.reduce((s,i) => s + i.qty, 0);
+    document.getElementById('sum-count').textContent    = items.length;
+    document.getElementById('sum-qty').textContent      = totalQty;
+    document.getElementById('sum-subtotal').textContent = subTotal > 0 ? subTotal.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+    document.getElementById('sum-livraison').textContent = LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    document.getElementById('sum-total').textContent    = totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+    document.getElementById('orderBtn').disabled = false;
+  }
+
+  function pageUpdateQty(cartId, qty) {
+    Cart.updateQty(cartId, qty);
+    renderCartPage();
+  }
+  function pageRemove(cartId) {
+    Cart.remove(cartId);
+    renderCartPage();
+  }
+
+  function placeOrder() {
+    const items = Cart.get();
+    if (!items.length) { showToast('error','Panier vide','Ajoutez des articles avant de commander.'); return; }
+
+    // Connexion obligatoire pour passer une commande
+    const sessionCheck = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (!sessionCheck) {
+      showToast('info', '🔐 Connexion requise', 'Connectez-vous pour passer votre commande.');
+      setTimeout(() => { window.location.href = 'login.html?redirect=panier.html'; }, 1800);
+      return;
+    }
+
+    const name    = document.getElementById('cf-name').value.trim();
+    const phone   = document.getElementById('cf-phone').value.trim();
+    const email   = document.getElementById('cf-email').value.trim();
+    const city    = document.getElementById('cf-city').value;
+    const address = document.getElementById('cf-address').value.trim();
+    const notes   = document.getElementById('cf-notes').value.trim();
+
+    if (!name || !phone || !email || !city) {
+      showToast('error','Champs requis','Veuillez remplir les champs obligatoires (*).');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('error','Email invalide','Vérifiez votre adresse email.');
+      return;
+    }
+
+    const btn = document.getElementById('orderBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span style="width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block"></span>';
+
+    setTimeout(() => {
+      const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+      const orderId = 'ORD-5F-' + Date.now().toString().slice(-6);
+
+      const LIVRAISON = getLivraisonFee();
+      const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
+      const order = {
+        id: orderId,
+        clientId:   session ? session.id : null,
+        name, phone, email, city, address, notes,
+        items:      items,
+        subTotal:   subTotal,
+        livraison:  LIVRAISON,
+        total:      subTotal > 0 ? subTotal + LIVRAISON : 0,
+        status:     'En attente',
+        date:       new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'}),
+        dateTs:     Date.now(),
+      };
+
+      // Save order to localStorage
+      const allOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+      allOrders.unshift(order);
+      localStorage.setItem('5f_orders', JSON.stringify(allOrders));
+
+      // Save order to Firestore (cloud)
+      if (typeof db !== 'undefined') {
+        db.collection('orders').doc(orderId).set({
+          ...order,
+          items: order.items.map(i => ({
+            name: i.name, code: i.code || i.productId || '', variant: i.variant || '', price: i.price,
+            priceNum: i.priceNum || 0, qty: i.qty, icon: i.icon || '📦'
+          }))
+        }).catch(e => console.warn('Firestore order:', e.message));
+      }
+
+      // Notification Telegram admin
+      (function sendTelegramNotif(o) {
+        const lignes = (o.items||[]).map(i => `• ${i.icon||'📦'} ${i.name}${i.variant?' — '+i.variant:''}${i.qty>1?' ×'+i.qty:''} — ${i.price}`).join('\n');
+        const total  = ((o.subTotal||0) + (o.livraison||0)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3}) + ' DT';
+        const msg = `🛒 <b>Nouvelle commande !</b>\n\n` +
+          `👤 <b>${o.name||'—'}</b>\n` +
+          `📞 ${o.phone||'—'}\n` +
+          `📍 ${o.city||'—'}${o.address?' — '+o.address:''}\n\n` +
+          `<b>Articles :</b>\n${lignes||'—'}\n\n` +
+          `🚚 Livraison : ${(o.livraison||0).toLocaleString('fr-TN',{minimumFractionDigits:3})} DT\n` +
+          `💰 <b>Total : ${total}</b>\n\n` +
+          `🔖 Ref : ${o.id}`;
+        fetch('https://api.telegram.org/bot8811759366:AAHW7CKl1SAHiuhOwzZ9bkKVPjDC2xjQ-Lw/sendMessage', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ chat_id: 8881361935, text: msg, parse_mode: 'HTML' })
+        }).catch(() => {});
+      })(order);
+
+      // If logged in, update client stats (localStorage + Firestore)
+      if (session) {
+        const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+        const idx = clients.findIndex(c => c.id === session.id);
+        if (idx > -1) {
+          clients[idx].orders     = (clients[idx].orders     || 0) + 1;
+          clients[idx].totalSpent = (clients[idx].totalSpent || 0) + order.total;
+          clients[idx].points     = (clients[idx].points     || 0) + Math.floor(order.total / 10);
+          localStorage.setItem('5f_clients', JSON.stringify(clients));
+          // Sync Firestore
+          if (typeof db !== 'undefined') {
+            db.collection('clients').doc(session.id).update({
+              orders:     clients[idx].orders,
+              totalSpent: clients[idx].totalSpent,
+              points:     clients[idx].points,
+            }).catch(e => console.warn('Stats Firestore:', e.message));
+          }
+        }
+      }
+
+      Cart.clear();
+      _lastOrder = order;
+      // Réinitialiser le modal : montrer étape 1 (choix)
+      document.getElementById('stepChoice').style.display  = '';
+      document.getElementById('stepReceipt').style.display = 'none';
+      selectDoc('bon'); // BL sélectionné par défaut
+      document.getElementById('orderSuccess').classList.add('show');
+    }, 1800);
+  }
+
+  /* ── Choix BL / Facture ── */
+  let _lastOrder  = null;
+  let _docType    = 'bon';
+
+  function selectDoc(type) {
+    _docType = type;
+    const bonBtn = document.getElementById('docBonBtn');
+    const facBtn = document.getElementById('docFacBtn');
+    const fields = document.getElementById('facFields');
+    if (type === 'bon') {
+      bonBtn.style.border = '2px solid var(--teal)';
+      bonBtn.style.background = 'rgba(43,190,200,.08)';
+      bonBtn.style.color = 'var(--teal-dark)';
+      facBtn.style.border = '2px solid var(--gray-200)';
+      facBtn.style.background = 'var(--white)';
+      facBtn.style.color = 'var(--gray-600)';
+      fields.style.display = 'none';
+    } else {
+      facBtn.style.border = '2px solid var(--teal)';
+      facBtn.style.background = 'rgba(43,190,200,.08)';
+      facBtn.style.color = 'var(--teal-dark)';
+      bonBtn.style.border = '2px solid var(--gray-200)';
+      bonBtn.style.background = 'var(--white)';
+      bonBtn.style.color = 'var(--gray-600)';
+      fields.style.display = 'block';
+    }
+  }
+
+  function confirmerChoixDoc() {
+    let societe = '', matricule = '';
+    if (_docType === 'fac') {
+      societe   = (document.getElementById('fac-societe').value   || '').trim();
+      matricule = (document.getElementById('fac-matricule').value || '').trim();
+      if (!societe || !matricule) {
+        showToast('error', 'Champs requis', 'Veuillez renseigner la société et la matricule fiscale.');
+        return;
+      }
+    }
+    showReceipt(_lastOrder, _docType, societe, matricule);
+    document.getElementById('stepChoice').style.display  = 'none';
+    document.getElementById('stepReceipt').style.display = '';
+  }
+
+  /* ── Reçu Client ── */
+
+  function fmtDT(n) {
+    if (!n && n !== 0) return '—';
+    return n.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+  }
+
+  function showReceipt(o, docType, societe, matricule) {
+    const isFac = docType === 'fac';
+    const code  = isFac ? 'FAC-5F-' + o.id.replace('ORD-5F-','') : o.id;
+
+    document.getElementById('receiptDocType').textContent = isFac ? '🧾 Facture' : '🚚 Bon de Livraison';
+    document.getElementById('receiptCode').textContent    = 'N° ' + code;
+    document.getElementById('receiptDate').textContent    = 'Date : ' + (o.date || new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}));
+
+    // Infos fiscales (facture)
+    const fiscalDiv = document.getElementById('receiptFiscal');
+    if (isFac && societe) {
+      fiscalDiv.style.display = '';
+      document.getElementById('receiptFiscalContent').innerHTML =
+        `<span style="color:#92400e;font-weight:600">Société :</span> <strong>${societe}</strong><br>
+         <span style="color:#92400e;font-weight:600">Matricule Fiscale :</span> <strong>${matricule}</strong>`;
+    } else {
+      fiscalDiv.style.display = 'none';
+    }
+
+    document.getElementById('receiptClient').innerHTML =
+      `<strong style="color:var(--navy-dark)">${o.name||'—'}</strong>` +
+      (o.phone   ? ` &nbsp;•&nbsp; ${o.phone}` : '') +
+      (o.city    ? ` &nbsp;•&nbsp; ${o.city}`  : '') +
+      (o.address ? `<br>${o.address}` : '');
+
+    const items = Array.isArray(o.items) ? o.items : [];
+    document.getElementById('receiptItems').innerHTML = items.map(it => {
+      const lineTotal = it.priceNum > 0 ? fmtDT(it.priceNum * (it.qty||1)) : (it.price||'Sur devis');
+      const unitInfo  = it.priceNum > 0 && it.qty > 1
+        ? `<div style="font-size:.7rem;color:var(--gray-400)">${it.price} × ${it.qty}</div>` : '';
+      return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <div style="font-size:.82rem;font-weight:600;color:var(--navy-dark)">${it.icon||'📦'} ${it.name||'—'}</div>
+            ${it.code ? `<span style="font-size:.6rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 5px">${it.code}</span>` : ''}
+          </div>
+          ${it.variant ? `<div style="font-size:.72rem;color:var(--gray-500)">${it.variant}</div>` : ''}
+          ${unitInfo}
+        </div>
+        <div style="font-size:.83rem;font-weight:700;color:var(--navy-dark);margin-left:8px;white-space:nowrap">${lineTotal}</div>
+      </div>`;
+    }).join('');
+
+    const livraisonDT = o.livraison || getLivraisonFee();
+    const subTotal    = typeof o.subTotal === 'number' ? o.subTotal : Math.max(0, (o.total||0) - livraisonDT);
+    const totalNum    = subTotal > 0 ? subTotal + livraisonDT : 0;
+    document.getElementById('receiptSubtotal').textContent  = subTotal > 0 ? fmtDT(subTotal) : 'Sur devis';
+    document.getElementById('receiptLivraison').textContent = fmtDT(livraisonDT);
+    document.getElementById('receiptTotal').textContent     = totalNum > 0 ? fmtDT(totalNum) : 'Sur devis';
+  }
+
+  /* ── Bon de Livraison ── */
+
+  function showBonLivraison() {
+    const o = _lastOrder;
+    if (!o) { showToast('error','Erreur','Aucune commande en cours.'); return; }
+
+    // Numéro & date
+    document.getElementById('bl-num').textContent  = 'N° ' + o.id;
+    document.getElementById('bl-date').textContent = 'Date : ' + (o.date || new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}));
+
+    // Client
+    const rows = [
+      ['Nom',      o.name    || '—'],
+      ['Téléphone',o.phone   || '—'],
+      ['Email',    o.email   || '—'],
+      ['Ville',    o.city    || '—'],
+      ['Adresse',  o.address || '—'],
+      ['Notes',    o.notes   || '—'],
+    ].filter(r => r[1] && r[1] !== '—' || r[0] === 'Nom');
+
+    document.getElementById('bl-client').innerHTML = rows.map(r =>
+      `<div class="bon-client-row"><span>${r[0]} : </span><span style="font-weight:600;color:#1a2740">${r[1]}</span></div>`
+    ).join('');
+
+    // Articles
+    const items = Array.isArray(o.items) ? o.items : [];
+    const livraisonDT = o.livraison || getLivraisonFee();
+    const livraisonStr = livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    document.getElementById('bl-items').innerHTML = items.map((it) => {
+      const pu    = it.priceNum > 0 ? it.priceNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : it.price || '—';
+      const total = it.priceNum > 0 ? (it.priceNum * (it.qty||1)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : '—';
+      return `<tr>
+        <td style="font-size:.72rem;font-weight:700;color:#94a3b8">${it.code||it.productId||'—'}</td>
+        <td style="font-weight:600">${it.icon||'📦'} ${it.name||'—'}</td>
+        <td style="color:#64748b;font-size:.78rem">${it.variant||'—'}</td>
+        <td style="text-align:center;font-weight:700">${it.qty||1}</td>
+        <td>${pu}</td>
+        <td style="font-weight:700">${total}</td>
+      </tr>`;
+    }).join('') + `
+      <tr style="background:#f0fdfe">
+        <td></td>
+        <td style="font-weight:600;color:#1A99A3">🚚 Frais de livraison</td>
+        <td style="color:#64748b;font-size:.78rem">Livraison Tunisie</td>
+        <td style="text-align:center;font-weight:700">1</td>
+        <td style="color:#1A99A3;font-weight:700">${livraisonStr}</td>
+        <td style="font-weight:700;color:#1A99A3">${livraisonStr}</td>
+      </tr>`;
+
+    // Total (sous-total + livraison)
+    const subTotal = typeof o.subTotal === 'number' ? o.subTotal : (typeof o.total === 'number' ? Math.max(0, o.total - livraisonDT) : 0);
+    const totalNum = subTotal > 0 ? subTotal + livraisonDT : 0;
+    document.getElementById('bl-total').textContent =
+      totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+
+    document.getElementById('bonOverlay').classList.add('show');
+  }
+
+  function closeBon() {
+    document.getElementById('bonOverlay').classList.remove('show');
+  }
+
+
+  /* ── Facture ── */
+  function showFacture(societe, matricule) {
+    const o = _lastOrder;
+    if (!o) { showToast('error','Erreur','Aucune commande en cours.'); return; }
+
+    const facId = 'FAC-5F-' + (o.id || Date.now().toString().slice(-6)).replace('ORD-5F-','');
+    document.getElementById('fac-num').textContent  = 'N° ' + facId;
+    document.getElementById('fac-date').textContent = 'Date : ' + (o.date || new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}));
+
+    // Infos fiscales
+    document.getElementById('fac-fiscal').innerHTML = [
+      ['Société', societe],
+      ['Matricule Fiscale', matricule],
+    ].map(r => `<div class="bon-client-row"><span style="color:#92400e">${r[0]} : </span><span style="font-weight:700;color:#78350f">${r[1]}</span></div>`).join('');
+
+    // Infos livraison
+    const delivRows = [
+      ['Nom',      o.name    || '—'],
+      ['Téléphone',o.phone   || '—'],
+      ['Email',    o.email   || '—'],
+      ['Ville',    o.city    || '—'],
+      ['Adresse',  o.address || '—'],
+    ].filter(r => r[1] && r[1] !== '—' || r[0] === 'Nom');
+    document.getElementById('fac-client').innerHTML = delivRows.map(r =>
+      `<div class="bon-client-row"><span>${r[0]} : </span><span style="font-weight:600;color:#1a2740">${r[1]}</span></div>`
+    ).join('');
+
+    // Articles
+    const items = Array.isArray(o.items) ? o.items : [];
+    const livraisonDT = o.livraison || getLivraisonFee();
+    const livraisonStr = livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    document.getElementById('fac-items').innerHTML = items.map((it) => {
+      const pu    = it.priceNum > 0 ? it.priceNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : it.price || '—';
+      const total = it.priceNum > 0 ? (it.priceNum * (it.qty||1)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : '—';
+      return `<tr>
+        <td style="font-size:.72rem;font-weight:700;color:#94a3b8">${it.code||it.productId||'—'}</td>
+        <td style="font-weight:600">${it.icon||'📦'} ${it.name||'—'}</td>
+        <td style="color:#64748b;font-size:.78rem">${it.variant||'—'}</td>
+        <td style="text-align:center;font-weight:700">${it.qty||1}</td>
+        <td>${pu}</td>
+        <td style="font-weight:700">${total}</td>
+      </tr>`;
+    }).join('') + `
+      <tr style="background:#fef9ee">
+        <td></td>
+        <td style="font-weight:600;color:#92400e">🚚 Frais de livraison</td>
+        <td style="color:#64748b;font-size:.78rem">Livraison Tunisie</td>
+        <td style="text-align:center;font-weight:700">1</td>
+        <td style="color:#92400e;font-weight:700">${livraisonStr}</td>
+        <td style="font-weight:700;color:#92400e">${livraisonStr}</td>
+      </tr>`;
+
+    const subTotal = typeof o.subTotal === 'number' ? o.subTotal : (typeof o.total === 'number' ? Math.max(0, o.total - livraisonDT) : 0);
+    const totalNum = subTotal > 0 ? subTotal + livraisonDT : 0;
+    document.getElementById('fac-total').textContent =
+      totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+
+    document.getElementById('facOverlay').classList.add('show');
+  }
+
+  function closeFac() {
+    document.getElementById('facOverlay').classList.remove('show');
+  }
+
+  // Init — essaie Firestore d'abord pour charger le profil utilisateur
+  (function initCart() {
+    const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (session && typeof db !== 'undefined') {
+      db.collection('clients').doc(session.id).get()
+        .then(doc => {
+          const user = doc.exists ? doc.data() : null;
+          if (user) {
+            // Synchronise localStorage avec Firestore
+            const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+            const idx = clients.findIndex(c => c.id === session.id);
+            if (idx > -1) clients[idx] = { ...clients[idx], ...user };
+            else clients.push(user);
+            localStorage.setItem('5f_clients', JSON.stringify(clients));
+          }
+          renderCartPage(user);
+        })
+        .catch(() => renderCartPage());
+    } else {
+      renderCartPage();
+    }
+  })();
+
+  // Observe cart changes
+  window.addEventListener('storage', () => renderCartPage());
+</script>
+</body>
+</html>

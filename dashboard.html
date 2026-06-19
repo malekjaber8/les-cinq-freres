@@ -1,0 +1,2071 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Espace — Les Cinq Frères</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    body { background:var(--gray-50); }
+    .dash-layout { display:flex; min-height:100vh; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width:260px; background:var(--navy-dark);
+      display:flex; flex-direction:column;
+      position:fixed; top:0; left:0; bottom:0; z-index:100;
+    }
+    .sidebar-logo { padding:20px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:12px; }
+    .sidebar-logo img { height:38px; border-radius:6px; }
+    .sidebar-logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.9rem; color:var(--white); line-height:1.2; }
+    .sidebar-logo .sub   { font-size:.7rem; color:var(--teal-light); }
+    .sidebar-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+    .nav-sect { font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.35); padding:0 8px; margin:16px 0 6px; }
+    .s-link {
+      display:flex; align-items:center; gap:10px; padding:10px 12px;
+      border-radius:10px; color:rgba(255,255,255,.7); font-size:.87rem;
+      font-weight:500; transition:var(--transition); margin-bottom:2px; cursor:pointer;
+    }
+    .s-link:hover  { background:rgba(255,255,255,.08); color:var(--white); }
+    .s-link.active { background:linear-gradient(135deg,var(--teal-dark),var(--navy-light)); color:var(--white); }
+    .s-link .ico   { font-size:1.05rem; width:20px; text-align:center; }
+    .s-link .bdg   { margin-left:auto; background:var(--teal); color:var(--white); font-size:.65rem; font-weight:700; padding:2px 6px; border-radius:50px; }
+    .sidebar-user { padding:14px 16px; border-top:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px; }
+    .user-av { width:36px; height:36px; background:linear-gradient(135deg,var(--teal),var(--navy-light)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--white); font-size:.85rem; flex-shrink:0; }
+    .user-name { font-size:.83rem; font-weight:600; color:var(--white); }
+    .user-role { font-size:.7rem; color:var(--teal-light); }
+
+    /* ---- Main ---- */
+    .main { margin-left:260px; flex:1; }
+    .topbar { background:var(--white); border-bottom:1px solid var(--gray-100); padding:0 28px; height:62px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .topbar-title h2 { font-size:1.05rem; font-weight:700; color:var(--navy-dark); }
+    .topbar-title p  { font-size:.76rem; color:var(--gray-600); }
+    .topbar-right { display:flex; align-items:center; gap:10px; }
+    .tb-btn { width:36px; height:36px; background:var(--gray-50); border:1px solid var(--gray-200); border-radius:9px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.95rem; transition:var(--transition); }
+    .tb-btn:hover { background:var(--gray-100); }
+
+    /* ---- Content ---- */
+    .dash-content { padding:24px 28px; }
+
+    /* Fiche Client — carte principale */
+    .fiche-card {
+      background:var(--white);
+      border-radius:var(--radius-lg);
+      border:1px solid var(--gray-100);
+      box-shadow:var(--shadow-sm);
+      overflow:hidden;
+      margin-bottom:24px;
+    }
+    .fiche-banner {
+      background:linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--teal-dark) 100%);
+      height:120px;
+      position:relative;
+    }
+    .fiche-banner-img {
+      width:100%; height:100%;
+      object-fit:cover;
+      opacity:.12;
+      position:absolute; inset:0;
+    }
+    .fiche-banner-badge {
+      position:absolute; top:16px; right:20px;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.25);
+      color:var(--white);
+      font-size:.75rem; font-weight:600;
+      padding:4px 12px; border-radius:50px;
+      backdrop-filter:blur(6px);
+    }
+    .fiche-main {
+      padding:0 28px 28px;
+      position:relative;
+    }
+    .fiche-avatar-wrap {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      margin-top:-36px; margin-bottom:16px;
+    }
+    .fiche-avatar {
+      width:72px; height:72px;
+      background:linear-gradient(135deg,var(--teal),var(--navy-light));
+      border-radius:50%;
+      border:4px solid var(--white);
+      box-shadow:var(--shadow-md);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.6rem; font-weight:800; color:var(--white);
+    }
+    .fiche-actions { display:flex; gap:8px; }
+
+    .fiche-name { font-family:'Raleway',sans-serif; font-size:1.4rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px; }
+    .fiche-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .fiche-meta .role-pill {
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(43,190,200,.1); color:var(--teal-dark);
+      font-size:.78rem; font-weight:600; padding:3px 12px; border-radius:50px;
+    }
+    .fiche-meta .status-pill {
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(47,133,90,.1); color:var(--success);
+      font-size:.78rem; font-weight:600; padding:3px 12px; border-radius:50px;
+    }
+    .fiche-meta .id-pill {
+      font-size:.76rem; color:var(--gray-600);
+      background:var(--gray-100); padding:3px 10px; border-radius:50px;
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-bottom:24px;
+    }
+    .info-item {
+      background:var(--gray-50);
+      border:1px solid var(--gray-100);
+      border-radius:var(--radius);
+      padding:14px 16px;
+    }
+    .info-item .i-label { font-size:.73rem; font-weight:600; color:var(--gray-600); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; display:flex; align-items:center; gap:5px; }
+    .info-item .i-value { font-size:.92rem; font-weight:600; color:var(--navy-dark); }
+
+    /* Stats row */
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+    .stat-mini {
+      background:var(--white);
+      border:1px solid var(--gray-100);
+      border-radius:var(--radius-lg);
+      padding:20px;
+      box-shadow:var(--shadow-sm);
+      text-align:center;
+      transition:var(--transition);
+    }
+    .stat-mini:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .stat-mini .sm-icon { font-size:1.6rem; margin-bottom:8px; }
+    .stat-mini .sm-val { font-family:'Raleway',sans-serif; font-size:1.5rem; font-weight:800; color:var(--navy-dark); line-height:1; margin-bottom:4px; }
+    .stat-mini .sm-lbl { font-size:.76rem; color:var(--gray-600); }
+
+    /* Bottom grid */
+    .bottom-grid { display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+    .dash-card { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); overflow:hidden; }
+    .card-hd { padding:16px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--gray-100); }
+    .card-hd h3 { font-size:.92rem; font-weight:700; color:var(--navy-dark); }
+    .card-hd a  { font-size:.78rem; color:var(--teal-dark); font-weight:500; }
+
+    table { width:100%; border-collapse:collapse; }
+    th { text-align:left; font-size:.72rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.06em; padding:10px 20px; background:var(--gray-50); }
+    td { padding:12px 20px; font-size:.83rem; color:var(--gray-800); border-top:1px solid var(--gray-100); }
+    .order-id { font-weight:600; color:var(--navy); }
+    .sbadge { display:inline-block; padding:3px 9px; border-radius:50px; font-size:.7rem; font-weight:600; }
+    .sbadge.livré      { background:rgba(47,133,90,.1);   color:var(--success); }
+    .sbadge.en-cours   { background:rgba(221,107,32,.1);  color:#DD6B20; }
+    .sbadge.traitement { background:rgba(27,78,122,.1);   color:var(--navy); }
+
+    .qa-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:16px; }
+    .qa-btn {
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      padding:14px 10px;
+      background:var(--gray-50); border:1px solid var(--gray-200);
+      border-radius:var(--radius); cursor:pointer; transition:var(--transition);
+      text-decoration:none; color:inherit;
+    }
+    .qa-btn:hover { background:rgba(43,190,200,.08); border-color:var(--teal); }
+    .qa-btn .a-icon { font-size:1.3rem; }
+    .qa-btn .a-lbl  { font-size:.75rem; font-weight:600; color:var(--navy-dark); text-align:center; }
+
+    /* Edit mode */
+    .edit-field { width:100%; padding:8px 12px; border:1.5px solid var(--teal); border-radius:8px; font-family:'Poppins',sans-serif; font-size:.9rem; outline:none; }
+    .edit-field:focus { box-shadow:0 0 0 3px rgba(43,190,200,.15); }
+
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(1.3); }
+    }
+    @keyframes slideInRight {
+      from { opacity:0; transform:translateX(60px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+
+    @media(max-width:1000px){
+      .sidebar { transform:translateX(-260px); }
+      .main { margin-left:0; }
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .info-grid  { grid-template-columns:repeat(2,1fr); }
+      .bottom-grid { grid-template-columns:1fr; }
+    }
+    @media print {
+      body > *:not(#admin-bon-overlay) { display:none !important; }
+      #admin-bon-overlay { position:static !important; padding:0 !important; }
+      .no-print { display:none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Logo">
+      <div><div class="brand">Les Cinq Frères</div><div class="sub">Espace Client Pro</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <!-- Liens admin (cachés par défaut, montrés pour admin) -->
+      <div id="navAdminSection" style="display:none">
+        <div class="nav-sect">Administration</div>
+        <div class="s-link" id="navAdminOrders" onclick="showSection('admin-orders')"><span class="ico">📋</span> Commandes reçues <span class="bdg" id="adminOrdersBadge" style="background:#e53e3e;display:none">0</span></div>
+        <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📊</span> Gérer le Stock</div>
+        <div class="s-link" id="navParametres" onclick="showSection('parametres')"><span class="ico">⚙️</span> Paramètres</div>
+      </div>
+      <!-- Liens client (cachés pour admin) -->
+      <div id="navClientSection">
+        <div class="nav-sect">Principal</div>
+        <div class="s-link active" onclick="showSection('home')"><span class="ico">🏠</span> Tableau de bord</div>
+        <div class="s-link" onclick="showSection('fiche')"><span class="ico">👤</span> Ma Fiche Client</div>
+        <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📦</span> Catalogue Produits</div>
+        <div class="s-link" onclick="showSection('mes-commandes')"><span class="ico">🛒</span> Mes Commandes <span class="bdg" id="orderBadge">0</span></div>
+        <div class="s-link"><span class="ico">💰</span> Devis &amp; Factures</div>
+      </div>
+      <div class="nav-sect">Paramètres</div>
+      <div class="s-link" onclick="showSection('fiche')"><span class="ico">⚙️</span> Mon Profil</div>
+      <div class="s-link"><span class="ico">🔔</span> Notifications</div>
+      <div class="s-link"><span class="ico">📞</span> Support</div>
+      <div class="s-link" onclick="logout()" style="margin-top:8px;color:#ff6b6b;border:1px solid rgba(255,107,107,.2);border-radius:10px"><span class="ico">🚪</span> Déconnexion</div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-av" id="sideAvatar">?</div>
+      <div>
+        <div class="user-name" id="sideName">Chargement…</div>
+        <div class="user-role" id="sideRole">—</div>
+      </div>
+      <a href="login.html" style="margin-left:auto;color:rgba(255,255,255,.4);font-size:1rem" title="Déconnexion" onclick="logout()">🚪</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">
+        <h2 id="pageTitle">Tableau de Bord</h2>
+        <p id="pageDate"></p>
+      </div>
+      <div class="topbar-right">
+        <div class="tb-btn" onclick="showSection('fiche')" title="Mon profil">👤</div>
+        <div class="tb-btn" title="Notifications">🔔</div>
+        <div class="user-av tb-btn" id="topAvatar" onclick="showSection('fiche')" style="cursor:pointer">?</div>
+      </div>
+    </div>
+
+    <div class="dash-content">
+
+      <!-- ======== SECTION : HOME ======== -->
+      <div id="sec-home">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-mini"><div class="sm-icon">🛒</div><div class="sm-val" id="stat-orders">0</div><div class="sm-lbl">Commandes</div></div>
+          <div class="stat-mini"><div class="sm-icon">💰</div><div class="sm-val" id="stat-spent">0 DT</div><div class="sm-lbl">Total achats</div></div>
+          <div class="stat-mini"><div class="sm-icon">⭐</div><div class="sm-val" id="stat-points">0</div><div class="sm-lbl">Points fidélité</div></div>
+          <div class="stat-mini"><div class="sm-icon">📅</div><div class="sm-val" id="stat-since">—</div><div class="sm-lbl">Membre depuis</div></div>
+        </div>
+
+        <div class="bottom-grid">
+          <div class="dash-card">
+            <div class="card-hd"><h3>📋 Commandes Récentes</h3><a href="#">Voir tout →</a></div>
+            <table>
+              <thead><tr><th>N° Cmd</th><th>Produit</th><th>Montant</th><th>Statut</th></tr></thead>
+              <tbody>
+                <tr><td><span class="order-id">#5F-001</span></td><td>Mousse HR35 — 20m²</td><td><strong>160 DT</strong></td><td><span class="sbadge livré">Livré</span></td></tr>
+                <tr><td><span class="order-id">#5F-002</span></td><td>Fibre Polyester 3kg</td><td><strong>55 DT</strong></td><td><span class="sbadge en-cours">En cours</span></td></tr>
+                <tr><td colspan="4" style="text-align:center;color:var(--gray-600);font-size:.82rem;padding:20px">Aucune autre commande pour l'instant</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dash-card">
+            <div class="card-hd"><h3>⚡ Actions Rapides</h3></div>
+            <div class="qa-grid">
+              <a href="#" class="qa-btn"><span class="a-icon">🛒</span><span class="a-lbl">Nouvelle Commande</span></a>
+              <a href="#" class="qa-btn"><span class="a-icon">📄</span><span class="a-lbl">Demander un Devis</span></a>
+              <div class="qa-btn" onclick="showSection('fiche')"><span class="a-icon">👤</span><span class="a-lbl">Ma Fiche Client</span></div>
+              <a href="#" class="qa-btn"><span class="a-icon">📞</span><span class="a-lbl">Support Client</span></a>
+            </div>
+            <!-- Promo -->
+            <div style="margin:0 16px 16px;background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));border-radius:var(--radius);padding:16px;color:var(--white)">
+              <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-light);margin-bottom:4px">🎉 Offre Exclusive</div>
+              <div style="font-size:.88rem;font-weight:700;margin-bottom:4px">-15% sur la fibre polyester</div>
+              <div style="font-size:.75rem;color:rgba(255,255,255,.7)">Valable jusqu'au 30 Juin 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== SECTION : FICHE CLIENT ======== -->
+      <div id="sec-fiche" style="display:none">
+
+        <div class="fiche-card">
+          <!-- Banner -->
+          <div class="fiche-banner">
+            <img src="magasin.jpg" alt="" class="fiche-banner-img">
+            <span class="fiche-banner-badge" id="ficheStatusBadge">✅ Compte Actif</span>
+          </div>
+
+          <!-- Main fiche -->
+          <div class="fiche-main">
+            <div class="fiche-avatar-wrap">
+              <div class="fiche-avatar" id="ficheAvatar">?</div>
+              <div class="fiche-actions">
+                <button class="btn" style="background:var(--gray-50);border:1.5px solid var(--gray-200);color:var(--gray-800);padding:8px 16px;border-radius:var(--radius);font-size:.82rem" id="editToggleBtn" onclick="toggleEdit()">✏️ Modifier</button>
+                <button class="btn btn-primary" style="padding:8px 16px;font-size:.82rem" onclick="saveProfile()" id="saveBtn" style="display:none">💾 Sauvegarder</button>
+              </div>
+            </div>
+
+            <div class="fiche-name" id="ficheName">—</div>
+            <div class="fiche-meta">
+              <span class="role-pill" id="ficheRole">—</span>
+              <span class="status-pill">● Actif</span>
+              <span class="id-pill" id="ficheId">ID : —</span>
+              <span class="id-pill" id="ficheDate">📅 Membre depuis —</span>
+            </div>
+
+            <!-- Info grid — view mode -->
+            <div id="ficheInfoView">
+              <div class="info-grid" id="infoGrid"></div>
+            </div>
+
+            <!-- Info grid — edit mode -->
+            <div id="ficheInfoEdit" style="display:none">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Prénom</label>
+                  <input class="edit-field" id="ef-firstName" type="text">
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Nom</label>
+                  <input class="edit-field" id="ef-lastName" type="text">
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Téléphone</label>
+                  <input class="edit-field" id="ef-phone" type="tel">
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Ville</label>
+                  <input class="edit-field" id="ef-city" type="text">
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Société</label>
+                  <input class="edit-field" id="ef-company" type="text">
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label style="font-size:.78rem;font-weight:600;color:var(--gray-800);margin-bottom:5px;display:block">Adresse</label>
+                  <input class="edit-field" id="ef-address" type="text">
+                </div>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-primary" onclick="saveProfile()" style="padding:10px 24px">💾 Sauvegarder les modifications</button>
+                <button class="btn btn-outline-navy" onclick="cancelEdit()" style="padding:10px 20px">✕ Annuler</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compte & Sécurité -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="dash-card">
+            <div class="card-hd"><h3>🔐 Sécurité du Compte</h3></div>
+            <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:1.1rem">🔒</span>
+                  <div>
+                    <div style="font-size:.85rem;font-weight:600;color:var(--navy-dark)">Mot de passe</div>
+                    <div style="font-size:.75rem;color:var(--gray-600)">Dernière modification : à l'inscription</div>
+                  </div>
+                </div>
+                <button class="btn" style="background:var(--gray-100);border:none;color:var(--navy);font-size:.78rem;padding:6px 12px;border-radius:8px" onclick="showToast('info','Bientôt disponible','Fonctionnalité en cours de développement.')">Modifier</button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:1.1rem">✉️</span>
+                  <div>
+                    <div style="font-size:.85rem;font-weight:600;color:var(--navy-dark)">Email</div>
+                    <div style="font-size:.75rem;color:var(--gray-600)" id="secEmail">—</div>
+                  </div>
+                </div>
+                <span style="background:rgba(47,133,90,.1);color:var(--success);font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:50px">Vérifié</span>
+              </div>
+            </div>
+          </div>
+          <div class="dash-card">
+            <div class="card-hd"><h3>💎 Programme Fidélité</h3></div>
+            <div style="padding:16px 20px">
+              <div style="text-align:center;padding:16px 0">
+                <div style="font-family:'Raleway',sans-serif;font-size:2.2rem;font-weight:800;color:var(--teal-dark)" id="pointsDisplay">0</div>
+                <div style="font-size:.82rem;color:var(--gray-600)">Points accumulés</div>
+              </div>
+              <div style="background:var(--gray-100);border-radius:50px;height:8px;margin:0 0 10px;overflow:hidden">
+                <div style="background:linear-gradient(90deg,var(--teal),var(--navy-light));height:100%;border-radius:50px;width:5%;transition:.8s ease" id="loyaltyBar"></div>
+              </div>
+              <div style="font-size:.76rem;color:var(--gray-600);text-align:center">Encore <strong id="pointsNeeded">1000</strong> pts pour le niveau Or ⭐</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end sec-fiche -->
+
+      <!-- ======== SECTION : MES COMMANDES (CLIENT) ======== -->
+      <div id="sec-mes-commandes" style="display:none">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+          <div>
+            <h3 style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">🛒 Mes Commandes</h3>
+            <p style="font-size:.82rem;color:var(--gray-500)">Historique de toutes vos commandes passées</p>
+          </div>
+          <a href="catalogue.html" class="btn btn-primary" style="padding:9px 20px;font-size:.82rem">📦 Nouvelle commande</a>
+        </div>
+
+        <!-- Stats client -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px" id="clientOrderStats"></div>
+
+        <!-- Liste commandes -->
+        <div id="clientOrdersList">
+          <div style="text-align:center;padding:60px 20px;color:var(--gray-400)">
+            <div style="font-size:2.5rem;margin-bottom:12px">⏳</div>
+            <div style="font-weight:600">Chargement…</div>
+          </div>
+        </div>
+
+      </div><!-- end sec-mes-commandes -->
+
+      <!-- ======== SECTION : ADMIN COMMANDES ======== -->
+      <div id="sec-admin-orders" style="display:none">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+          <div>
+            <h3 style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">🛒 Commandes Reçues</h3>
+            <p style="font-size:.82rem;color:var(--gray-500)">Mise à jour automatique en temps réel</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span id="newOrdersBadge" style="display:none;background:#e53e3e;color:#fff;font-size:.72rem;font-weight:800;padding:4px 12px;border-radius:50px;animation:pulse 1.5s infinite">● Nouvelles</span>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:#2e7d32;background:#e8f5e9;border:1px solid #a5d6a7;padding:5px 12px;border-radius:50px">
+              <span style="width:7px;height:7px;background:#2e7d32;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span> Écoute en direct
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats rapides -->
+        <div id="ordersStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px"></div>
+
+        <!-- Recherche par code BL / Facture -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:var(--white);border:1.5px solid var(--gray-200);border-radius:12px;padding:8px 14px">
+          <span style="font-size:1rem;color:var(--gray-400)">🔍</span>
+          <input id="orderSearchInput" type="text" placeholder="Rechercher par code BL, N° Facture, nom ou téléphone…"
+            oninput="searchOrders(this.value)"
+            style="flex:1;border:none;outline:none;font-family:'Poppins',sans-serif;font-size:.85rem;color:var(--navy-dark);background:transparent">
+          <button onclick="document.getElementById('orderSearchInput').value='';searchOrders('')" style="background:none;border:none;cursor:pointer;font-size:.9rem;color:var(--gray-400);padding:0">✕</button>
+        </div>
+
+        <!-- Filtres statut -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px" id="orderFilters">
+          <button class="order-filter-btn active" onclick="filterOrders('tous',this)" style="padding:7px 16px;border-radius:50px;border:1.5px solid var(--teal);background:var(--teal);color:#fff;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">Toutes</button>
+          <button class="order-filter-btn" onclick="filterOrders('En attente',this)" style="padding:7px 16px;border-radius:50px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">⏳ En attente</button>
+          <button class="order-filter-btn" onclick="filterOrders('Confirmée',this)" style="padding:7px 16px;border-radius:50px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">✅ Confirmée</button>
+          <button class="order-filter-btn" onclick="filterOrders('En cours',this)" style="padding:7px 16px;border-radius:50px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">🚚 En cours</button>
+          <button class="order-filter-btn" onclick="filterOrders('Livrée',this)" style="padding:7px 16px;border-radius:50px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">📦 Livrée</button>
+        </div>
+
+        <!-- Liste des commandes -->
+        <div id="adminOrdersList">
+          <div style="text-align:center;padding:60px 20px;color:var(--gray-400)">
+            <div style="font-size:2.5rem;margin-bottom:12px">⏳</div>
+            <div style="font-weight:600">Connexion à Firebase…</div>
+          </div>
+        </div>
+
+      </div><!-- end sec-admin-orders -->
+
+      <!-- ======== SECTION : PARAMÈTRES ADMIN ======== -->
+      <div id="sec-parametres" style="display:none">
+
+        <div style="margin-bottom:24px">
+          <h2 style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">⚙️ Paramètres du Site</h2>
+          <p style="font-size:.82rem;color:var(--gray-600)">Configurez les paramètres de tarification et de livraison.</p>
+        </div>
+
+        <!-- Carte livraison -->
+        <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:28px;max-width:520px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">
+            <div style="width:44px;height:44px;background:rgba(43,190,200,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem">🚚</div>
+            <div>
+              <div style="font-weight:700;color:var(--navy-dark);font-size:.95rem">Frais de Livraison</div>
+              <div style="font-size:.76rem;color:var(--gray-600)">Montant facturé à chaque commande (en Dinars)</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px">
+            <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">Montant frais de livraison (DT) *</label>
+            <div style="display:flex;align-items:center;gap:10px">
+              <input type="number" id="paramLivraison" min="0" step="0.5"
+                style="flex:1;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:var(--navy-dark);outline:none;transition:var(--transition)"
+                onfocus="this.style.borderColor='var(--teal)'" onblur="this.style.borderColor='var(--gray-200)'">
+              <span style="font-weight:700;color:var(--gray-500);font-size:.9rem">DT</span>
+            </div>
+            <div style="font-size:.74rem;color:var(--gray-400);margin-top:5px">Valeur par défaut : 9 DT. Ce montant s'applique à toutes les nouvelles commandes.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center">
+            <button onclick="saveParamLivraison()"
+              style="padding:11px 24px;background:linear-gradient(135deg,var(--teal),var(--navy-light));color:#fff;border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(43,190,200,.3)">
+              💾 Enregistrer
+            </button>
+            <div id="paramSaveMsg" style="font-size:.8rem;color:var(--success);font-weight:600;display:none">✅ Sauvegardé !</div>
+          </div>
+        </div>
+
+      </div><!-- end sec-parametres -->
+
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<!-- ══ MODAL : MOT DE PASSE QUOTIDIEN ══ -->
+<div id="editPwdModal" style="display:none;position:fixed;inset:0;background:rgba(18,47,75,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
+  <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center">
+    <div style="width:60px;height:60px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 18px">🔐</div>
+    <h3 style="font-family:'Raleway',sans-serif;font-size:1.15rem;font-weight:800;color:#1B4E7A;margin-bottom:8px">Vérification requise</h3>
+    <p style="font-size:.82rem;color:#64748b;margin-bottom:20px">Saisissez le mot de passe du jour pour modifier cette commande.</p>
+    <input id="editPwdInput" type="password" placeholder="Mot de passe du jour…"
+      onkeydown="if(event.key==='Enter')verifyEditPwd()"
+      style="width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.95rem;text-align:center;letter-spacing:.15em;outline:none;margin-bottom:8px">
+    <div id="editPwdErr" style="display:none;font-size:.78rem;color:#e53e3e;margin-bottom:10px;font-weight:600">❌ Mot de passe incorrect.</div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button onclick="closeEditPwdModal()" style="flex:1;padding:10px;background:#f1f5f9;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.85rem;cursor:pointer;color:#64748b">Annuler</button>
+      <button onclick="verifyEditPwd()" style="flex:2;padding:10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer">Confirmer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL : ÉDITION COMMANDE ══ -->
+<div id="editOrderModal" style="display:none;position:fixed;inset:0;background:rgba(18,47,75,.7);z-index:9998;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 16px;backdrop-filter:blur(4px)">
+  <div style="background:#fff;border-radius:20px;padding:28px;max-width:620px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid #f1f5f9">
+      <div>
+        <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:#1B4E7A">✏️ Modifier la commande</div>
+        <div id="editOrderIdLabel" style="font-size:.78rem;color:#64748b;margin-top:2px"></div>
+      </div>
+      <button onclick="closeEditOrderModal()" style="width:34px;height:34px;background:#f1f5f9;border:none;border-radius:9px;cursor:pointer;font-size:1rem">✕</button>
+    </div>
+
+    <!-- Frais de livraison -->
+    <div style="background:#f0fdfe;border:1.5px solid #a7f3f0;border-radius:12px;padding:14px 18px;margin-bottom:18px">
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1A99A3;margin-bottom:8px">🚚 Frais de livraison</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="number" id="editLivraison" min="0" step="0.5"
+          style="flex:1;padding:9px 12px;border:1.5px solid #a7f3f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;color:#1B4E7A;outline:none">
+        <span style="font-size:.88rem;color:#64748b;font-weight:600">DT</span>
+      </div>
+    </div>
+
+    <!-- Articles -->
+    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:10px">Articles de la commande</div>
+    <div id="editItemsList" style="margin-bottom:14px"></div>
+
+    <!-- Ajouter un article — recherche live -->
+    <div style="background:#f0fdf4;border:1.5px dashed #86efac;border-radius:12px;padding:14px 16px;margin-bottom:18px">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#16a34a;margin-bottom:10px">➕ Ajouter un article</div>
+
+      <!-- Barre de recherche avec dropdown -->
+      <div style="position:relative;margin-bottom:10px">
+        <input id="addArticleSearch" type="text" autocomplete="off"
+          placeholder="🔍 Code (ex: FP01) ou nom d'article…"
+          oninput="showArticleSuggestions(this.value)"
+          style="width:100%;padding:9px 12px;border:1.5px solid #86efac;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.85rem;outline:none;box-sizing:border-box">
+        <div id="articleSuggestDropdown"
+          style="display:none;position:absolute;top:calc(100% + 3px);left:0;right:0;background:#fff;border:1.5px solid #86efac;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.14);z-index:2000;max-height:240px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Article sélectionné -->
+      <div id="addArticlePreview" style="display:none;background:#fff;border:1px solid #86efac;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:.8rem;display:flex;align-items:center;gap:8px"></div>
+
+      <!-- Champs manuels (si l'article n'existe pas) + Qté + Ajouter -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+        <div style="flex:1;min-width:120px">
+          <label style="font-size:.67rem;font-weight:600;color:#6b7280;display:block;margin-bottom:3px">Nom (si inconnu)</label>
+          <input id="addArticleName" type="text" placeholder="Nom de l'article"
+            style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;outline:none;box-sizing:border-box">
+        </div>
+        <div style="width:88px">
+          <label style="font-size:.67rem;font-weight:600;color:#6b7280;display:block;margin-bottom:3px">Prix DT</label>
+          <input id="addArticlePrice" type="number" min="0" step="0.001" placeholder="0,000"
+            style="width:100%;padding:7px 8px;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;text-align:center;outline:none;box-sizing:border-box">
+        </div>
+        <div style="width:58px">
+          <label style="font-size:.67rem;font-weight:600;color:#6b7280;display:block;margin-bottom:3px">Qté</label>
+          <input id="addArticleQty" type="number" min="1" value="1"
+            style="width:100%;padding:7px 6px;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;text-align:center;outline:none">
+        </div>
+        <button onclick="addArticleToEdit()"
+          style="padding:8px 16px;background:linear-gradient(135deg,#2BBEC8,#1B4E7A);color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.83rem;cursor:pointer;font-weight:700;white-space:nowrap;height:34px">
+          + Ajouter
+        </button>
+      </div>
+    </div>
+
+    <!-- Total recalculé -->
+    <div style="background:#1B4E7A;color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:.88rem;opacity:.85">Total TTC recalculé</span>
+      <span id="editTotalDisplay" style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:900">—</span>
+    </div>
+
+    <!-- Boutons -->
+    <div style="display:flex;gap:12px">
+      <button onclick="closeEditOrderModal()" style="flex:1;padding:12px;background:#f1f5f9;border:none;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.88rem;cursor:pointer;color:#64748b">Annuler</button>
+      <button onclick="saveOrderEdit()" style="flex:2;padding:12px;background:linear-gradient(135deg,#2BBEC8,#1B4E7A);color:#fff;border:none;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(43,190,200,.3)">💾 Enregistrer les modifications</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script>
+  let currentUser = null;
+  let editMode = false;
+
+  // ---- Boot ----
+  (function init() {
+    const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (!session) { window.location.href = 'login.html'; return; }
+
+    function boot(user) {
+      if (!user) { window.location.href = 'login.html'; return; }
+      if (user.role !== 'admin') { window.location.href = 'index.html'; return; }
+      currentUser = user;
+      renderUI();
+    }
+
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc(session.id).get()
+        .then(doc => boot(doc.exists ? doc.data() : null))
+        .catch(() => {
+          const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+          boot(clients.find(c => c.id === session.id) || null);
+        });
+    } else {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      boot(clients.find(c => c.id === session.id) || null);
+    }
+  })();
+
+  function renderUI() {
+    const u = currentUser;
+    const initials = (u.firstName[0] || '') + (u.lastName[0] || '');
+    const fullName = u.firstName + ' ' + u.lastName;
+    const roleLabel = u.role === 'admin' ? '🛡️ Administrateur' : '👤 Client Pro';
+
+    // Sidebar
+    document.getElementById('sideAvatar').textContent = initials;
+    document.getElementById('sideName').textContent   = fullName;
+    document.getElementById('sideRole').textContent   = roleLabel;
+    document.getElementById('topAvatar').textContent  = initials;
+
+    // Topbar date
+    document.getElementById('pageDate').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    // Admin : afficher section admin, cacher section client
+    if (u.role === 'admin') {
+      document.getElementById('navAdminSection').style.display  = '';
+      document.getElementById('navClientSection').style.display = 'none';
+      initAdminOrders();
+      showSection('admin-orders'); // vue par défaut pour l'admin
+    }
+
+    // Badge commandes client (nombre réel depuis localStorage)
+    const allOrd = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    const myOrd  = allOrd.filter(o => o.clientId === u.id);
+    document.getElementById('orderBadge').textContent = myOrd.length;
+
+    // Stats
+    document.getElementById('stat-orders').textContent = u.orders || 0;
+    document.getElementById('stat-spent').textContent  = (u.totalSpent || 0) + ' DT';
+    document.getElementById('stat-points').textContent = u.points || 0;
+    document.getElementById('stat-since').textContent  = (u.createdAt || '—').split(' ').slice(2).join(' ') || '2024';
+    document.getElementById('orderBadge').textContent  = u.orders || 0;
+
+    // Fiche
+    document.getElementById('ficheAvatar').textContent = initials;
+    document.getElementById('ficheName').textContent   = fullName;
+    document.getElementById('ficheRole').textContent   = roleLabel;
+    document.getElementById('ficheId').textContent     = 'ID : ' + u.id;
+    document.getElementById('ficheDate').textContent   = '📅 Membre depuis ' + (u.createdAt || '—');
+    document.getElementById('secEmail').textContent    = u.email;
+    document.getElementById('pointsDisplay').textContent = u.points || 0;
+
+    const pts = u.points || 0;
+    document.getElementById('loyaltyBar').style.width = Math.min(pts / 10, 100) + '%';
+    document.getElementById('pointsNeeded').textContent = Math.max(1000 - pts, 0);
+
+    // Info grid
+    const fields = [
+      { icon:'✉️', label:'Email',         value: u.email },
+      { icon:'📞', label:'Téléphone',     value: u.phone || '—' },
+      { icon:'📍', label:'Ville',         value: u.city  || '—' },
+      { icon:'⚙️', label:'Activité',      value: u.activity || '—' },
+      { icon:'🏢', label:'Société',       value: u.company  || '—' },
+      { icon:'🗺️', label:'Adresse',       value: u.address  || '—' },
+      { icon:'📅', label:'Inscrit le',    value: u.createdAt || '—' },
+      { icon:'🆔', label:'Identifiant',   value: u.id },
+      { icon:'🔑', label:'Type de compte',value: u.role === 'admin' ? 'Administrateur' : 'Client' },
+    ];
+    document.getElementById('infoGrid').innerHTML = fields.map(f => `
+      <div class="info-item">
+        <div class="i-label">${f.icon} ${f.label}</div>
+        <div class="i-value">${f.value}</div>
+      </div>`).join('');
+  }
+
+  function showSection(id) {
+    document.getElementById('sec-home').style.display            = id === 'home'          ? '' : 'none';
+    document.getElementById('sec-fiche').style.display           = id === 'fiche'         ? '' : 'none';
+    document.getElementById('sec-mes-commandes').style.display   = id === 'mes-commandes' ? '' : 'none';
+    document.getElementById('sec-admin-orders').style.display    = id === 'admin-orders'  ? '' : 'none';
+    document.getElementById('sec-parametres').style.display      = id === 'parametres'    ? '' : 'none';
+
+    if (id === 'parametres') {
+      const cur = parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
+      document.getElementById('paramLivraison').value = cur;
+      document.getElementById('paramSaveMsg').style.display = 'none';
+    }
+
+    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres' };
+    document.getElementById('pageTitle').textContent = titles[id] || 'Tableau de Bord';
+
+    document.querySelectorAll('.s-link').forEach(l => l.classList.remove('active'));
+    if (id === 'home')          document.querySelectorAll('.s-link')[0].classList.add('active');
+    if (id === 'fiche')         document.querySelectorAll('.s-link')[1].classList.add('active');
+    if (id === 'mes-commandes') document.querySelectorAll('.s-link')[3].classList.add('active');
+    if (id === 'admin-orders')  document.getElementById('adminOrdersLink').classList.add('active');
+
+    if (id === 'admin-orders') {
+      document.getElementById('adminOrdersBadge').style.display = 'none';
+      document.getElementById('newOrdersBadge').style.display   = 'none';
+      _newOrdersCount = 0;
+    }
+    if (id === 'mes-commandes') loadClientOrders();
+  }
+
+  function toggleEdit() {
+    editMode = true;
+    const u = currentUser;
+    document.getElementById('ef-firstName').value = u.firstName;
+    document.getElementById('ef-lastName').value  = u.lastName;
+    document.getElementById('ef-phone').value     = u.phone    || '';
+    document.getElementById('ef-city').value      = u.city     || '';
+    document.getElementById('ef-company').value   = u.company  || '';
+    document.getElementById('ef-address').value   = u.address  || '';
+    document.getElementById('ficheInfoView').style.display = 'none';
+    document.getElementById('ficheInfoEdit').style.display = '';
+    document.getElementById('editToggleBtn').style.display = 'none';
+  }
+
+  /* ══════════════════════════════════════════
+     MODIFICATION COMMANDE (mot de passe quotidien)
+     Mot de passe : "01" + jour (2 chiffres) + "."
+     Ex: 16/06 → "0116."
+  ══════════════════════════════════════════ */
+  let _editTargetId = null;
+
+  function getDailyPassword() {
+    const d = new Date();
+    return '01' + String(d.getDate()).padStart(2, '0') + '.';
+  }
+
+  function requestEditOrder(orderId) {
+    _editTargetId = orderId;
+    document.getElementById('editPwdInput').value = '';
+    document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
+  }
+
+  function closeEditPwdModal() {
+    document.getElementById('editPwdModal').style.display = 'none';
+    _editTargetId = null;
+  }
+
+  function verifyEditPwd() {
+    const entered = document.getElementById('editPwdInput').value;
+    if (entered !== getDailyPassword()) {
+      document.getElementById('editPwdErr').style.display = 'block';
+      document.getElementById('editPwdInput').value = '';
+      document.getElementById('editPwdInput').focus();
+      return;
+    }
+    document.getElementById('editPwdModal').style.display = 'none';
+    openEditOrder(_editTargetId);
+  }
+
+  let _editRowCounter = 0;
+
+  function _makeEditRow(it, rowId) {
+    const code = it.code || it.productId || '';
+    return `<div id="erow-${rowId}"
+        data-name="${(it.name||'').replace(/"/g,'&quot;')}"
+        data-code="${code}"
+        data-icon="${it.icon||'📦'}"
+        data-variant="${(it.variant||'').replace(/"/g,'&quot;')}"
+        style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8fafc;border-radius:10px;margin-bottom:8px;border:1px solid #e2e8f0">
+      <div style="font-size:1.2rem">${it.icon||'📦'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+          <div style="font-size:.83rem;font-weight:700;color:#1B4E7A;overflow:hidden;text-overflow:ellipsis">${it.name||'—'}</div>
+          ${code ? `<span style="font-size:.62rem;font-weight:700;color:#94a3b8;background:#e2e8f0;border-radius:4px;padding:1px 5px">${code}</span>` : ''}
+        </div>
+        ${it.variant ? `<div style="font-size:.72rem;color:#64748b">${it.variant}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <span style="font-size:.75rem;color:#94a3b8">Qté</span>
+        <input type="number" min="1" value="${it.qty||1}" oninput="recalcEditTotal()"
+          data-row="${rowId}" data-field="qty"
+          style="width:50px;padding:5px 6px;border:1.5px solid #e2e8f0;border-radius:7px;font-family:'Poppins',sans-serif;font-size:.82rem;text-align:center;outline:none">
+        <span style="font-size:.75rem;color:#94a3b8">Prix</span>
+        <input type="number" min="0" step="0.001" value="${it.priceNum||0}" oninput="recalcEditTotal()"
+          data-row="${rowId}" data-field="priceNum"
+          style="width:80px;padding:5px 6px;border:1.5px solid #e2e8f0;border-radius:7px;font-family:'Poppins',sans-serif;font-size:.82rem;text-align:center;outline:none">
+        <span style="font-size:.72rem;color:#94a3b8">DT</span>
+        <button onclick="deleteEditItem('erow-${rowId}')" title="Supprimer cet article"
+          style="width:26px;height:26px;background:rgba(239,68,68,.1);border:none;border-radius:6px;cursor:pointer;font-size:.8rem;color:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      </div>
+    </div>`;
+  }
+
+  function openEditOrder(orderId) {
+    const order = _allOrders.find(o => (o._id || o.id) === orderId);
+    if (!order) return;
+
+    _editRowCounter = 0;
+    if (_productCatalogue.length === 0) buildProductCatalogue();
+    document.getElementById('editOrderIdLabel').textContent = 'N° ' + orderId;
+    document.getElementById('editLivraison').value = order.livraison != null ? order.livraison : (order.fraisLivraison || 9);
+
+    const items = Array.isArray(order.items) ? order.items : [];
+    document.getElementById('editItemsList').innerHTML = items.map(it => {
+      const rowId = _editRowCounter++;
+      return _makeEditRow(it, rowId);
+    }).join('');
+
+    // Reset add-article fields
+    _selectedArticle = null;
+    ['addArticleSearch','addArticleName','addArticlePrice'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('addArticleQty').value = '1';
+    document.getElementById('addArticlePreview').style.display = 'none';
+    const dd = document.getElementById('articleSuggestDropdown'); if (dd) dd.style.display = 'none';
+
+    document.getElementById('editLivraison').oninput = recalcEditTotal;
+    recalcEditTotal();
+    document.getElementById('editOrderModal').style.display = 'flex';
+  }
+
+  function deleteEditItem(rowId) {
+    const el = document.getElementById(rowId);
+    if (el) el.remove();
+    recalcEditTotal();
+  }
+
+  function recalcEditTotal() {
+    const livraison = parseFloat(document.getElementById('editLivraison').value) || 0;
+    let subTotal = 0;
+    document.querySelectorAll('#editItemsList [data-field="priceNum"]').forEach(inp => {
+      const rowId  = inp.dataset.row;
+      const qtyInp = document.querySelector(`#editItemsList [data-row="${rowId}"][data-field="qty"]`);
+      const qty    = parseInt(qtyInp ? qtyInp.value : 1) || 1;
+      subTotal    += (parseFloat(inp.value) || 0) * qty;
+    });
+    const total = subTotal + livraison;
+    document.getElementById('editTotalDisplay').textContent =
+      total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+  }
+
+  /* ── Catalogue produits (construit depuis toutes les commandes) ── */
+  let _productCatalogue = []; // [{code, name, icon, variant, priceNum, price}, ...]
+  let _selectedArticle  = null;
+
+  function buildProductCatalogue() {
+    const byCode = new Map();
+    const byName = new Map();
+
+    function addEntry(it) {
+      const code = (it.code || it.productId || '').trim().toUpperCase();
+      const name = (it.name || '').trim();
+      if (!name) return;
+      const entry = { code, name, icon: it.icon||'📦', variant: it.variant||'', priceNum: it.priceNum||0, price: it.price||'' };
+      if (code) {
+        if (!byCode.has(code)) byCode.set(code, entry);
+      } else {
+        const key = name.toLowerCase();
+        if (!byName.has(key)) byName.set(key, entry);
+      }
+    }
+
+    // 1. Catalogue complet défini dans catalogue.html (source principale)
+    try {
+      JSON.parse(localStorage.getItem('5f_catalogue') || '[]').forEach(addEntry);
+    } catch(e) {}
+
+    // 2. Articles des commandes existantes (articles personnalisés / anciens)
+    for (const o of _allOrders) {
+      if (Array.isArray(o.items)) o.items.forEach(addEntry);
+    }
+
+    _productCatalogue = [...byCode.values(), ...byName.values()];
+  }
+
+  function getArticleSuggestions(q) {
+    q = (q || '').trim().toLowerCase();
+    if (!q) return [];
+    // Rebuild catalogue on-demand if empty (catalogue.html not yet visited)
+    if (_productCatalogue.length === 0) buildProductCatalogue();
+    const exact = [], starts = [], contains = [];
+    const seen = new Set();
+    for (const it of _productCatalogue) {
+      const codeL = (it.code || '').toLowerCase();
+      const nameL = (it.name || '').toLowerCase();
+      const key   = it.code || it.name;
+      if (seen.has(key)) continue;
+      if (codeL === q || nameL === q)           { exact.push(it);    seen.add(key); }
+      else if (codeL.startsWith(q) || nameL.startsWith(q)) { starts.push(it); seen.add(key); }
+      else if (codeL.includes(q)   || nameL.includes(q))   { contains.push(it); seen.add(key); }
+    }
+    return [...exact, ...starts, ...contains].slice(0, 12);
+  }
+
+  let _currentSuggestions = [];
+
+  function showArticleSuggestions(val) {
+    const dropdown = document.getElementById('articleSuggestDropdown');
+    if (!val || !val.trim()) { dropdown.style.display = 'none'; return; }
+    _currentSuggestions = getArticleSuggestions(val);
+    if (!_currentSuggestions.length) {
+      dropdown.style.display = '';
+      dropdown.innerHTML = `<div style="padding:12px 14px;font-size:.8rem;color:#94a3b8;text-align:center">Aucun article trouvé — saisir manuellement ci-dessous</div>`;
+      return;
+    }
+    dropdown.style.display = '';
+    dropdown.innerHTML = _currentSuggestions.map((it, i) => `
+      <div onclick="selectArticleSugg(${i})"
+        style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid #f0fdf4;transition:.12s"
+        onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
+        <span style="font-size:1.15rem;flex-shrink:0">${it.icon||'📦'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.84rem;font-weight:700;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${it.name}</div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px">
+            ${it.code ? `<span style="font-size:.64rem;font-weight:800;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 5px">${it.code}</span>` : ''}
+            ${it.variant ? `<span style="font-size:.72rem;color:#64748b">${it.variant}</span>` : ''}
+          </div>
+        </div>
+        ${it.priceNum > 0 ? `<span style="font-size:.82rem;font-weight:800;color:#16a34a;white-space:nowrap;flex-shrink:0">${it.price}</span>` : ''}
+      </div>`).join('');
+  }
+
+  function selectArticleSugg(idx) {
+    const it = _currentSuggestions[idx];
+    if (!it) return;
+    _selectedArticle = it;
+    document.getElementById('addArticleSearch').value = (it.code ? '[' + it.code + '] ' : '') + it.name;
+    document.getElementById('addArticleName').value   = it.name;
+    document.getElementById('addArticlePrice').value  = it.priceNum > 0 ? it.priceNum : '';
+    const prev = document.getElementById('addArticlePreview');
+    prev.style.display = 'flex';
+    prev.innerHTML = `<span style="font-size:1.1rem">${it.icon||'📦'}</span><div><strong>${it.name}</strong>${it.variant?' <span style="color:#64748b;font-size:.78rem">— '+it.variant+'</span>':''}${it.priceNum>0?' <span style="color:#16a34a;font-weight:700;margin-left:6px">'+it.price+'</span>':''}</div>`;
+    document.getElementById('articleSuggestDropdown').style.display = 'none';
+  }
+
+  function addArticleToEdit() {
+    const name  = (document.getElementById('addArticleName').value || '').trim();
+    const price = parseFloat(document.getElementById('addArticlePrice').value) || 0;
+    const qty   = parseInt(document.getElementById('addArticleQty').value)     || 1;
+    const it    = _selectedArticle || {};
+
+    const finalName    = name    || it.name    || '';
+    const finalPrice   = price   || it.priceNum || 0;
+    const finalIcon    = it.icon    || '📦';
+    const finalVariant = it.variant || '';
+    const finalCode    = it.code    || '';
+
+    if (!finalName) {
+      if (typeof showToast === 'function') showToast('error','Article requis','Cherchez ou saisissez un article à ajouter.');
+      return;
+    }
+
+    const rowId = 'add-' + (++_editRowCounter);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = _makeEditRow({
+      name: finalName, code: finalCode, icon: finalIcon,
+      variant: finalVariant, qty, priceNum: finalPrice,
+      price: finalPrice > 0
+        ? finalPrice.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT'
+        : 'Sur devis'
+    }, rowId);
+    document.getElementById('editItemsList').appendChild(wrapper.firstChild);
+    recalcEditTotal();
+
+    _selectedArticle = null;
+    ['addArticleSearch','addArticleName','addArticlePrice'].forEach(id => { const e=document.getElementById(id); if(e)e.value=''; });
+    document.getElementById('addArticleQty').value = '1';
+    document.getElementById('addArticlePreview').style.display = 'none';
+    document.getElementById('articleSuggestDropdown').style.display = 'none';
+  }
+
+  // Fermer le dropdown si clic dehors
+  document.addEventListener('click', function(e) {
+    const drop = document.getElementById('articleSuggestDropdown');
+    const input = document.getElementById('addArticleSearch');
+    if (drop && input && !drop.contains(e.target) && e.target !== input) {
+      drop.style.display = 'none';
+    }
+  });
+
+  function closeEditOrderModal() {
+    document.getElementById('editOrderModal').style.display = 'none';
+  }
+
+  function saveOrderEdit() {
+    const orderId = document.getElementById('editOrderIdLabel').textContent.replace('N° ','');
+    const order   = _allOrders.find(o => (o._id || o.id) === orderId);
+    if (!order) return;
+
+    const livraison = parseFloat(document.getElementById('editLivraison').value) || 0;
+    let subTotal = 0;
+    const newItems = [];
+
+    document.querySelectorAll('#editItemsList > div[id^="erow-"]').forEach(row => {
+      const rowId    = row.id.replace('erow-','');
+      const qtyInp   = row.querySelector(`[data-row="${rowId}"][data-field="qty"]`);
+      const priceInp = row.querySelector(`[data-row="${rowId}"][data-field="priceNum"]`);
+      const qty      = parseInt(qtyInp   ? qtyInp.value   : 1) || 1;
+      const price    = parseFloat(priceInp ? priceInp.value : 0) || 0;
+      subTotal += price * qty;
+      newItems.push({
+        name:     row.dataset.name    || '—',
+        code:     row.dataset.code    || '',
+        icon:     row.dataset.icon    || '📦',
+        variant:  row.dataset.variant || '',
+        qty,
+        priceNum: price,
+        price:    price > 0 ? price.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis',
+      });
+    });
+
+    order.items    = newItems;
+    order.livraison = livraison;
+    order.subTotal  = subTotal;
+    order.total     = subTotal + livraison;
+
+    // Mise à jour localStorage
+    const allOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    const idx = allOrders.findIndex(o => (o._id || o.id) === orderId);
+    if (idx > -1) allOrders[idx] = order;
+    localStorage.setItem('5f_orders', JSON.stringify(allOrders));
+
+    // Mise à jour Firestore
+    if (typeof db !== 'undefined') {
+      db.collection('orders').doc(orderId).update({
+        items:     order.items,
+        livraison: order.livraison,
+        subTotal:  order.subTotal,
+        total:     order.total,
+      }).catch(e => console.warn('saveOrderEdit:', e.message));
+    }
+
+    closeEditOrderModal();
+    if (typeof showToast === 'function') showToast('success','Modifications enregistrées','La commande a été mise à jour.');
+    renderAdminOrders(_allOrders);
+  }
+
+  function searchOrders(q) {
+    q = (q || '').trim().toLowerCase();
+    if (!q) { renderAdminOrders(_allOrders); return; }
+    const results = _allOrders.filter(o => {
+      const id    = ((o._id || o.id || '')).toLowerCase();
+      const facId = ('fac-5f-' + id.replace('ord-5f','')).toLowerCase();
+      const name  = ((o.clientName || o.nom || o.name || '')).toLowerCase();
+      const phone = (o.phone || o.tel || '').toLowerCase();
+      // Recherche par code ou nom d'article
+      const hasArticle = Array.isArray(o.items) && o.items.some(it =>
+        ((it.code || it.productId || '').toLowerCase()).includes(q) ||
+        ((it.name || '').toLowerCase()).includes(q)
+      );
+      return id.includes(q) || facId.includes(q) || name.includes(q) || phone.includes(q) || hasArticle;
+    });
+    const list = document.getElementById('adminOrdersList');
+    if (!results.length) {
+      list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray-400)">
+        <div style="font-size:2rem;margin-bottom:10px">🔍</div>
+        <div style="font-weight:600">Aucun résultat pour "<em>${q}</em>"</div>
+        <div style="font-size:.8rem;margin-top:6px">Vérifiez le code BL (ORD-5F-…) ou FAC-5F-…</div>
+      </div>`;
+    } else {
+      renderAdminOrders(results);
+    }
+  }
+
+  function saveParamLivraison() {
+    const val = parseFloat(document.getElementById('paramLivraison').value);
+    if (isNaN(val) || val < 0) { alert('Veuillez saisir un montant valide.'); return; }
+    localStorage.setItem('5f_livraison_fee', val.toString());
+    const msg = document.getElementById('paramSaveMsg');
+    msg.style.display = 'inline';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  }
+
+  function cancelEdit() {
+    editMode = false;
+    document.getElementById('ficheInfoView').style.display = '';
+    document.getElementById('ficheInfoEdit').style.display = 'none';
+    document.getElementById('editToggleBtn').style.display = '';
+  }
+
+  function saveProfile() {
+    currentUser.firstName = document.getElementById('ef-firstName').value.trim() || currentUser.firstName;
+    currentUser.lastName  = document.getElementById('ef-lastName').value.trim()  || currentUser.lastName;
+    currentUser.phone     = document.getElementById('ef-phone').value.trim();
+    currentUser.city      = document.getElementById('ef-city').value.trim();
+    currentUser.company   = document.getElementById('ef-company').value.trim();
+    currentUser.address   = document.getElementById('ef-address').value.trim();
+
+    // Firestore
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc(currentUser.id).update({
+        firstName: currentUser.firstName, lastName: currentUser.lastName,
+        phone: currentUser.phone, city: currentUser.city,
+        company: currentUser.company, address: currentUser.address,
+      }).catch(e => console.warn('saveProfile Firestore:', e.message));
+    }
+    // localStorage fallback
+    const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+    const idx = clients.findIndex(c => c.id === currentUser.id);
+    if (idx > -1) clients[idx] = currentUser;
+    localStorage.setItem('5f_clients', JSON.stringify(clients));
+
+    cancelEdit();
+    renderUI();
+    showToast('success', 'Profil mis à jour', 'Vos informations ont été sauvegardées avec succès.');
+  }
+
+  function logout() {
+    localStorage.removeItem('5f_session');
+    window.location.href = 'login.html';
+  }
+
+  /* =========================================================
+     CLIENT ORDERS — Historique commandes du client connecté
+     ========================================================= */
+
+  function loadClientOrders() {
+    const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (!session) return;
+
+    const allOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    const myOrders  = allOrders.filter(o => o.clientId === session.id);
+
+    renderClientOrders(myOrders);
+
+    // Mise à jour stats
+    const total   = myOrders.length;
+    const attente = myOrders.filter(o => (o.status||'En attente') === 'En attente').length;
+    const livree  = myOrders.filter(o => (o.status||'') === 'Livrée').length;
+    const totalDT = myOrders.reduce((s,o) => s + (parseFloat(String(o.total||'0').replace(/[^\d.]/g,''))||0), 0);
+
+    document.getElementById('clientOrderStats').innerHTML = `
+      <div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="font-size:1.8rem;font-weight:800;color:var(--navy-dark)">${total}</div>
+        <div style="font-size:.76rem;color:var(--gray-500);margin-top:3px">Total commandes</div>
+      </div>
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:14px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;font-weight:800;color:#f57f17">${attente}</div>
+        <div style="font-size:.76rem;color:#7b5300;margin-top:3px">En attente</div>
+      </div>
+      <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:14px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;font-weight:800;color:#2e7d32">${livree}</div>
+        <div style="font-size:.76rem;color:#1b5e20;margin-top:3px">Livrées</div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));border-radius:14px;padding:18px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:800;color:#fff">${totalDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false})} DT</div>
+        <div style="font-size:.76rem;color:rgba(255,255,255,.75);margin-top:3px">Total dépensé</div>
+      </div>`;
+
+    // Badge sidebar
+    document.getElementById('orderBadge').textContent = total;
+  }
+
+  function renderClientOrders(orders) {
+    const list = document.getElementById('clientOrdersList');
+    if (!list) return;
+
+    if (!orders.length) {
+      list.innerHTML = `
+        <div style="text-align:center;padding:70px 20px;background:#fff;border-radius:16px;border:1px solid var(--gray-100)">
+          <div style="font-size:3rem;margin-bottom:14px">📭</div>
+          <div style="font-size:1rem;font-weight:700;color:var(--navy-dark);margin-bottom:6px">Aucune commande pour l'instant</div>
+          <div style="font-size:.82rem;color:var(--gray-500);margin-bottom:20px">Parcourez notre catalogue et passez votre première commande.</div>
+          <a href="catalogue.html" class="btn btn-primary" style="padding:10px 24px">📦 Voir le Catalogue</a>
+        </div>`;
+      return;
+    }
+
+    const statusStyle = {
+      'En attente': { bg:'#fff8e1', color:'#f57f17', border:'#ffe082', icon:'⏳' },
+      'Confirmée':  { bg:'#e8f5e9', color:'#2e7d32', border:'#a5d6a7', icon:'✅' },
+      'En cours':   { bg:'#e3f2fd', color:'#1565c0', border:'#90caf9', icon:'🚚' },
+      'Livrée':     { bg:'#e8f5e9', color:'#1b5e20', border:'#a5d6a7', icon:'📦' },
+      'Annulée':    { bg:'#ffebee', color:'#c62828', border:'#ef9a9a', icon:'❌' },
+    };
+
+    list.innerHTML = orders.map(o => {
+      const status = o.status || 'En attente';
+      const sc     = statusStyle[status] || statusStyle['En attente'];
+      const items  = Array.isArray(o.items) ? o.items : [];
+      const total  = o.total ? (typeof o.total === 'number' ? o.total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) : o.total) : '—';
+
+      return `
+      <div style="background:#fff;border:1px solid var(--gray-100);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+        <!-- En-tête commande -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+          <div>
+            <div style="font-size:.72rem;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px">${o.date||'—'}</div>
+            <div style="font-size:1rem;font-weight:800;color:var(--navy-dark)">Commande ${o.id||'—'}</div>
+          </div>
+          <span style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.border};font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:50px">
+            ${sc.icon} ${status}
+          </span>
+        </div>
+
+        <!-- Articles -->
+        <div style="background:var(--gray-50);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+          ${items.length
+            ? items.map(i => `
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100)">
+                <span style="font-size:.83rem;color:var(--gray-800)">${i.icon||'📦'} ${i.name||'—'}${i.variant ? ' <span style="color:var(--gray-400);font-size:.78rem">— '+i.variant+'</span>' : ''}</span>
+                <span style="font-size:.83rem;font-weight:600;white-space:nowrap">×${i.qty||1} &nbsp; ${i.price||'—'}</span>
+              </div>`).join('')
+            : '<div style="font-size:.82rem;color:var(--gray-400)">Détail non disponible</div>'
+          }
+        </div>
+
+        <!-- Pied -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="font-size:.78rem;color:var(--gray-500)">${items.length} article${items.length!==1?'s':''} • Livraison à ${o.city||'—'}</div>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total} DT</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* =========================================================
+     ADMIN ORDERS — Temps réel Firebase
+     ========================================================= */
+
+  let _allOrders = [];
+  let _activeFilter = 'tous';
+  let _newOrdersCount = 0;
+  let _ordersInitialized = false;
+
+  function initAdminOrders() {
+    if (_ordersInitialized) return;
+    _ordersInitialized = true;
+
+    // Demander permission notifications via bannière cliquable (navigateur exige un geste utilisateur)
+    if ('Notification' in window && Notification.permission === 'default') {
+      const bar = document.createElement('div');
+      bar.id = 'notif-permission-bar';
+      bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99998;background:#1B4E7A;color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;padding:11px 20px;font-family:Poppins,Arial,sans-serif;font-size:.84rem;flex-wrap:wrap;text-align:center';
+      bar.innerHTML = `
+        <span>🔔 Activez les notifications pour être alerté à chaque nouvelle commande.</span>
+        <button id="notif-allow-btn" style="padding:7px 18px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-family:Poppins,Arial,sans-serif;font-size:.82rem;font-weight:700;cursor:pointer">
+          Activer les notifications
+        </button>
+        <button onclick="document.getElementById('notif-permission-bar').remove()" style="padding:7px 12px;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;font-size:.8rem;cursor:pointer">
+          Plus tard
+        </button>`;
+      document.body.prepend(bar);
+      document.getElementById('notif-allow-btn').addEventListener('click', () => {
+        Notification.requestPermission().then(result => {
+          bar.remove();
+          if (result === 'granted') {
+            new Notification('✅ Notifications activées — Les Cinq Frères', {
+              body: 'Vous serez alerté à chaque nouvelle commande.',
+              icon: 'logo.png'
+            });
+          }
+        });
+      });
+    }
+
+    // Try Firestore real-time listener
+    if (typeof db !== 'undefined') {
+      try {
+        db.collection('orders').orderBy('dateTs', 'desc').onSnapshot(
+          snap => {
+            const orders = [];
+            snap.forEach(doc => orders.push({ _id: doc.id, ...doc.data() }));
+
+            // Detect new orders (added after first load)
+            if (_allOrders.length > 0) {
+              snap.docChanges().forEach(change => {
+                if (change.type === 'added') {
+                  const o = change.doc.data();
+                  _newOrdersCount++;
+                  showNewOrderNotification(o);
+                  document.getElementById('newOrdersBadge').style.display = '';
+                  const badge = document.getElementById('adminOrdersBadge');
+                  badge.style.display = '';
+                  badge.textContent = _newOrdersCount;
+                }
+              });
+            }
+
+            _allOrders = orders;
+            buildProductCatalogue();
+            renderAdminOrders(_allOrders);
+            updateOrdersStats(_allOrders);
+          },
+          err => {
+            console.warn('Firestore onSnapshot:', err.message);
+            loadOrdersFromLocalStorage();
+          }
+        );
+        return;
+      } catch(e) {
+        console.warn('initAdminOrders:', e.message);
+      }
+    }
+    loadOrdersFromLocalStorage();
+  }
+
+  function loadOrdersFromLocalStorage() {
+    const lsOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    _allOrders = lsOrders.map(o => ({ _id: o.id, ...o })).reverse();
+    buildProductCatalogue();
+    renderAdminOrders(_allOrders);
+    updateOrdersStats(_allOrders);
+  }
+
+  function showNewOrderNotification(order) {
+    const clientName = order.clientName || order.nom || 'Nouveau client';
+    const city       = order.city || order.ville || '';
+    const total      = order.totalDT || order.total || '—';
+    const items      = Array.isArray(order.items) ? order.items : [];
+    const itemsText  = items.slice(0,3).map(i => `• ${i.name||'Article'}${i.qty>1?' ×'+i.qty:''}`).join('\n');
+
+    // 1. Son d'alerte (Web Audio API — pas besoin de fichier)
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 150, 300].forEach((delay, i) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = i === 0 ? 880 : i === 1 ? 1100 : 880;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime + delay/1000);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay/1000 + 0.3);
+        osc.start(ctx.currentTime + delay/1000);
+        osc.stop(ctx.currentTime + delay/1000 + 0.35);
+      });
+    } catch(e) {}
+
+    // 2. Bannière in-app détaillée
+    let banner = document.getElementById('newOrderBanner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'newOrderBanner';
+      banner.style.cssText = 'position:fixed;top:18px;right:18px;z-index:99999;max-width:340px;width:calc(100vw - 36px);font-family:Poppins,Arial,sans-serif;';
+      document.body.appendChild(banner);
+    }
+    const card = document.createElement('div');
+    card.style.cssText = 'background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.22);border-left:5px solid #0d9488;padding:16px 18px;margin-bottom:10px;animation:slideInRight .35s ease';
+    card.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="font-size:1.3rem">🛒</div>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:.92rem;color:#1B4E7A;margin-bottom:2px">Nouvelle commande !</div>
+          <div style="font-size:.82rem;font-weight:700;color:#0d9488">${clientName}${city?' — '+city:''}</div>
+          ${itemsText ? `<div style="font-size:.75rem;color:#64748b;margin-top:5px;white-space:pre-line">${itemsText}${items.length>3?`\n• +${items.length-3} autre(s)`:''}</div>` : ''}
+          <div style="font-size:.85rem;font-weight:800;color:#1B4E7A;margin-top:6px">${typeof total === 'number' ? total.toLocaleString('fr-TN',{minimumFractionDigits:3}) : total} DT</div>
+        </div>
+        <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#94a3b8;padding:0;line-height:1;flex-shrink:0">✕</button>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:7px">
+        <button onclick="showSection('admin-orders');this.closest('#newOrderBanner').querySelectorAll('div[style]').forEach(e=>e.remove())"
+          style="flex:1;padding:7px 10px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-family:Poppins,Arial,sans-serif;font-size:.78rem;font-weight:700;cursor:pointer">
+          Voir la commande →
+        </button>
+        <button onclick="this.closest('div[style]').remove()"
+          style="padding:7px 12px;background:#f1f5f9;color:#64748b;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer">
+          Ignorer
+        </button>
+      </div>`;
+    banner.prepend(card);
+    setTimeout(() => { if (card.parentNode) card.remove(); }, 12000);
+
+    // 3. Notification navigateur (fonctionne même si l'onglet est en arrière-plan)
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const notif = new Notification('🛒 Nouvelle commande — Les Cinq Frères', {
+        body: `Client : ${clientName}${city?' ('+city+')':''}\nMontant : ${total} DT${itemsText?'\n'+itemsText:''}`,
+        icon: 'logo.png',
+        badge: 'logo.png',
+        tag: 'new-order-' + (order._id || order.id || Date.now()),
+        requireInteraction: true
+      });
+      notif.onclick = () => { window.focus(); showSection('admin-orders'); notif.close(); };
+    }
+  }
+
+  function updateOrdersStats(orders) {
+    const total     = orders.length;
+    const attente   = orders.filter(o => (o.status||o.statut||'En attente') === 'En attente').length;
+    const confirmee = orders.filter(o => (o.status||o.statut||'') === 'Confirmée').length;
+    const livree    = orders.filter(o => (o.status||o.statut||'') === 'Livrée').length;
+
+    const totalDT = orders.reduce((sum, o) => {
+      const t = parseFloat(String(o.totalDT||o.total||'0').replace(/[^\d.]/g,'')) || 0;
+      return sum + t;
+    }, 0);
+
+    document.getElementById('ordersStats').innerHTML = `
+      <div style="background:#fff;border:1px solid var(--gray-100);border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <div style="font-size:1.5rem;font-weight:800;color:var(--navy-dark)">${total}</div>
+        <div style="font-size:.75rem;color:var(--gray-600)">Total</div>
+      </div>
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:800;color:#f57f17">${attente}</div>
+        <div style="font-size:.75rem;color:#7b5300">En attente</div>
+      </div>
+      <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:800;color:#2e7d32">${confirmee}</div>
+        <div style="font-size:.75rem;color:#1b5e20">Confirmées</div>
+      </div>
+      <div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:800;color:#1565c0">${livree}</div>
+        <div style="font-size:.75rem;color:#0d47a1">Livrées</div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;font-weight:800;color:#fff">${totalDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false})} DT</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.7)">Chiffre d'affaires</div>
+      </div>`;
+  }
+
+  function filterOrders(status, btn) {
+    _activeFilter = status;
+    document.querySelectorAll('.order-filter-btn').forEach(b => {
+      b.style.background  = '#fff';
+      b.style.color       = 'var(--gray-800)';
+      b.style.borderColor = 'var(--gray-200)';
+    });
+    btn.style.background  = 'var(--teal)';
+    btn.style.color       = '#fff';
+    btn.style.borderColor = 'var(--teal)';
+    renderAdminOrders(_allOrders);
+  }
+
+  function renderAdminOrders(orders) {
+    const list = document.getElementById('adminOrdersList');
+    if (!list) return;
+
+    const filtered = _activeFilter === 'tous'
+      ? orders
+      : orders.filter(o => (o.status||o.statut||'En attente') === _activeFilter);
+
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div style="text-align:center;padding:60px 20px;background:#fff;border-radius:16px;border:1px solid var(--gray-100)">
+          <div style="font-size:2.5rem;margin-bottom:12px">📭</div>
+          <div style="font-weight:600;color:var(--gray-600)">Aucune commande trouvée</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(o => orderCard(o)).join('');
+  }
+
+  function orderCard(o) {
+    const status   = o.status || o.statut || 'En attente';
+    const statusColors = {
+      'En attente': { bg:'#fff8e1', color:'#f57f17', border:'#ffe082' },
+      'Confirmée':  { bg:'#e8f5e9', color:'#2e7d32', border:'#a5d6a7' },
+      'En cours':   { bg:'#e3f2fd', color:'#1565c0', border:'#90caf9' },
+      'Livrée':     { bg:'#e8f5e9', color:'#1b5e20', border:'#a5d6a7' },
+      'Annulée':    { bg:'#ffebee', color:'#c62828', border:'#ef9a9a' },
+    };
+    const sc = statusColors[status] || statusColors['En attente'];
+
+    const clientName = o.clientName || o.nom  || '—';
+    const phone      = o.phone      || o.tel  || '—';
+    const city       = o.city       || o.ville|| '—';
+    const total      = o.totalDT    || o.total|| '—';
+    const orderId    = o._id        || o.id   || '—';
+    const dateStr    = o.date || (o.dateTs ? new Date(o.dateTs.toMillis ? o.dateTs.toMillis() : o.dateTs).toLocaleDateString('fr-FR') : '—');
+
+    const items = Array.isArray(o.items) ? o.items : [];
+    const itemsHTML = items.length
+      ? items.map(i => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--gray-100)">
+            <span style="font-size:.82rem;color:var(--gray-800)">${i.icon||'📦'} ${i.name||'—'} ${i.variant ? '<em style="color:var(--gray-500)">— '+i.variant+'</em>' : ''}</span>
+            <span style="font-size:.82rem;font-weight:600;white-space:nowrap">×${i.qty||1} &nbsp; ${i.price||'—'}</span>
+          </div>`).join('')
+      : '<div style="font-size:.82rem;color:var(--gray-400);padding:8px 0">Détail articles non disponible</div>';
+
+    const safeId = orderId.replace(/'/g, "\\'");
+
+    return `
+    <div style="background:#fff;border:1px solid var(--gray-100);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;color:var(--gray-500);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">${dateStr}</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--navy-dark)">${clientName}</div>
+          <div style="font-size:.82rem;color:var(--gray-600);margin-top:2px">📞 ${phone} &nbsp;|&nbsp; 📍 ${city}</div>
+          <div style="font-size:.78rem;color:var(--gray-400);margin-top:2px">N° ${orderId}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.border};font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:50px">${status}</span>
+          <select onchange="updateOrderStatus('${safeId}',this.value)"
+            style="font-family:'Poppins',sans-serif;font-size:.75rem;padding:5px 10px;border:1.5px solid var(--gray-200);border-radius:8px;color:var(--navy-dark);cursor:pointer;outline:none">
+            <option value="" disabled selected>Changer statut…</option>
+            <option value="En attente">⏳ En attente</option>
+            <option value="Confirmée">✅ Confirmée</option>
+            <option value="En cours">🚚 En cours</option>
+            <option value="Livrée">📦 Livrée</option>
+            <option value="Annulée">❌ Annulée</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:var(--gray-50);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+        ${itemsHTML}
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="font-size:.78rem;color:var(--gray-600)">${items.length} article${items.length!==1?'s':''}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="printAdminBon('${safeId}')" style="padding:7px 16px;background:var(--navy-dark);color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
+            🖨️ Bon de Livraison
+          </button>
+          <button onclick="printAdminFacture('${safeId}')" style="padding:7px 14px;background:#92400e;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
+            🧾 Facture
+          </button>
+          <button onclick="requestEditOrder('${safeId}')" style="padding:7px 14px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
+            ✏️ Modifier
+          </button>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total} DT</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function updateOrderStatus(orderId, newStatus) {
+    if (!newStatus) return;
+
+    // Update in Firestore
+    if (typeof db !== 'undefined') {
+      db.collection('orders').doc(orderId).update({ status: newStatus }).then(() => {
+        if (typeof showToast === 'function') {
+          showToast('success', 'Statut mis à jour', `Commande ${orderId} → ${newStatus}`);
+        }
+      }).catch(e => {
+        console.warn('updateStatus:', e.message);
+        updateOrderStatusLocal(orderId, newStatus);
+      });
+    } else {
+      updateOrderStatusLocal(orderId, newStatus);
+    }
+  }
+
+  function updateOrderStatusLocal(orderId, newStatus) {
+    const orders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    const idx = orders.findIndex(o => o.id === orderId);
+    if (idx > -1) {
+      orders[idx].status = newStatus;
+      localStorage.setItem('5f_orders', JSON.stringify(orders));
+    }
+    const o = _allOrders.find(o => o._id === orderId || o.id === orderId);
+    if (o) { o.status = newStatus; o.statut = newStatus; }
+    renderAdminOrders(_allOrders);
+    updateOrdersStats(_allOrders);
+    if (typeof showToast === 'function') {
+      showToast('success', 'Statut mis à jour', `Commande ${orderId} → ${newStatus}`);
+    }
+  }
+
+  /* ===== HELPERS IMPRESSION ===== */
+  function fmtInv(n) {
+    if (n == null || isNaN(n)) return '0.000';
+    const parts = Math.abs(n).toFixed(3).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return parts.join('.');
+  }
+
+  function nombreEnLettres(n) {
+    if (!n) return 'ZÉRO DINAR';
+    n = Math.round(n * 1000) / 1000;
+    const dinars = Math.floor(n);
+    const millimes = Math.round((n - dinars) * 1000);
+    const u = ['','UN','DEUX','TROIS','QUATRE','CINQ','SIX','SEPT','HUIT','NEUF',
+               'DIX','ONZE','DOUZE','TREIZE','QUATORZE','QUINZE','SEIZE','DIX-SEPT','DIX-HUIT','DIX-NEUF'];
+    const dz = ['','','VINGT','TRENTE','QUARANTE','CINQUANTE','SOIXANTE','SOIXANTE','QUATRE-VINGT','QUATRE-VINGT'];
+    function deux(n) {
+      if (!n) return '';
+      if (n < 20) return u[n];
+      const q = Math.floor(n/10), r = n%10;
+      if (q===7||q===9) return dz[q]+'-'+u[10+r];
+      if (q===8) return 'QUATRE-VINGT'+(r?'-'+u[r]:'S');
+      return dz[q]+(!r?'':r===1?'-ET-UN':'-'+u[r]);
+    }
+    function cent(n) {
+      if (!n) return '';
+      const c=Math.floor(n/100),r=n%100;
+      const cs=c===1?'CENT':c>1?u[c]+' CENT'+(r?'':'S'):'';
+      return cs+(r?(cs?' ':'')+deux(r):'');
+    }
+    function mil(n) {
+      if (!n) return '';
+      if (n<1000) return cent(n);
+      const m=Math.floor(n/1000),r=n%1000;
+      const ms=m===1?'MILLE':cent(m)+' MILLES';
+      return ms+(r?' '+cent(r):'');
+    }
+    let res=(mil(dinars)||'ZÉRO')+(dinars>1?' DINARS':' DINAR');
+    if (millimes>0) res+=' '+mil(millimes)+(millimes>1?' MILLIMES':' MILLIME');
+    return res;
+  }
+
+  /* ===== BON DE LIVRAISON (admin) ===== */
+  function printAdminBon(orderId) {
+    const order = _allOrders.find(o => (o._id || o.id) === orderId);
+    if (!order) { showToast('error','Erreur','Commande introuvable.'); return; }
+
+    const items        = Array.isArray(order.items) ? order.items : [];
+    const dateShort    = order.dateTs
+      ? new Date(order.dateTs).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})
+      : new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const client       = order.clientName || order.nom || order.name || '—';
+    const phone        = order.phone  || order.tel   || '—';
+    const city         = order.city   || order.ville  || '—';
+    const addr         = order.address || order.adresse || '';
+    const id           = order._id    || order.id     || '—';
+    const livraisonDT  = typeof order.livraison === 'number' ? order.livraison : (parseFloat(localStorage.getItem('5f_livraison_fee')) || 9);
+    const TVA_RATE_BL  = 0.19;
+
+    let blTotalHT = 0;
+    const itemsRows = items.map(it => {
+      const puttc = it.priceNum || 0;
+      const puht  = puttc / (1 + TVA_RATE_BL);
+      const mntHT = puht * (it.qty||1);
+      blTotalHT  += mntHT;
+      const B = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+      return `<tr>
+        <td style="${B}font-weight:700">${it.code||it.productId||''}</td>
+        <td style="${B}"></td>
+        <td style="${B}">${it.name||'—'}${it.variant?' <em style="color:#666;font-size:.9em">— '+it.variant+'</em>':''}</td>
+        <td style="${B}text-align:center">1</td>
+        <td style="${B}text-align:center;font-weight:700">${it.qty||1}</td>
+        <td style="${B}text-align:right;white-space:nowrap">${puttc>0?fmtInv(puht):'—'}</td>
+        <td style="${B}text-align:right;font-weight:700;white-space:nowrap">${mntHT>0?fmtInv(mntHT):'—'}</td>
+        <td style="${B}text-align:center">${puttc>0?'19.00':''}</td>
+        <td style="${B}text-align:right;white-space:nowrap">${puttc>0?fmtInv(puttc):'—'}</td>
+      </tr>`;
+    }).join('');
+    const blLivHT   = livraisonDT / (1 + TVA_RATE_BL);
+    blTotalHT      += blLivHT;
+    const blTVA     = blTotalHT * TVA_RATE_BL;
+    const blTTC     = blTotalHT + blTVA;
+    const B0 = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+
+    let overlay = document.getElementById('admin-bon-overlay');
+    if (!overlay) { overlay = document.createElement('div'); overlay.id = 'admin-bon-overlay'; document.body.appendChild(overlay); }
+    overlay.style.cssText = 'display:block;position:fixed;inset:0;background:#777;z-index:9999;overflow:auto;padding:24px 12px';
+
+    overlay.innerHTML = `
+    <style>
+      @media print{
+        .no-print{display:none!important}
+        body>*:not(#admin-bon-overlay){display:none!important}
+        #admin-bon-overlay{position:static!important;background:none!important;padding:0!important;overflow:visible!important}
+        @page{size:A4 portrait;margin:.8cm 1.2cm}
+      }
+    </style>
+    <div style="max-width:820px;margin:0 auto;background:#fff;border:1px solid #aaa;font-family:Arial,Helvetica,sans-serif;font-size:12.5px;color:#111;line-height:1.4">
+
+      <!-- Header: Logo gauche | Infos droite -->
+      <div style="display:flex;align-items:center;padding:10px 14px;border-bottom:2px solid #333;gap:16px">
+        <div style="flex-shrink:0"><img src="logo.png" style="height:72px;object-fit:contain"></div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em">SOCIÉTÉ MAGASIN LES CINQ FRÈRES</div>
+          <div style="font-size:.73rem;font-weight:600;margin-top:1px">VENTE PRODUITS DIVERS</div>
+          <div style="font-size:.69rem;color:#444;margin-top:2px">AVENUE FATOUMA BOURGUIBA, LA SOUKRA - 2073 ARIANA</div>
+          <div style="font-size:.69rem;color:#444">TVA : 1544770 SAM 002 &nbsp;|&nbsp; Tél : 29 94 01 86 / 72 58 87 17</div>
+          <div style="font-size:.69rem;color:#444">Web : www.magasinlescinqfreres.com &nbsp;|&nbsp; e-mail : contact.gt@smcf.tn</div>
+        </div>
+      </div>
+
+      <!-- Corps: Gauche | Droite -->
+      <div style="display:flex;border-bottom:2px solid #333">
+
+        <!-- Gauche -->
+        <div style="width:235px;flex-shrink:0;border-right:1px solid #999">
+          <div style="padding:5px 10px;border-bottom:1px solid #999;font-size:.75rem;font-weight:700;min-height:26px">CHAUFFEUR :</div>
+          <div style="padding:5px 10px;border-bottom:1px solid #999;font-size:.75rem;font-weight:700;min-height:26px">VÉHICULE :</div>
+          <div style="padding:10px 14px;border-bottom:1px solid #999">
+            <div style="border:2.5px solid #333;padding:10px 12px;text-align:center">
+              <div style="font-size:.95rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;line-height:1.3">BON DE LIVRAISON</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 10px;font-size:.64rem;color:#888;border-bottom:1px solid #ddd">
+            <span>Numéro</span><span>Date</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #999;font-size:.8rem">
+            <span style="font-weight:700">${id}</span>
+            <span style="font-weight:700">${dateShort}</span>
+          </div>
+          <div style="display:flex;gap:8px;padding:5px 10px;border-bottom:1px solid #999;font-size:.74rem">
+            <span style="font-weight:700">—</span><span>—</span>
+          </div>
+          <div style="padding:5px 10px;font-size:.7rem">
+            Code Client : <strong>${id.replace('ORD-5F-','')}</strong> &nbsp; Réf. Commande :
+          </div>
+        </div>
+
+        <!-- Droite -->
+        <div style="flex:1;display:flex;flex-direction:column">
+          <div style="padding:3px 12px;border-bottom:1px solid #ddd;font-size:.68rem;text-align:right;color:#aaa;min-height:22px"></div>
+          <div style="padding:5px 12px;border-bottom:1px solid #999;font-size:.74rem">
+            <strong>POINT DE VENTE : ARIANA</strong> &nbsp;&nbsp;&nbsp; Page 1 de 1
+          </div>
+          <div style="padding:14px 16px;flex:1">
+            <div style="font-size:1rem;font-weight:900;text-transform:uppercase;margin-bottom:7px;letter-spacing:.02em">${client}</div>
+            ${addr?`<div style="font-size:.82rem;margin-bottom:3px">${addr}</div>`:''}
+            ${city&&city!=='—'?`<div style="font-size:.82rem;margin-bottom:6px">${city}</div>`:''}
+            <div style="font-size:.82rem;display:flex;gap:16px">
+              <span>I.F.</span>
+              <span>TEL &nbsp; ${phone&&phone!=='—'?phone:'—'}</span>
+            </div>
+          </div>
+          <div style="padding:5px 12px;border-top:1px solid #999;font-size:.76rem;font-weight:700;text-align:right">AU COMPTANT</div>
+        </div>
+      </div>
+
+      <!-- Tableau -->
+      <table style="width:100%;border-collapse:collapse;font-size:.77rem">
+        <thead>
+          <tr style="background:#4a4a4a;color:#fff">
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666;width:66px">Référence</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666;width:74px">Code Barre</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666">Désignation</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:38px">Col.</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:40px">Qté</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">P.U. HT</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">Mnt H.T</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:50px">TVA</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">P.U. TTC</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsRows}
+          <tr style="background:#f2f2f2">
+            <td style="${B0}font-weight:700">—</td>
+            <td style="${B0}"></td>
+            <td style="${B0}font-weight:600">Frais de Livraison</td>
+            <td style="${B0}text-align:center">1</td>
+            <td style="${B0}text-align:center">1</td>
+            <td style="${B0}text-align:right;white-space:nowrap">${fmtInv(blLivHT)}</td>
+            <td style="${B0}text-align:right;font-weight:700;white-space:nowrap">${fmtInv(blLivHT)}</td>
+            <td style="${B0}text-align:center">19.00</td>
+            <td style="${B0}text-align:right;white-space:nowrap">${fmtInv(livraisonDT)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Bas: TVA | CACHET | Totaux -->
+      <div style="display:flex;border-top:2px solid #333;min-height:90px">
+
+        <!-- TVA -->
+        <div style="flex:1;border-right:1px solid #999;padding:10px 12px">
+          <table style="width:100%;border-collapse:collapse;font-size:.74rem">
+            <thead><tr>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:center">Taxe</th>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:right">Base</th>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:right">Montant</th>
+            </tr></thead>
+            <tbody><tr>
+              <td style="padding:4px 6px;text-align:center">19.00</td>
+              <td style="padding:4px 6px;text-align:right;white-space:nowrap">${fmtInv(blTotalHT)}</td>
+              <td style="padding:4px 6px;text-align:right;white-space:nowrap">${fmtInv(blTVA)}</td>
+            </tr></tbody>
+            <tfoot><tr>
+              <td colspan="2" style="padding:5px 6px;border-top:1px solid #333;text-align:right;font-weight:700"></td>
+              <td style="padding:5px 6px;border-top:1px solid #333;text-align:right;font-weight:900;white-space:nowrap">${fmtInv(blTVA)}</td>
+            </tr></tfoot>
+          </table>
+        </div>
+
+        <!-- CACHET centre -->
+        <div style="width:175px;flex-shrink:0;border-right:1px solid #999;padding:8px 10px;text-align:center">
+          <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em">CACHET &amp; SIGNATURE</div>
+        </div>
+
+        <!-- Totaux -->
+        <div style="width:210px;flex-shrink:0;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:3px">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>TOTAL HT</span><span style="font-weight:700;white-space:nowrap">${fmtInv(blTotalHT)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>TOTAL HT (NET)</span><span style="font-weight:700;white-space:nowrap">${fmtInv(blTotalHT)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>T.V.A.</span><span style="font-weight:700;white-space:nowrap">${fmtInv(blTVA)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.86rem;font-weight:900;padding:5px 0 2px;border-top:2px solid #333;margin-top:3px">
+            <span>TOTAL T.T.C.</span><span style="white-space:nowrap">${fmtInv(blTTC)}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Montant en lettres -->
+      <div style="border-top:1px solid #ccc;padding:5px 12px 2px;font-size:.71rem;font-weight:700">ARRETÉE LA PRÉSENTE À LA SOMME DE :</div>
+      <div style="padding:2px 12px 7px;font-size:.74rem;font-weight:700;text-transform:uppercase">${nombreEnLettres(blTTC)}</div>
+
+      <!-- Signature client -->
+      <div style="border-top:1px solid #ccc;padding:5px 12px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;text-align:center">
+        CACHET &amp; SIGNATURE CLIENT
+      </div>
+
+      <!-- Boutons -->
+      <div class="no-print" style="display:flex;gap:12px;justify-content:center;padding:14px;background:#f0f0f0;border-top:1px solid #ccc">
+        <button onclick="window.print()" style="padding:9px 28px;background:#333;color:#fff;border:none;border-radius:6px;font-family:Arial,sans-serif;font-size:.86rem;font-weight:700;cursor:pointer">🖨️ Imprimer</button>
+        <button onclick="document.getElementById('admin-bon-overlay').style.display='none'" style="padding:9px 28px;background:#e2e8f0;color:#334155;border:none;border-radius:6px;font-family:Arial,sans-serif;font-size:.86rem;font-weight:600;cursor:pointer">✕ Fermer</button>
+      </div>
+    </div>`;
+  }
+
+  /* ===== FACTURE (admin) ===== */
+  function printAdminFacture(orderId) {
+    const order = _allOrders.find(o => (o._id || o.id) === orderId);
+    if (!order) { showToast('error','Erreur','Commande introuvable.'); return; }
+
+    const societe   = prompt('Nom de la Société / Client :');
+    if (societe === null) return;
+    const matricule = prompt('Matricule Fiscale (I.F.) :');
+    if (matricule === null) return;
+
+    const items        = Array.isArray(order.items) ? order.items : [];
+    const dateShort    = order.dateTs
+      ? new Date(order.dateTs).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})
+      : new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const client       = order.clientName || order.nom || order.name || '—';
+    const phone        = order.phone  || order.tel   || '—';
+    const city         = order.city   || order.ville  || '—';
+    const addr         = order.address || order.adresse || '';
+    const id           = order._id    || order.id     || '—';
+    const facId        = 'FAC-5F-' + String(id).replace('ORD-5F-','');
+    const livraisonDT  = typeof order.livraison === 'number' ? order.livraison : (parseFloat(localStorage.getItem('5f_livraison_fee')) || 9);
+    const TVA_RATE     = 0.19;
+    const TIMBRE       = 1.000;
+
+    let totalHT = 0;
+    const itemsRows = items.map(it => {
+      const puttc = it.priceNum || 0;
+      const puht  = puttc / (1 + TVA_RATE);
+      const mntHT = puht * (it.qty||1);
+      totalHT    += mntHT;
+      const F = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+      return `<tr>
+        <td style="${F}font-weight:700">${it.code||it.productId||''}</td>
+        <td style="${F}"></td>
+        <td style="${F}">${it.name||'—'}${it.variant?' <em style="color:#666;font-size:.9em">— '+it.variant+'</em>':''}</td>
+        <td style="${F}text-align:center">1</td>
+        <td style="${F}text-align:center;font-weight:700">${it.qty||1}</td>
+        <td style="${F}text-align:right;white-space:nowrap">${puttc>0?fmtInv(puht):'—'}</td>
+        <td style="${F}text-align:right;font-weight:700;white-space:nowrap">${mntHT>0?fmtInv(mntHT):'—'}</td>
+        <td style="${F}text-align:center">${puttc>0?'19.00':''}</td>
+        <td style="${F}text-align:right;white-space:nowrap">${puttc>0?fmtInv(puttc):'—'}</td>
+      </tr>`;
+    }).join('');
+
+    const livHT    = livraisonDT / (1 + TVA_RATE);
+    totalHT       += livHT;
+    const tvaTotal = totalHT * TVA_RATE;
+    const totalTTC = totalHT + tvaTotal + TIMBRE;
+    const F0 = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+
+    let overlay = document.getElementById('admin-bon-overlay');
+    if (!overlay) { overlay = document.createElement('div'); overlay.id = 'admin-bon-overlay'; document.body.appendChild(overlay); }
+    overlay.style.cssText = 'display:block;position:fixed;inset:0;background:#777;z-index:9999;overflow:auto;padding:24px 12px';
+
+    overlay.innerHTML = `
+    <style>
+      @media print{
+        .no-print{display:none!important}
+        body>*:not(#admin-bon-overlay){display:none!important}
+        #admin-bon-overlay{position:static!important;background:none!important;padding:0!important;overflow:visible!important}
+        @page{size:A4 portrait;margin:.8cm 1.2cm}
+      }
+    </style>
+    <div style="max-width:820px;margin:0 auto;background:#fff;border:1px solid #aaa;font-family:Arial,Helvetica,sans-serif;font-size:12.5px;color:#111;line-height:1.4">
+
+      <!-- Header: Logo gauche | Infos droite -->
+      <div style="display:flex;align-items:center;padding:10px 14px;border-bottom:2px solid #333;gap:16px">
+        <div style="flex-shrink:0"><img src="logo.png" style="height:72px;object-fit:contain"></div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em">SOCIÉTÉ MAGASIN LES CINQ FRÈRES</div>
+          <div style="font-size:.73rem;font-weight:600;margin-top:1px">VENTE PRODUITS DIVERS</div>
+          <div style="font-size:.69rem;color:#444;margin-top:2px">AVENUE FATOUMA BOURGUIBA, LA SOUKRA - 2073 ARIANA</div>
+          <div style="font-size:.69rem;color:#444">TVA : 1544770 SAM 002 &nbsp;|&nbsp; Tél : 29 94 01 86 / 72 58 87 17</div>
+          <div style="font-size:.69rem;color:#444">Web : www.magasinlescinqfreres.com &nbsp;|&nbsp; e-mail : contact.gt@smcf.tn</div>
+        </div>
+      </div>
+
+      <!-- Corps: Gauche | Droite -->
+      <div style="display:flex;border-bottom:2px solid #333">
+
+        <!-- Gauche -->
+        <div style="width:235px;flex-shrink:0;border-right:1px solid #999">
+          <div style="padding:5px 10px;border-bottom:1px solid #999;font-size:.75rem;font-weight:700;min-height:26px">CHAUFFEUR :</div>
+          <div style="padding:5px 10px;border-bottom:1px solid #999;font-size:.75rem;font-weight:700;min-height:26px">VÉHICULE :</div>
+          <div style="padding:10px 14px;border-bottom:1px solid #999">
+            <div style="border:2.5px solid #333;padding:10px 12px;text-align:center">
+              <div style="font-size:.95rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em">FACTURE</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 10px;font-size:.64rem;color:#888;border-bottom:1px solid #ddd">
+            <span>Numéro</span><span>Date</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;border-bottom:1px solid #999;font-size:.8rem">
+            <span style="font-weight:700">${facId}</span>
+            <span style="font-weight:700">${dateShort}</span>
+          </div>
+          <div style="display:flex;gap:8px;padding:5px 10px;border-bottom:1px solid #999;font-size:.74rem">
+            <span style="font-weight:700">—</span><span>—</span>
+          </div>
+          <div style="padding:5px 10px;font-size:.7rem">
+            Code Client : <strong>${id.replace('ORD-5F-','')}</strong> &nbsp; Réf. Commande :
+          </div>
+        </div>
+
+        <!-- Droite -->
+        <div style="flex:1;display:flex;flex-direction:column">
+          <div style="padding:3px 12px;border-bottom:1px solid #ddd;font-size:.68rem;text-align:right;color:#aaa;min-height:22px"></div>
+          <div style="padding:5px 12px;border-bottom:1px solid #999;font-size:.74rem">
+            <strong>POINT DE VENTE : ARIANA</strong> &nbsp;&nbsp;&nbsp; Page 1 de 1
+          </div>
+          <div style="padding:14px 16px;flex:1">
+            <div style="font-size:1rem;font-weight:900;text-transform:uppercase;margin-bottom:7px;letter-spacing:.02em">${societe||client}</div>
+            ${addr?`<div style="font-size:.82rem;margin-bottom:3px">${addr}</div>`:''}
+            ${city&&city!=='—'?`<div style="font-size:.82rem;margin-bottom:6px">${city}</div>`:''}
+            <div style="font-size:.82rem;display:flex;gap:16px">
+              <span>I.F. &nbsp; ${matricule||''}</span>
+              <span>TEL &nbsp; ${phone&&phone!=='—'?phone:'—'}</span>
+            </div>
+          </div>
+          <div style="padding:5px 12px;border-top:1px solid #999;font-size:.76rem;font-weight:700;text-align:right">AU COMPTANT</div>
+        </div>
+      </div>
+
+      <!-- Tableau -->
+      <table style="width:100%;border-collapse:collapse;font-size:.77rem">
+        <thead>
+          <tr style="background:#4a4a4a;color:#fff">
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666;width:66px">Référence</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666;width:74px">Code Barre</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:left;border:1px solid #666">Désignation</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:38px">Col.</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:40px">Qté</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">P.U. HT</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">Mnt H.T</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:center;border:1px solid #666;width:50px">TVA</th>
+            <th style="padding:7px 9px;font-weight:600;text-align:right;border:1px solid #666;width:74px">P.U. TTC</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsRows}
+          <tr style="background:#f2f2f2">
+            <td style="${F0}font-weight:700">—</td>
+            <td style="${F0}"></td>
+            <td style="${F0}font-weight:600">Frais de Livraison</td>
+            <td style="${F0}text-align:center">1</td>
+            <td style="${F0}text-align:center">1</td>
+            <td style="${F0}text-align:right;white-space:nowrap">${fmtInv(livHT)}</td>
+            <td style="${F0}text-align:right;font-weight:700;white-space:nowrap">${fmtInv(livHT)}</td>
+            <td style="${F0}text-align:center">19.00</td>
+            <td style="${F0}text-align:right;white-space:nowrap">${fmtInv(livraisonDT)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Bas: TVA | CACHET | Totaux -->
+      <div style="display:flex;border-top:2px solid #333;min-height:90px">
+
+        <!-- TVA -->
+        <div style="flex:1;border-right:1px solid #999;padding:10px 12px">
+          <table style="width:100%;border-collapse:collapse;font-size:.74rem">
+            <thead><tr>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:center">Taxe</th>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:right">Base</th>
+              <th style="padding:4px 6px;border-bottom:1px solid #333;text-align:right">Montant</th>
+            </tr></thead>
+            <tbody><tr>
+              <td style="padding:4px 6px;text-align:center">19.00</td>
+              <td style="padding:4px 6px;text-align:right;white-space:nowrap">${fmtInv(totalHT)}</td>
+              <td style="padding:4px 6px;text-align:right;white-space:nowrap">${fmtInv(tvaTotal)}</td>
+            </tr></tbody>
+            <tfoot><tr>
+              <td colspan="2" style="padding:5px 6px;border-top:1px solid #333;text-align:right;font-weight:700"></td>
+              <td style="padding:5px 6px;border-top:1px solid #333;text-align:right;font-weight:900;white-space:nowrap">${fmtInv(tvaTotal)}</td>
+            </tr></tfoot>
+          </table>
+        </div>
+
+        <!-- CACHET centre -->
+        <div style="width:175px;flex-shrink:0;border-right:1px solid #999;padding:8px 10px;text-align:center">
+          <div style="font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em">CACHET &amp; SIGNATURE</div>
+        </div>
+
+        <!-- Totaux -->
+        <div style="width:210px;flex-shrink:0;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:3px">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>TOTAL HT</span><span style="font-weight:700;white-space:nowrap">${fmtInv(totalHT)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>TOTAL HT (NET)</span><span style="font-weight:700;white-space:nowrap">${fmtInv(totalHT)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>T.V.A.</span><span style="font-weight:700;white-space:nowrap">${fmtInv(tvaTotal)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:2px 0;border-bottom:1px solid #e5e7eb">
+            <span>TIMBRE FISCAL</span><span style="font-weight:700;white-space:nowrap">${fmtInv(TIMBRE)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.86rem;font-weight:900;padding:5px 0 2px;border-top:2px solid #333;margin-top:3px">
+            <span>TOTAL T.T.C.</span><span style="white-space:nowrap">${fmtInv(totalTTC)}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Montant en lettres -->
+      <div style="border-top:1px solid #ccc;padding:5px 12px 2px;font-size:.71rem;font-weight:700">ARRETÉE LA PRÉSENTE FACTURE À LA SOMME DE :</div>
+      <div style="padding:2px 12px 7px;font-size:.74rem;font-weight:700;text-transform:uppercase">${nombreEnLettres(totalTTC)}</div>
+
+      <!-- Signature client -->
+      <div style="border-top:1px solid #ccc;padding:5px 12px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;text-align:center">
+        CACHET &amp; SIGNATURE CLIENT
+      </div>
+
+      <!-- Boutons -->
+      <div class="no-print" style="display:flex;gap:12px;justify-content:center;padding:14px;background:#f0f0f0;border-top:1px solid #ccc">
+        <button onclick="window.print()" style="padding:9px 28px;background:#333;color:#fff;border:none;border-radius:6px;font-family:Arial,sans-serif;font-size:.86rem;font-weight:700;cursor:pointer">🖨️ Imprimer la Facture</button>
+        <button onclick="document.getElementById('admin-bon-overlay').style.display='none'" style="padding:9px 28px;background:#e2e8f0;color:#334155;border:none;border-radius:6px;font-family:Arial,sans-serif;font-size:.86rem;font-weight:600;cursor:pointer">✕ Fermer</button>
+      </div>
+    </div>`;
+  }
+</script>
+</body>
+</html>

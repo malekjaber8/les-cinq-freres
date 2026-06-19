@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Pages privées — ne pas indexer
+Disallow: /dashboard.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /commandes.html
+
+# Sitemap
+Sitemap: https://www.lescinqfreres.com/sitemap.xml

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Les Cinq Frères</title>
+  <meta name="description" content="Connectez-vous à votre espace client Les Cinq Frères pour suivre vos commandes.">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Les Cinq Frères">
+  <meta property="og:title"       content="Connexion — Les Cinq Frères">
+  <meta property="og:image"       content="https://www.lescinqfreres.com/logo.png">
+  <meta name="robots"             content="noindex,nofollow">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body>
+<div class="auth-page">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <img src="magasin.jpg" alt="Notre Magasin" class="store-bg">
+    <a href="index.html" class="auth-left-logo">
+      <img src="logo.png" alt="Logo">
+      <div>
+        <div class="brand">Les Cinq Frères</div>
+        <div class="sub">Société Magasin • Tunisie</div>
+      </div>
+    </a>
+    <div class="auth-left-content">
+      <h2>Bienvenue sur votre <span>Espace Client</span> Professionnel</h2>
+      <p>Accédez à votre catalogue personnalisé, suivez vos commandes et bénéficiez de vos tarifs professionnels.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><div class="icon-wrap">📦</div><div class="text"><strong>Catalogue complet</strong><span>100+ références produits</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">💰</div><div class="text"><strong>Prix professionnels</strong><span>Tarifs dégressifs</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">📋</div><div class="text"><strong>Suivi commandes</strong><span>Statut en temps réel</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">🎁</div><div class="text"><strong>Programme fidélité</strong><span>Points et récompenses</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <a href="index.html" class="back-link">← Retour à l'accueil</a>
+
+      <div class="form-header">
+        <h1 id="formTitle">Connexion</h1>
+        <p id="formSub">Entrez vos identifiants pour accéder à votre compte</p>
+      </div>
+
+      <!-- Role Selector supprimé : rôle détecté automatiquement -->
+
+      <div class="form-alert" id="formAlert"><span id="alertIcon"></span><span id="alertMsg"></span></div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Adresse Email</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="email" placeholder="exemple@email.com" autocomplete="email">
+          </div>
+          <div class="field-error" id="emailError">Adresse email invalide.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de Passe</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+            <span class="toggle-pass" onclick="togglePass('password',this)">👁️</span>
+          </div>
+          <div class="field-error" id="passwordError">Mot de passe requis.</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--gray-600);cursor:pointer">
+            <input type="checkbox" id="rememberMe" style="accent-color:var(--teal);width:15px;height:15px">
+            Se souvenir de moi
+          </label>
+          <a href="#" style="font-size:.83rem;color:var(--teal-dark);font-weight:500" onclick="forgotPassword(event)">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-text">Se Connecter</span>
+          <span class="spinner"></span>
+        </button>
+      </form>
+
+      <div class="form-divider"><span>Pas encore de compte ?</span></div>
+      <a href="register.html" class="btn" style="width:100%;justify-content:center;background:var(--gray-50);border:1.5px solid var(--gray-200);color:var(--navy-dark);border-radius:var(--radius);padding:12px">
+        <span>🚀</span> Créer un compte gratuitement
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script>
+  let currentRole = 'client';
+
+  const _adminData = {
+    id: 'ADMIN-001', role: 'admin',
+    firstName: 'Admin', lastName: '5F',
+    email: 'admin@cinqfreres.tn',
+    password: btoa('Admin123!'),
+    phone: '+216 00 000 000', company: 'Les Cinq Frères', activity: 'Administration',
+    city: 'Tunis', address: '', createdAt: '01 Janvier 2024',
+    status: 'Actif', points: 0, orders: 0, totalSpent: 0,
+  };
+
+  // Seed admin dans Firestore (et localStorage en fallback)
+  (function seedAdmin() {
+    // Toujours garder en localStorage comme fallback
+    const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+    if (!clients.find(c => c.email === 'admin@cinqfreres.tn')) {
+      clients.push(_adminData);
+      localStorage.setItem('5f_clients', JSON.stringify(clients));
+    }
+    // Seed dans Firestore
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc('ADMIN-001').get()
+        .then(doc => { if (!doc.exists) return db.collection('clients').doc('ADMIN-001').set(_adminData); })
+        .catch(e => console.warn('seedAdmin Firestore:', e.message));
+    }
+  })();
+
+  function selectRole(btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentRole = btn.dataset.role;
+    document.getElementById('formTitle').textContent = currentRole === 'admin' ? 'Accès Administrateur' : 'Connexion';
+    document.getElementById('formSub').textContent   = currentRole === 'admin'
+      ? 'Connectez-vous au tableau de bord de gestion'
+      : 'Entrez vos identifiants pour accéder à votre compte';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email    = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+    let valid = true;
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('emailError').classList.add('show');
+      document.getElementById('email').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('emailError').classList.remove('show');
+      document.getElementById('email').classList.remove('error');
+    }
+    if (!password) {
+      document.getElementById('passwordError').classList.add('show');
+      document.getElementById('password').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('passwordError').classList.remove('show');
+      document.getElementById('password').classList.remove('error');
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    function onLoginSuccess(user) {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      localStorage.setItem('5f_session', JSON.stringify({ id: user.id, role: user.role }));
+      showAlert('success', '✅', `Bienvenue ${user.firstName} ! Redirection…`);
+      setTimeout(() => {
+        if (user.role === 'admin') {
+          window.location.href = 'dashboard.html';
+        } else {
+          const params = new URLSearchParams(window.location.search);
+          window.location.href = params.get('redirect') || 'index.html';
+        }
+      }, 1200);
+    }
+
+    function onLoginFail() {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      showAlert('error', '❌', 'Email ou mot de passe incorrect. Vérifiez vos identifiants.');
+    }
+
+    function loginViaLocalStorage() {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      const user = clients.find(c => c.email === email && c.password === btoa(password));
+      if (user) onLoginSuccess(user); else onLoginFail();
+    }
+
+    if (typeof db !== 'undefined') {
+      db.collection('clients')
+        .where('email', '==', email)
+        .where('password', '==', btoa(password))
+        .limit(1)
+        .get()
+        .then(snap => {
+          if (snap.empty) { onLoginFail(); return; }
+          onLoginSuccess(snap.docs[0].data());
+        })
+        .catch(e => { console.warn('Firestore login:', e.message); loginViaLocalStorage(); });
+    } else {
+      setTimeout(loginViaLocalStorage, 1200);
+    }
+  });
+
+  function showAlert(type, icon, msg) {
+    const el = document.getElementById('formAlert');
+    el.className = `form-alert ${type} show`;
+    document.getElementById('alertIcon').textContent = icon;
+    document.getElementById('alertMsg').textContent  = msg;
+  }
+
+  function forgotPassword(e) {
+    e.preventDefault();
+    showToast('info', 'Mot de passe oublié', 'Fonctionnalité bientôt disponible. Contactez-nous au +216 XX XXX XXX.');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Commandes — Les Cinq Frères</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    body { background:var(--gray-50); }
+
+    .cmd-nav {
+      background:var(--white);
+      border-bottom:1px solid var(--gray-100);
+      padding:0 28px;
+      height:64px;
+      display:flex; align-items:center; justify-content:space-between;
+      position:sticky; top:0; z-index:100;
+      box-shadow:var(--shadow-sm);
+    }
+    .cmd-nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .cmd-nav-logo img { height:38px; border-radius:6px; }
+    .cmd-nav-logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.92rem; color:var(--navy-dark); }
+    .cmd-nav-logo .sub   { font-size:.7rem; color:var(--teal-dark); }
+    .cmd-nav-right { display:flex; align-items:center; gap:10px; }
+
+    .cmd-wrap { max-width:820px; margin:0 auto; padding:32px 20px; }
+
+    .cmd-header {
+      background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));
+      border-radius:var(--radius-lg);
+      padding:28px 32px;
+      color:#fff;
+      margin-bottom:28px;
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    }
+    .cmd-header h1 { font-family:'Raleway',sans-serif; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+    .cmd-header p  { font-size:.83rem; opacity:.8; }
+
+    .stats-strip {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
+      gap:12px;
+      margin-bottom:28px;
+    }
+    .stat-box {
+      background:#fff;
+      border:1px solid var(--gray-100);
+      border-radius:14px;
+      padding:16px 18px;
+      text-align:center;
+      box-shadow:0 1px 4px rgba(0,0,0,.05);
+    }
+    .stat-box .val { font-family:'Raleway',sans-serif; font-size:1.7rem; font-weight:800; color:var(--navy-dark); line-height:1; }
+    .stat-box .lbl { font-size:.74rem; color:var(--gray-500); margin-top:5px; }
+
+    .cmd-list-title {
+      font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+      color:var(--gray-500); margin-bottom:14px;
+    }
+
+    .cmd-card {
+      background:#fff;
+      border:1px solid var(--gray-100);
+      border-radius:16px;
+      padding:22px;
+      margin-bottom:16px;
+      box-shadow:0 2px 8px rgba(0,0,0,.05);
+      transition:box-shadow .2s;
+    }
+    .cmd-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); }
+
+    .cmd-card-head {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap; gap:10px; margin-bottom:16px;
+    }
+    .cmd-id   { font-size:1rem; font-weight:800; color:var(--navy-dark); }
+    .cmd-date { font-size:.74rem; color:var(--gray-400); font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+
+    .status-pill {
+      font-size:.76rem; font-weight:700;
+      padding:5px 14px; border-radius:50px;
+      border:1px solid;
+      white-space:nowrap;
+    }
+
+    .items-box {
+      background:var(--gray-50);
+      border-radius:10px;
+      padding:12px 14px;
+      margin-bottom:14px;
+    }
+    .item-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:5px 0;
+      border-bottom:1px solid var(--gray-100);
+      font-size:.83rem;
+    }
+    .item-row:last-child { border-bottom:none; }
+    .item-row .item-name { color:var(--gray-800); }
+    .item-row .item-price { font-weight:700; white-space:nowrap; color:var(--navy-dark); }
+
+    .cmd-card-foot {
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:8px;
+    }
+    .cmd-city { font-size:.78rem; color:var(--gray-500); }
+    .cmd-total { font-family:'Raleway',sans-serif; font-size:1.15rem; font-weight:800; color:var(--navy-dark); }
+
+    .empty-state {
+      text-align:center;
+      padding:80px 20px;
+      background:#fff;
+      border-radius:16px;
+      border:1px solid var(--gray-100);
+    }
+    .empty-state .e-icon { font-size:3.5rem; margin-bottom:14px; }
+    .empty-state h3 { font-family:'Raleway',sans-serif; font-size:1.2rem; font-weight:800; color:var(--navy-dark); margin-bottom:8px; }
+    .empty-state p  { font-size:.85rem; color:var(--gray-500); margin-bottom:24px; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="cmd-nav">
+  <a href="index.html" class="cmd-nav-logo">
+    <img src="logo.png" alt="Logo">
+    <div>
+      <div class="brand">Les Cinq Frères</div>
+      <div class="sub">Mes Commandes</div>
+    </div>
+  </a>
+  <div class="cmd-nav-right">
+    <a href="catalogue.html" class="btn btn-outline-navy" style="padding:8px 18px;font-size:.83rem">📦 Catalogue</a>
+    <a href="panier.html" class="btn btn-primary" style="padding:8px 18px;font-size:.83rem">🛒 Panier</a>
+    <button onclick="logout()" style="background:none;border:none;cursor:pointer;font-size:.83rem;color:var(--gray-500);padding:8px 12px;border-radius:8px" title="Déconnexion">🚪 Déconnexion</button>
+  </div>
+</nav>
+
+<div class="cmd-wrap">
+
+  <!-- Header -->
+  <div class="cmd-header">
+    <div>
+      <h1>📋 Mes Commandes</h1>
+      <p id="headerSub">Chargement…</p>
+    </div>
+    <a href="catalogue.html" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:10px 20px;font-size:.83rem;border-radius:var(--radius)">
+      + Nouvelle commande
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip" id="statsStrip"></div>
+
+  <!-- Liste -->
+  <div class="cmd-list-title" id="listTitle"></div>
+  <div id="ordersList"></div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script>
+  const STATUS_STYLE = {
+    'En attente': { bg:'#fff8e1', color:'#f57f17', border:'#ffe082', icon:'⏳' },
+    'Confirmée':  { bg:'#e8f5e9', color:'#2e7d32', border:'#a5d6a7', icon:'✅' },
+    'En cours':   { bg:'#e3f2fd', color:'#1565c0', border:'#90caf9', icon:'🚚' },
+    'Livrée':     { bg:'#e8f5e9', color:'#1b5e20', border:'#a5d6a7', icon:'📦' },
+    'Annulée':    { bg:'#ffebee', color:'#c62828', border:'#ef9a9a', icon:'❌' },
+  };
+
+  (function init() {
+    const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+    if (!session) { window.location.href = 'login.html?redirect=commandes.html'; return; }
+
+    function renderForUser(firstName, orders) {
+      document.getElementById('headerSub').textContent =
+        'Bonjour ' + firstName + ' — voici l\'historique de vos commandes';
+      const sorted = orders.slice().sort((a,b) => (b.dateTs||0) - (a.dateTs||0));
+      renderStats(sorted);
+      renderOrders(sorted);
+    }
+
+    function fallback() {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      const user = clients.find(c => c.id === session.id);
+      if (!user) { window.location.href = 'login.html'; return; }
+      const myOrders = (JSON.parse(localStorage.getItem('5f_orders') || '[]'))
+        .filter(o => o.clientId === session.id);
+      renderForUser(user.firstName, myOrders);
+    }
+
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc(session.id).get()
+        .then(doc => {
+          if (!doc.exists) { window.location.href = 'login.html'; return Promise.reject('no-user'); }
+          const user = doc.data();
+          document.getElementById('headerSub').textContent =
+            'Bonjour ' + user.firstName + ' — voici l\'historique de vos commandes';
+          return db.collection('orders').where('clientId', '==', session.id).get();
+        })
+        .then(snap => {
+          if (!snap) return;
+          const orders = snap.docs.map(d => d.data()).sort((a,b) => (b.dateTs||0) - (a.dateTs||0));
+          renderStats(orders);
+          renderOrders(orders);
+        })
+        .catch(e => { if (e !== 'no-user') { console.warn('Firestore commandes:', e); fallback(); } });
+    } else {
+      fallback();
+    }
+  })();
+
+  function renderStats(orders) {
+    const total   = orders.length;
+    const attente = orders.filter(o => (o.status||'En attente') === 'En attente').length;
+    const livree  = orders.filter(o => (o.status||'') === 'Livrée').length;
+    const totalDT = orders.reduce((s,o) => s + (parseFloat(String(o.total||'0').replace(/[^\d.]/g,''))||0), 0);
+
+    document.getElementById('statsStrip').innerHTML = `
+      <div class="stat-box">
+        <div class="val">${total}</div>
+        <div class="lbl">Total commandes</div>
+      </div>
+      <div class="stat-box" style="background:#fff8e1;border-color:#ffe082">
+        <div class="val" style="color:#f57f17">${attente}</div>
+        <div class="lbl" style="color:#7b5300">En attente</div>
+      </div>
+      <div class="stat-box" style="background:#e8f5e9;border-color:#a5d6a7">
+        <div class="val" style="color:#2e7d32">${livree}</div>
+        <div class="lbl" style="color:#1b5e20">Livrées</div>
+      </div>
+      <div class="stat-box" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));border:none">
+        <div class="val" style="color:#fff;font-size:1.2rem">${totalDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false})} DT</div>
+        <div class="lbl" style="color:rgba(255,255,255,.75)">Total dépensé</div>
+      </div>`;
+  }
+
+  function renderOrders(orders) {
+    const listEl = document.getElementById('ordersList');
+    const titleEl = document.getElementById('listTitle');
+
+    if (!orders.length) {
+      titleEl.textContent = '';
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <div class="e-icon">📭</div>
+          <h3>Aucune commande pour l'instant</h3>
+          <p>Parcourez notre catalogue et passez votre première commande.</p>
+          <a href="catalogue.html" class="btn btn-primary" style="padding:11px 28px">📦 Voir le Catalogue</a>
+        </div>`;
+      return;
+    }
+
+    titleEl.textContent = orders.length + ' commande' + (orders.length > 1 ? 's' : '');
+
+    listEl.innerHTML = orders.map(o => {
+      const status = o.status || 'En attente';
+      const sc     = STATUS_STYLE[status] || STATUS_STYLE['En attente'];
+      const items  = Array.isArray(o.items) ? o.items : [];
+      const total  = typeof o.total === 'number'
+        ? o.total.toLocaleString('fr-TN', {minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT'
+        : (o.total || '—');
+
+      const itemsHTML = items.length
+        ? items.map(i => `
+            <div class="item-row">
+              <span class="item-name">${i.icon||'📦'} ${i.name||'—'}${i.variant ? ' <span style="color:var(--gray-400);font-size:.76rem">— '+i.variant+'</span>' : ''}${(i.code||i.productId) ? ' <span style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 5px">'+(i.code||i.productId)+'</span>' : ''}</span>
+              <span class="item-price">×${i.qty||1} &nbsp; ${i.price||'—'}</span>
+            </div>`).join('')
+        : '<div style="font-size:.82rem;color:var(--gray-400);padding:4px 0">Détail non disponible</div>';
+
+      return `
+      <div class="cmd-card">
+        <div class="cmd-card-head">
+          <div>
+            <div class="cmd-date">${o.date||'—'}</div>
+            <div class="cmd-id">Commande ${o.id||'—'}</div>
+          </div>
+          <span class="status-pill" style="background:${sc.bg};color:${sc.color};border-color:${sc.border}">
+            ${sc.icon} ${status}
+          </span>
+        </div>
+
+        <div class="items-box">${itemsHTML}</div>
+
+        <div class="cmd-card-foot">
+          <span class="cmd-city">📍 Livraison à ${o.city||'—'} &nbsp;|&nbsp; ${items.length} article${items.length!==1?'s':''}</span>
+          <span class="cmd-total">${total}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function logout() {
+    localStorage.removeItem('5f_session');
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

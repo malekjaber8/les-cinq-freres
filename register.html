@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un Compte — Les Cinq Frères</title>
+  <meta name="description" content="Créez votre compte client pour passer commande facilement sur le site Les Cinq Frères.">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Les Cinq Frères">
+  <meta property="og:title"       content="Créer un Compte — Les Cinq Frères">
+  <meta property="og:image"       content="https://www.lescinqfreres.com/logo.png">
+  <meta name="robots"             content="noindex,nofollow">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    .step-indicator { display:flex; align-items:center; gap:8px; margin-bottom:32px; }
+    .step { display:flex; align-items:center; gap:8px; font-size:.8rem; font-weight:600; color:var(--gray-400); }
+    .step.active { color:var(--teal-dark); }
+    .step.done   { color:var(--success); }
+    .step-num { width:28px; height:28px; border-radius:50%; background:var(--gray-200); display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; }
+    .step.active .step-num { background:var(--teal); color:var(--white); }
+    .step.done   .step-num { background:var(--success); color:var(--white); }
+    .step-line { flex:1; height:2px; background:var(--gray-200); max-width:40px; }
+    .step.done + .step-line { background:var(--success); }
+    .form-step { display:none; }
+    .form-step.active { display:block; }
+
+    .success-screen { display:none; text-align:center; padding:20px 0; }
+    .success-screen.show { display:block; }
+    .success-icon { width:80px; height:80px; background:linear-gradient(135deg,var(--teal),var(--navy-light)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 24px; animation:pop .4s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+    .success-screen h2 { font-family:'Raleway',sans-serif; font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:.5rem; }
+    .success-screen p  { color:var(--gray-600); font-size:.9rem; line-height:1.6; margin-bottom:2rem; }
+
+    .preview-card {
+      background:linear-gradient(135deg,var(--navy-dark),var(--navy));
+      border-radius:var(--radius-lg);
+      padding:24px;
+      color:var(--white);
+      margin-bottom:20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .preview-card::before {
+      content:'';
+      position:absolute; top:-30px; right:-30px;
+      width:120px; height:120px;
+      border-radius:50%;
+      background:rgba(43,190,200,.15);
+    }
+    .preview-card .avatar {
+      width:52px; height:52px;
+      background:linear-gradient(135deg,var(--teal),var(--teal-light));
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3rem; font-weight:800;
+      margin-bottom:12px;
+    }
+    .preview-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:4px; }
+    .preview-card .role-tag { display:inline-block; background:rgba(43,190,200,.25); color:var(--teal-light); font-size:.72rem; font-weight:600; padding:2px 10px; border-radius:50px; margin-bottom:14px; }
+    .preview-info { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .preview-info-item { font-size:.78rem; }
+    .preview-info-item .lbl { color:rgba(255,255,255,.55); margin-bottom:1px; }
+    .preview-info-item .val { color:var(--white); font-weight:600; }
+  </style>
+</head>
+<body>
+<div class="auth-page">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <img src="magasin.jpg" alt="Notre Magasin" class="store-bg">
+    <a href="index.html" class="auth-left-logo">
+      <img src="logo.png" alt="Logo">
+      <div>
+        <div class="brand">Les Cinq Frères</div>
+        <div class="sub">Société Magasin • Tunisie</div>
+      </div>
+    </a>
+    <div class="auth-left-content">
+      <h2>Rejoignez les <span>500+ Professionnels</span> qui nous font confiance</h2>
+      <p>Créez votre compte en quelques minutes et accédez à notre catalogue complet avec des prix exclusifs.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><div class="icon-wrap">✅</div><div class="text"><strong>Inscription gratuite</strong><span>Moins de 3 minutes</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">📦</div><div class="text"><strong>Catalogue complet</strong><span>100+ références produits</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">💰</div><div class="text"><strong>Prix professionnels</strong><span>Tarifs dégressifs</span></div></div>
+        <div class="auth-feature"><div class="icon-wrap">🚚</div><div class="text"><strong>Livraison rapide</strong><span>Partout en Tunisie</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <a href="index.html" class="back-link">← Retour à l'accueil</a>
+
+      <!-- Success Screen -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✅</div>
+        <h2>Compte créé avec succès !</h2>
+        <p id="successMsg">Bienvenue ! Votre compte a été créé. Vous pouvez maintenant vous connecter.</p>
+        <a href="login.html" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-bottom:12px">
+          <span>🔑</span> Se Connecter maintenant
+        </a>
+        <a href="index.html" style="font-size:.85rem;color:var(--gray-600)">Retour à l'accueil</a>
+      </div>
+
+      <!-- Registration Form -->
+      <div id="regForm">
+        <div class="form-header">
+          <h1>Créer un Compte</h1>
+          <p>Rejoignez notre réseau de professionnels</p>
+        </div>
+
+        <!-- Role fixé à client uniquement -->
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <div class="step active" id="ind1"><div class="step-num">1</div><span>Informations</span></div>
+          <div class="step-line" id="line1"></div>
+          <div class="step" id="ind2"><div class="step-num">2</div><span>Sécurité</span></div>
+          <div class="step-line" id="line2"></div>
+          <div class="step" id="ind3"><div class="step-num">3</div><span>Aperçu</span></div>
+        </div>
+
+        <div class="form-alert" id="formAlert"><span id="alertIcon"></span><span id="alertMsg"></span></div>
+
+        <!-- ===== STEP 1 ===== -->
+        <div class="form-step active" id="step1">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prénom *</label>
+              <div class="input-wrap">
+                <span class="input-icon">👤</span>
+                <input type="text" id="firstName" placeholder="Mohamed" autocomplete="given-name">
+              </div>
+              <div class="field-error" id="firstNameError">Prénom requis.</div>
+            </div>
+            <div class="form-group">
+              <label>Nom *</label>
+              <div class="input-wrap">
+                <span class="input-icon">👤</span>
+                <input type="text" id="lastName" placeholder="Ben Ali" autocomplete="family-name">
+              </div>
+              <div class="field-error" id="lastNameError">Nom requis.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Adresse Email *</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="email" placeholder="exemple@email.com" autocomplete="email">
+            </div>
+            <div class="field-error" id="emailError">Email invalide ou déjà utilisé.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Numéro de Téléphone *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" id="phone" placeholder="+216 XX XXX XXX" autocomplete="tel">
+            </div>
+            <div class="field-error" id="phoneError">Numéro requis.</div>
+          </div>
+
+          <div class="form-group" id="companyGroup">
+            <label>Société / Raison Sociale</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏢</span>
+              <input type="text" id="company" placeholder="Nom de votre entreprise">
+            </div>
+          </div>
+
+          <div class="form-group" id="activityGroup">
+            <label>Activité Principale *</label>
+            <div class="input-wrap">
+              <span class="input-icon">⚙️</span>
+              <select id="activity">
+                <option value="">-- Sélectionnez votre activité --</option>
+                <option value="Tapissier / Rembourrage">Tapissier / Rembourrage</option>
+                <option value="Fabricant de Meubles">Fabricant de Meubles</option>
+                <option value="Fabricant de Matelas">Fabricant de Matelas</option>
+                <option value="Revendeur / Distributeur">Revendeur / Distributeur</option>
+                <option value="Artisan Indépendant">Artisan Indépendant</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+            <div class="field-error" id="activityError">Activité requise.</div>
+          </div>
+
+          <div class="form-group" id="adminCodeGroup" style="display:none">
+            <div class="input-wrap">
+              <input type="password" id="adminCode" style="display:none">
+            </div>
+            <div class="field-error" id="adminCodeError">Code administrateur invalide.</div>
+          </div>
+
+          <button type="button" class="btn-submit" onclick="validateStep1()">Continuer →</button>
+        </div>
+
+        <!-- ===== STEP 2 ===== -->
+        <div class="form-step" id="step2">
+          <div class="form-group">
+            <label>Mot de Passe *</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="Minimum 8 caractères"
+                     oninput="checkStrength(this.value)" autocomplete="new-password">
+              <span class="toggle-pass" onclick="togglePass('password',this)">👁️</span>
+            </div>
+            <div class="password-strength">
+              <div class="strength-bar">
+                <span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span>
+              </div>
+              <div class="strength-label" id="strengthLabel">Entrez un mot de passe</div>
+            </div>
+            <div class="field-error" id="passwordError">Au moins 8 caractères requis.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Confirmer le Mot de Passe *</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="confirmPassword" placeholder="Répétez votre mot de passe" autocomplete="new-password">
+              <span class="toggle-pass" onclick="togglePass('confirmPassword',this)">👁️</span>
+            </div>
+            <div class="field-error" id="confirmError">Les mots de passe ne correspondent pas.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Ville *</label>
+            <div class="input-wrap">
+              <span class="input-icon">📍</span>
+              <select id="city">
+                <option value="">-- Votre ville --</option>
+                <option>Tunis</option><option>Sfax</option><option>Sousse</option>
+                <option>Kairouan</option><option>Bizerte</option><option>Gabès</option>
+                <option>Ariana</option><option>Ben Arous</option><option>Monastir</option>
+                <option>Nabeul</option><option>Gafsa</option><option>Autre</option>
+              </select>
+            </div>
+            <div class="field-error" id="cityError">Ville requise.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Adresse (optionnel)</label>
+            <div class="input-wrap">
+              <span class="input-icon">🗺️</span>
+              <input type="text" id="address" placeholder="Rue, quartier...">
+            </div>
+          </div>
+
+          <div class="checkbox-wrap">
+            <input type="checkbox" id="terms">
+            <label for="terms">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a>.</label>
+          </div>
+          <div class="field-error" id="termsError" style="margin-top:-12px;margin-bottom:16px">Vous devez accepter les conditions.</div>
+
+          <div style="display:flex;gap:12px">
+            <button type="button" class="btn btn-outline-navy" style="flex:.8;justify-content:center" onclick="goToStep(1)">← Retour</button>
+            <button type="button" class="btn-submit" style="flex:1.2" onclick="validateStep2()">Continuer →</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3 : Aperçu Fiche ===== -->
+        <div class="form-step" id="step3">
+          <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:16px;font-weight:500">
+            📋 Vérifiez votre fiche avant de confirmer :
+          </p>
+
+          <!-- Preview Card -->
+          <div class="preview-card" id="previewCard">
+            <div class="avatar" id="previewAvatar">MB</div>
+            <h3 id="previewName">Mohamed Ben Ali</h3>
+            <span class="role-tag" id="previewRole">👤 Client Pro</span>
+            <div class="preview-info" id="previewInfo"></div>
+          </div>
+
+          <div style="display:flex;gap:12px">
+            <button type="button" class="btn btn-outline-navy" style="flex:.8;justify-content:center" onclick="goToStep(2)">← Modifier</button>
+            <button type="button" class="btn-submit" id="finalSubmit" style="flex:1.2" onclick="submitRegistration()">
+              <span class="btn-text">✅ Créer mon Compte</span>
+              <span class="spinner"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-footer">Déjà membre ? <a href="login.html">Se connecter</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script>
+  let currentRole = 'client';
+  let currentStep = 1;
+
+  function selectRole(btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentRole = btn.dataset.role;
+    const isAdmin = currentRole === 'admin';
+    document.getElementById('adminCodeGroup').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('activityGroup').style.display  = isAdmin ? 'none'  : 'block';
+    document.getElementById('companyGroup').style.display   = isAdmin ? 'none'  : 'block';
+  }
+
+  function goToStep(n) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('formAlert').className = 'form-alert';
+    currentStep = n;
+    document.getElementById('step' + currentStep).classList.add('active');
+  }
+
+  function setErr(id, show) {
+    const errEl = document.getElementById(id + 'Error');
+    const inpEl = document.getElementById(id);
+    if (errEl) errEl.classList.toggle('show', show);
+    if (inpEl) inpEl.classList.toggle('error', show);
+  }
+
+  function validateStep1() {
+    const fn    = document.getElementById('firstName').value.trim();
+    const ln    = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const phone = document.getElementById('phone').value.trim();
+    const act   = document.getElementById('activity').value;
+    const code  = document.getElementById('adminCode').value;
+    let valid = true;
+
+    setErr('firstName', !fn);  if (!fn)  valid = false;
+    setErr('lastName',  !ln);  if (!ln)  valid = false;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setErr('email', !emailOk); if (!emailOk) valid = false;
+    setErr('phone', !phone);   if (!phone)   valid = false;
+
+    if (currentRole === 'client') {
+      setErr('activity', !act); if (!act) valid = false;
+    } else {
+      const ok = code === 'ADMIN5F2024';
+      setErr('adminCode', !ok); if (!ok) valid = false;
+    }
+
+    if (!valid) return;
+
+    const btn = document.querySelector('#step1 .btn-submit');
+    btn.classList.add('loading'); btn.disabled = true;
+
+    function proceedToStep2() {
+      btn.classList.remove('loading'); btn.disabled = false;
+      document.getElementById('emailError').textContent = 'Email invalide ou déjà utilisé.';
+      document.getElementById('ind1').classList.add('done');
+      document.getElementById('ind1').classList.remove('active');
+      document.getElementById('ind2').classList.add('active');
+      document.getElementById('line1').style.background = 'var(--success)';
+      goToStep(2);
+    }
+
+    function emailTaken() {
+      btn.classList.remove('loading'); btn.disabled = false;
+      setErr('email', true);
+      document.getElementById('emailError').textContent = 'Cette adresse email est déjà utilisée.';
+    }
+
+    if (typeof db !== 'undefined') {
+      db.collection('clients').where('email', '==', email).limit(1).get()
+        .then(snap => { snap.empty ? proceedToStep2() : emailTaken(); })
+        .catch(() => {
+          // fallback localStorage
+          const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+          clients.find(c => c.email === email) ? emailTaken() : proceedToStep2();
+        });
+    } else {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      clients.find(c => c.email === email) ? emailTaken() : proceedToStep2();
+    }
+  }
+
+  function validateStep2() {
+    const pwd  = document.getElementById('password').value;
+    const conf = document.getElementById('confirmPassword').value;
+    const city = document.getElementById('city').value;
+    const terms = document.getElementById('terms').checked;
+    let valid = true;
+
+    setErr('password',  pwd.length < 8);   if (pwd.length < 8) valid = false;
+    setErr('confirm',   pwd !== conf);      if (pwd !== conf)   valid = false;
+    setErr('city',      !city);             if (!city)          valid = false;
+    document.getElementById('termsError').classList.toggle('show', !terms);
+    if (!terms) valid = false;
+
+    if (!valid) return;
+
+    // Build preview card
+    const fn   = document.getElementById('firstName').value.trim();
+    const ln   = document.getElementById('lastName').value.trim();
+    const em   = document.getElementById('email').value.trim();
+    const ph   = document.getElementById('phone').value.trim();
+    const co   = document.getElementById('company').value.trim();
+    const act  = document.getElementById('activity').value;
+    const ci   = document.getElementById('city').value;
+    const addr = document.getElementById('address').value.trim();
+
+    document.getElementById('previewAvatar').textContent = (fn[0] || '') + (ln[0] || '');
+    document.getElementById('previewName').textContent   = fn + ' ' + ln;
+    document.getElementById('previewRole').textContent   = currentRole === 'admin' ? '🛡️ Administrateur' : '👤 Client Pro';
+
+    const info = [
+      { lbl: '✉️ Email',     val: em },
+      { lbl: '📞 Téléphone', val: ph },
+      { lbl: '📍 Ville',     val: ci },
+      { lbl: '⚙️ Activité',  val: act || '—' },
+      co   ? { lbl: '🏢 Société', val: co } : null,
+      addr ? { lbl: '🗺️ Adresse', val: addr } : null,
+    ].filter(Boolean);
+
+    document.getElementById('previewInfo').innerHTML = info.map(i =>
+      `<div class="preview-info-item"><div class="lbl">${i.lbl}</div><div class="val">${i.val}</div></div>`
+    ).join('');
+
+    document.getElementById('ind2').classList.add('done');
+    document.getElementById('ind2').classList.remove('active');
+    document.getElementById('ind3').classList.add('active');
+    document.getElementById('line2').style.background = 'var(--success)';
+    goToStep(3);
+  }
+
+  function submitRegistration() {
+    const btn = document.getElementById('finalSubmit');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const client = {
+      id:         'CLI-' + Date.now(),
+      role:       currentRole,
+      firstName:  document.getElementById('firstName').value.trim(),
+      lastName:   document.getElementById('lastName').value.trim(),
+      email:      document.getElementById('email').value.trim().toLowerCase(),
+      password:   btoa(document.getElementById('password').value),
+      phone:      document.getElementById('phone').value.trim(),
+      company:    document.getElementById('company').value.trim(),
+      activity:   document.getElementById('activity').value,
+      city:       document.getElementById('city').value,
+      address:    document.getElementById('address').value.trim(),
+      createdAt:  new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }),
+      status:     'Actif', points: 0, orders: 0, totalSpent: 0,
+    };
+
+    function showSuccess() {
+      btn.classList.remove('loading'); btn.disabled = false;
+      // Connecter automatiquement le client après inscription
+      localStorage.setItem('5f_session', JSON.stringify({ id: client.id, role: client.role }));
+      document.getElementById('regForm').style.display = 'none';
+      document.getElementById('successMsg').textContent =
+        `Bienvenue ${client.firstName} ! Votre compte est créé. Redirection…`;
+      document.getElementById('successScreen').classList.add('show');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1800);
+    }
+
+    function saveToLocalStorage() {
+      const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+      clients.push(client);
+      localStorage.setItem('5f_clients', JSON.stringify(clients));
+    }
+
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc(client.id).set(client)
+        .then(() => { saveToLocalStorage(); showSuccess(); })
+        .catch(e => { console.warn('Firestore register:', e.message); saveToLocalStorage(); showSuccess(); });
+    } else {
+      saveToLocalStorage();
+      setTimeout(showSuccess, 1200);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page introuvable — Les Cinq Frères</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    body {
+      background: var(--gray-50);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .err-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .err-code {
+      font-family: 'Raleway', sans-serif;
+      font-size: clamp(5rem, 18vw, 9rem);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--navy-dark, #1B4E7A), var(--teal-dark, #1A99A3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .err-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: wobble 2s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-4deg); }
+      50%       { transform: rotate(4deg); }
+    }
+    .err-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      font-weight: 800;
+      color: var(--navy-dark, #1B4E7A);
+      margin-bottom: 12px;
+    }
+    .err-sub {
+      font-size: .92rem;
+      color: #6b7280;
+      max-width: 440px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .err-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .err-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: .84rem;
+    }
+    .err-links a {
+      color: var(--teal-dark, #1A99A3);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .err-links a:hover { text-decoration: underline; }
+    .err-divider {
+      width: 1px;
+      background: var(--gray-200, #e5e7eb);
+    }
+  </style>
+</head>
+<body>
+
+<nav style="background:#fff;border-bottom:1px solid #e5e7eb;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+  <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+    <img src="logo.png" alt="Logo" style="height:38px;border-radius:6px">
+    <div>
+      <div style="font-family:'Raleway',sans-serif;font-weight:800;font-size:.92rem;color:#1B4E7A">Les Cinq Frères</div>
+      <div style="font-size:.7rem;color:#1A99A3">Société Magasin • Tunisie</div>
+    </div>
+  </a>
+  <a href="index.html" style="font-size:.83rem;color:#6b7280;text-decoration:none;font-weight:500">← Retour à l'accueil</a>
+</nav>
+
+<div class="err-wrap">
+  <div class="err-icon">🪑</div>
+  <div class="err-code">404</div>
+  <h1 class="err-title">Cette page est introuvable</h1>
+  <p class="err-sub">
+    Il semble que la page que vous cherchez n'existe pas ou a été déplacée.<br>
+    Pas d'inquiétude — notre catalogue est toujours disponible !
+  </p>
+  <div class="err-btns">
+    <a href="index.html" class="btn btn-primary btn-lg">🏠 Retour à l'accueil</a>
+    <a href="catalogue.html" class="btn btn-outline-navy btn-lg">🛍️ Voir le catalogue</a>
+  </div>
+  <div class="err-links">
+    <a href="catalogue.html">Catalogue</a>
+    <span class="err-divider"></span>
+    <a href="login.html">Connexion</a>
+    <span class="err-divider"></span>
+    <a href="register.html">Créer un compte</a>
+    <span class="err-divider"></span>
+    <a href="https://wa.me/21626068664" target="_blank">💬 WhatsApp</a>
+  </div>
+</div>
+
+<footer style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:20px;text-align:center;font-size:.78rem;color:#9ca3af">
+  © 2024 Société Magasin Les Cinq Frères — Soukra, Tunisie
+</footer>
+
+</body>
+</html>
