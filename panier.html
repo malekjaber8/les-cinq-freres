@@ -27,7 +27,7 @@
     .panier-nav .logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.95rem; color:var(--navy-dark); }
     .panier-nav .logo .sub   { font-size:.7rem; color:var(--teal-dark); }
 
-    .panier-layout { max-width:1200px; margin:32px auto; padding:0 24px; display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start; }
+    .panier-layout { max-width:780px; margin:32px auto; padding:0 24px; display:grid; grid-template-columns:1fr; gap:28px; align-items:start; }
 
     /* --- Cart Table --- */
     .cart-section { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); overflow:hidden; }
@@ -60,7 +60,7 @@
     .cart-empty p  { font-size:.88rem; color:var(--gray-400); margin-bottom:24px; }
 
     /* --- Order Summary --- */
-    .order-summary { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); position:sticky; top:80px; }
+    .order-summary { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--gray-100); box-shadow:var(--shadow-sm); }
     .summary-head { background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark)); padding:18px 22px; border-radius:var(--radius-lg) var(--radius-lg) 0 0; }
     .summary-head h3 { font-family:'Raleway',sans-serif; font-size:1rem; font-weight:800; color:var(--white); margin-bottom:2px; }
     .summary-head p  { font-size:.75rem; color:rgba(255,255,255,.7); }
@@ -81,7 +81,9 @@
 
     /* --- Checkout form --- */
     .checkout-form { padding:0 22px 20px; }
+    .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .cf-group { margin-bottom:14px; }
+    @media(max-width:560px) { .cf-row { grid-template-columns:1fr; } }
     .cf-group label { display:block; font-size:.78rem; font-weight:600; color:var(--gray-800); margin-bottom:5px; }
     .cf-input { width:100%; padding:9px 12px; border:1.5px solid var(--gray-200); border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:.85rem; outline:none; transition:var(--transition); }
     .cf-input:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(43,190,200,.1); }
@@ -267,31 +269,41 @@
       <div class="checkout-form">
         <div style="font-size:.82rem;font-weight:700;color:var(--navy-dark);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--gray-100)">📦 Informations de livraison</div>
 
-        <div class="cf-group">
-          <label>Nom complet *</label>
-          <input class="cf-input" type="text" id="cf-name" placeholder="Mohamed Ben Ali">
+        <div class="cf-row">
+          <div class="cf-group">
+            <label>Nom complet *</label>
+            <input class="cf-input" type="text" id="cf-name" placeholder="Mohamed Ben Ali">
+          </div>
+          <div class="cf-group">
+            <label>Téléphone *</label>
+            <input class="cf-input" type="tel" id="cf-phone" placeholder="+216 XX XXX XXX">
+          </div>
         </div>
-        <div class="cf-group">
-          <label>Téléphone *</label>
-          <input class="cf-input" type="tel" id="cf-phone" placeholder="+216 XX XXX XXX">
+        <div class="cf-row">
+          <div class="cf-group">
+            <label>Activité / Profession *</label>
+            <input class="cf-input" type="text" id="cf-activite" placeholder="Ex : Tapissier, Menuisier, Particulier…">
+          </div>
+          <div class="cf-group">
+            <label>Email *</label>
+            <input class="cf-input" type="email" id="cf-email" placeholder="exemple@email.com">
+          </div>
         </div>
-        <div class="cf-group">
-          <label>Email *</label>
-          <input class="cf-input" type="email" id="cf-email" placeholder="exemple@email.com">
-        </div>
-        <div class="cf-group">
-          <label>Ville *</label>
-          <select class="cf-input cf-select" id="cf-city">
-            <option value="">-- Votre ville --</option>
-            <option>Tunis</option><option>Sfax</option><option>Sousse</option>
-            <option>Kairouan</option><option>Bizerte</option><option>Gabès</option>
-            <option>Ariana</option><option>Ben Arous</option><option>Monastir</option>
-            <option>Nabeul</option><option>Gafsa</option><option>Autre</option>
-          </select>
-        </div>
-        <div class="cf-group">
-          <label>Adresse de livraison</label>
-          <input class="cf-input" type="text" id="cf-address" placeholder="Rue, quartier, bâtiment…">
+        <div class="cf-row">
+          <div class="cf-group">
+            <label>Ville *</label>
+            <select class="cf-input cf-select" id="cf-city">
+              <option value="">-- Votre ville --</option>
+              <option>Tunis</option><option>Sfax</option><option>Sousse</option>
+              <option>Kairouan</option><option>Bizerte</option><option>Gabès</option>
+              <option>Ariana</option><option>Ben Arous</option><option>Monastir</option>
+              <option>Nabeul</option><option>Gafsa</option><option>Autre</option>
+            </select>
+          </div>
+          <div class="cf-group">
+            <label>Adresse de livraison</label>
+            <input class="cf-input" type="text" id="cf-address" placeholder="Rue, quartier, bâtiment…">
+          </div>
         </div>
         <div class="cf-group">
           <label>Notes / Instructions</label>
@@ -350,6 +362,31 @@
 
       <button onclick="confirmerChoixDoc()" class="btn btn-primary" style="width:100%;padding:12px;font-size:.9rem">
         📄 Voir mon reçu →
+      </button>
+    </div>
+
+    <!-- ── ÉTAPE 1bis : Création de compte (société + facture, sans compte existant) ── -->
+    <div id="stepAccount" style="display:none;text-align:left">
+      <div style="background:rgba(43,190,200,.06);border:1px solid rgba(43,190,200,.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:.78rem;color:var(--teal-dark)">
+        🧾 Pour recevoir et retrouver vos factures, créez votre compte société en quelques secondes.
+      </div>
+      <div class="cf-group">
+        <label>Email</label>
+        <input class="cf-input" type="email" id="acc-email" disabled style="background:var(--gray-50)">
+      </div>
+      <div class="cf-group">
+        <label>Mot de passe *</label>
+        <input class="cf-input" type="password" id="acc-pass" placeholder="Minimum 6 caractères">
+      </div>
+      <div class="cf-group">
+        <label>Confirmer le mot de passe *</label>
+        <input class="cf-input" type="password" id="acc-pass2" placeholder="Retapez le mot de passe">
+      </div>
+      <button onclick="createAccountForFacture()" class="btn btn-primary" style="width:100%;padding:12px;font-size:.9rem;margin-bottom:8px">
+        🔐 Créer mon compte et voir ma facture →
+      </button>
+      <button onclick="backToDocChoice()" class="btn btn-outline-navy" style="width:100%;padding:10px;font-size:.82rem">
+        ← Retour
       </button>
     </div>
 
@@ -597,19 +634,17 @@
         <div style="font-size:.78rem;color:var(--gray-600)">${user.email} • ${user.city||'—'}</div>
       </div>`;
       // Pre-fill form
-      document.getElementById('cf-name').value    = user.firstName + ' ' + user.lastName;
-      document.getElementById('cf-phone').value   = user.phone || '';
-      document.getElementById('cf-email').value   = user.email || '';
-      document.getElementById('cf-city').value    = user.city  || '';
-      document.getElementById('cf-address').value = user.address || '';
+      document.getElementById('cf-name').value     = user.firstName + ' ' + user.lastName;
+      document.getElementById('cf-phone').value    = user.phone || '';
+      document.getElementById('cf-activite').value = user.activity || '';
+      document.getElementById('cf-email').value    = user.email || '';
+      document.getElementById('cf-city').value     = user.city  || '';
+      document.getElementById('cf-address').value  = user.address || '';
     } else {
-      clientCard.innerHTML = `<div class="client-info-card not-logged">
-        <div class="client-badge err">⚠️ Vous n'êtes pas connecté</div>
-        <div style="font-size:.78rem;color:#9C4221;margin-bottom:8px">Connectez-vous pour un suivi complet de votre commande.</div>
-        <div style="display:flex;gap:8px">
-          <a href="login.html" style="flex:1;text-align:center;padding:7px;background:var(--navy-dark);color:var(--white);border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none">Se connecter</a>
-          <a href="register.html" style="flex:1;text-align:center;padding:7px;background:var(--gray-100);color:var(--navy-dark);border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none">Créer un compte</a>
-        </div>
+      clientCard.innerHTML = `<div class="client-info-card">
+        <div class="client-badge" style="background:rgba(43,190,200,.1);color:var(--teal-dark);border-color:rgba(43,190,200,.3)">🛒 Commande sans compte</div>
+        <div style="font-size:.78rem;color:var(--gray-600);margin-bottom:8px">Remplissez le formulaire ci-dessous pour commander — aucun compte requis.</div>
+        <a href="commandes.html" style="display:block;text-align:center;padding:7px;background:var(--gray-50);color:var(--teal-dark);border:1px solid var(--gray-200);border-radius:8px;font-size:.76rem;font-weight:600;text-decoration:none">📋 Déjà commandé ? Retrouvez votre commande →</a>
       </div>`;
     }
 
@@ -694,22 +729,15 @@
     const items = Cart.get();
     if (!items.length) { showToast('error','Panier vide','Ajoutez des articles avant de commander.'); return; }
 
-    // Connexion obligatoire pour passer une commande
-    const sessionCheck = JSON.parse(localStorage.getItem('5f_session') || 'null');
-    if (!sessionCheck) {
-      showToast('info', '🔐 Connexion requise', 'Connectez-vous pour passer votre commande.');
-      setTimeout(() => { window.location.href = 'login.html?redirect=panier.html'; }, 1800);
-      return;
-    }
+    const name     = document.getElementById('cf-name').value.trim();
+    const phone    = document.getElementById('cf-phone').value.trim();
+    const activite = document.getElementById('cf-activite').value.trim();
+    const email    = document.getElementById('cf-email').value.trim();
+    const city     = document.getElementById('cf-city').value;
+    const address  = document.getElementById('cf-address').value.trim();
+    const notes    = document.getElementById('cf-notes').value.trim();
 
-    const name    = document.getElementById('cf-name').value.trim();
-    const phone   = document.getElementById('cf-phone').value.trim();
-    const email   = document.getElementById('cf-email').value.trim();
-    const city    = document.getElementById('cf-city').value;
-    const address = document.getElementById('cf-address').value.trim();
-    const notes   = document.getElementById('cf-notes').value.trim();
-
-    if (!name || !phone || !email || !city) {
+    if (!name || !phone || !activite || !email || !city) {
       showToast('error','Champs requis','Veuillez remplir les champs obligatoires (*).');
       return;
     }
@@ -731,7 +759,7 @@
       const order = {
         id: orderId,
         clientId:   session ? session.id : null,
-        name, phone, email, city, address, notes,
+        name, phone, activite, email, city, address, notes,
         items:      items,
         subTotal:   subTotal,
         livraison:  LIVRAISON,
@@ -800,6 +828,7 @@
       _lastOrder = order;
       // Réinitialiser le modal : montrer étape 1 (choix)
       document.getElementById('stepChoice').style.display  = '';
+      document.getElementById('stepAccount').style.display = 'none';
       document.getElementById('stepReceipt').style.display = 'none';
       selectDoc('bon'); // BL sélectionné par défaut
       document.getElementById('orderSuccess').classList.add('show');
@@ -834,6 +863,8 @@
     }
   }
 
+  let _pendingFacture = null;
+
   function confirmerChoixDoc() {
     let societe = '', matricule = '';
     if (_docType === 'fac') {
@@ -843,10 +874,85 @@
         showToast('error', 'Champs requis', 'Veuillez renseigner la société et la matricule fiscale.');
         return;
       }
+      const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
+      if (!session) {
+        // Société sans compte → création de compte obligatoire avant la facture
+        _pendingFacture = { societe, matricule };
+        document.getElementById('acc-email').value = _lastOrder.email || '';
+        document.getElementById('acc-pass').value  = '';
+        document.getElementById('acc-pass2').value = '';
+        document.getElementById('stepChoice').style.display  = 'none';
+        document.getElementById('stepAccount').style.display = '';
+        return;
+      }
     }
     showReceipt(_lastOrder, _docType, societe, matricule);
     document.getElementById('stepChoice').style.display  = 'none';
     document.getElementById('stepReceipt').style.display = '';
+  }
+
+  function backToDocChoice() {
+    document.getElementById('stepAccount').style.display = 'none';
+    document.getElementById('stepChoice').style.display   = '';
+  }
+
+  function createAccountForFacture() {
+    const pass  = document.getElementById('acc-pass').value;
+    const pass2 = document.getElementById('acc-pass2').value;
+    if (!pass || pass.length < 6) {
+      showToast('error', 'Mot de passe trop court', 'Minimum 6 caractères.');
+      return;
+    }
+    if (pass !== pass2) {
+      showToast('error', 'Mots de passe différents', 'Les deux mots de passe ne correspondent pas.');
+      return;
+    }
+
+    const email   = (_lastOrder.email || '').trim().toLowerCase();
+    const clients = JSON.parse(localStorage.getItem('5f_clients') || '[]');
+    if (clients.find(c => c.email === email)) {
+      showToast('error', 'Compte existant', 'Un compte existe déjà avec cet email. Connectez-vous puis recommencez.');
+      return;
+    }
+
+    const nameParts = (_lastOrder.name || '').trim().split(' ');
+    const newClient = {
+      id:        'CL' + Date.now(),
+      firstName: nameParts[0] || '',
+      lastName:  nameParts.slice(1).join(' ') || '',
+      email:     email,
+      password:  btoa(pass),
+      phone:     _lastOrder.phone    || '',
+      activity:  _lastOrder.activite || '',
+      company:   _pendingFacture.societe,
+      matricule: _pendingFacture.matricule,
+      city:      _lastOrder.city     || '',
+      address:   _lastOrder.address  || '',
+      createdAt: new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'}),
+      orders: 1, totalSpent: _lastOrder.total || 0, points: Math.floor((_lastOrder.total||0)/10),
+    };
+    clients.push(newClient);
+    localStorage.setItem('5f_clients', JSON.stringify(clients));
+    if (typeof db !== 'undefined') {
+      db.collection('clients').doc(newClient.id).set(newClient).catch(e => console.warn('Firestore client:', e.message));
+    }
+
+    // Connecter le nouveau compte
+    localStorage.setItem('5f_session', JSON.stringify({ id: newClient.id, role: 'client' }));
+
+    // Lier la commande déjà créée à ce nouveau compte
+    _lastOrder.clientId = newClient.id;
+    const allOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    const idx = allOrders.findIndex(o => o.id === _lastOrder.id);
+    if (idx > -1) { allOrders[idx].clientId = newClient.id; localStorage.setItem('5f_orders', JSON.stringify(allOrders)); }
+    if (typeof db !== 'undefined') {
+      db.collection('orders').doc(_lastOrder.id).update({ clientId: newClient.id }).catch(e => console.warn('Firestore order update:', e.message));
+    }
+
+    showToast('success', 'Compte créé !', 'Vous pourrez désormais retrouver vos factures.');
+    showReceipt(_lastOrder, 'fac', _pendingFacture.societe, _pendingFacture.matricule);
+    document.getElementById('stepAccount').style.display  = 'none';
+    document.getElementById('stepReceipt').style.display  = '';
   }
 
   /* ── Reçu Client ── */

@@ -175,7 +175,7 @@
 
   (function init() {
     const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
-    if (!session) { window.location.href = 'login.html?redirect=commandes.html'; return; }
+    if (!session) { showGuestLookup(); return; }
 
     function renderForUser(firstName, orders) {
       document.getElementById('headerSub').textContent =
@@ -299,6 +299,67 @@
   function logout() {
     localStorage.removeItem('5f_session');
     window.location.href = 'index.html';
+  }
+
+  /* ── Recherche invité (sans compte) par téléphone ou email ── */
+  function showGuestLookup() {
+    document.getElementById('headerSub').textContent = 'Retrouvez vos commandes sans compte';
+    document.getElementById('statsStrip').innerHTML = '';
+    document.getElementById('listTitle').textContent = '';
+    document.getElementById('ordersList').innerHTML = `
+      <div class="empty-state" style="text-align:left;padding:32px">
+        <div style="text-align:center">
+          <div class="e-icon">🔎</div>
+          <h3>Retrouver mes commandes</h3>
+          <p>Entrez le téléphone ou l'email utilisé lors de votre commande.</p>
+        </div>
+        <div style="max-width:380px;margin:0 auto">
+          <input id="lookupInput" type="text" placeholder="Téléphone ou email"
+            style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Poppins',sans-serif;font-size:.88rem;margin-bottom:12px"
+            onkeydown="if(event.key==='Enter') doGuestLookup()">
+          <button onclick="doGuestLookup()" class="btn btn-primary" style="width:100%;padding:12px">🔎 Rechercher</button>
+        </div>
+      </div>`;
+  }
+
+  function doGuestLookup() {
+    const raw = (document.getElementById('lookupInput').value || '').trim().toLowerCase();
+    if (!raw) { showToast('error','Champ requis','Entrez votre téléphone ou email.'); return; }
+
+    function renderResults(orders) {
+      const sorted = orders.slice().sort((a,b) => (b.dateTs||0) - (a.dateTs||0));
+      document.getElementById('headerSub').textContent = sorted.length
+        ? sorted.length + ' commande' + (sorted.length>1?'s':'') + ' trouvée' + (sorted.length>1?'s':'')
+        : 'Aucune commande trouvée pour ces coordonnées';
+      renderStats(sorted);
+      renderOrders(sorted);
+    }
+
+    if (typeof db !== 'undefined') {
+      Promise.all([
+        db.collection('orders').where('phone', '==', raw).get().catch(()=>({docs:[]})),
+        db.collection('orders').where('email', '==', raw).get().catch(()=>({docs:[]})),
+      ]).then(([byPhone, byEmail]) => {
+        const map = new Map();
+        byPhone.docs.forEach(d => map.set(d.id, d.data()));
+        byEmail.docs.forEach(d => map.set(d.id, d.data()));
+        if (map.size === 0) {
+          const local = JSON.parse(localStorage.getItem('5f_orders') || '[]')
+            .filter(o => (o.phone||'').toLowerCase() === raw || (o.email||'').toLowerCase() === raw);
+          renderResults(local);
+        } else {
+          renderResults(Array.from(map.values()));
+        }
+      }).catch(() => {
+        const local = JSON.parse(localStorage.getItem('5f_orders') || '[]')
+          .filter(o => (o.phone||'').toLowerCase() === raw || (o.email||'').toLowerCase() === raw);
+        renderResults(local);
+      });
+    } else {
+      const local = JSON.parse(localStorage.getItem('5f_orders') || '[]')
+        .filter(o => (o.phone||'').toLowerCase() === raw || (o.email||'').toLowerCase() === raw);
+      renderResults(local);
+    }
   }
 </script>
 </body>
