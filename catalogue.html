@@ -394,6 +394,11 @@
       .cat-content { padding:12px 10px; }
       .hide-xs { display:none !important; }
     }
+    @media(max-width:900px){
+      .mousse-2col { flex-direction:column; }
+      .mousse-col-form { width:100% !important; position:static !important; order:1 !important; }
+      .mousse-col-grid { order:2 !important; }
+    }
   </style>
 </head>
 <body>
@@ -663,12 +668,53 @@ const catalogue = {
     isMoussePage: true,
     types:[
       {
+        id:'15-17', label:'15/17',
+        color:'#26A69A', bgColor:'rgba(38,166,154,.08)',
+        desc:'Densité légère économique — usage occasionnel et appoint.',
+        badge:'Économique',
+        img:null,
+        dims:[
+          {d:'190×65×13', prix:52.500},
+          {d:'190×70×13', prix:57.000},
+        ]
+      },
+      {
+        id:'extra20-24', label:'Extra 20/24',
+        color:'#EF6C00', bgColor:'rgba(239,108,0,.08)',
+        desc:'Densité renforcée — bon compromis confort/prix.',
+        badge:'Renforcée',
+        img:null,
+        dims:[
+          {d:'190×65×13', prix:58.500},
+          {d:'190×70×13', prix:63.000},
+        ]
+      },
+      {
         id:'souple', label:'20/22 SOUPLE',
         color:'#4A90D9', bgColor:'rgba(74,144,217,.08)',
         desc:'Mousse souple idéale pour dossiers, têtes de lit et confort cocooning.',
         badge:'Souple',
         img:'images/matelas%20mousse/20x22.webp',
-        dims:['190×60×14','190×65×13','190×65×14','190×65×10','190×70×13','190×70×14','190×80×13','190×80×14']
+        dims:[
+          {d:'190×60×14', prix:null},
+          {d:'190×65×13', prix:null},
+          {d:'190×65×14', prix:null},
+          {d:'190×65×10', prix:null},
+          {d:'190×70×13', prix:null},
+          {d:'190×70×14', prix:null},
+          {d:'190×80×13', prix:null},
+          {d:'190×80×14', prix:null},
+        ]
+      },
+      {
+        id:'22-24-souple', label:'22/24 Souple',
+        color:'#66BB6A', bgColor:'rgba(102,187,106,.08)',
+        desc:'Densité souple renforcée — confort accru.',
+        badge:'Souple+',
+        img:null,
+        dims:[
+          {d:'190×70×13', prix:77.000},
+        ]
       },
       {
         id:'standard', label:'28/30',
@@ -676,7 +722,26 @@ const catalogue = {
         desc:'Densité standard — équilibre parfait entre confort et maintien. La plus polyvalente.',
         badge:'Populaire',
         img:'images/matelas%20mousse/28x30.webp',
-        dims:['190×60×13','190×60×14','190×65×13','190×65×14','190×65×15','190×65×10','190×70×10','190×70×13','190×70×14','190×70×20','190×75×13','190×75×14','190×80×10','190×80×13','190×80×14','190×80×20','190×90×14','190×95×14']
+        dims:[
+          {d:'190×60×13', prix:null},
+          {d:'190×60×14', prix:null},
+          {d:'190×65×13', prix:76.000},
+          {d:'190×65×14', prix:null},
+          {d:'190×65×15', prix:null},
+          {d:'190×65×10', prix:null},
+          {d:'190×70×10', prix:64.000},
+          {d:'190×70×13', prix:80.000},
+          {d:'190×70×14', prix:91.000},
+          {d:'190×70×20', prix:null},
+          {d:'190×75×13', prix:null},
+          {d:'190×75×14', prix:null},
+          {d:'190×80×10', prix:null},
+          {d:'190×80×13', prix:93.000},
+          {d:'190×80×14', prix:106.000},
+          {d:'190×80×20', prix:150.000},
+          {d:'190×90×14', prix:126.000},
+          {d:'190×95×14', prix:null},
+        ]
       },
       {
         id:'magic30', label:'Magic 30',
@@ -684,7 +749,18 @@ const catalogue = {
         desc:'Qualité Magic 30 — mousse haute performance, confort premium et longue durée.',
         badge:'Premium',
         img:'images/matelas%20mousse/magic30.webp',
-        dims:['190×65×13','190×65×14','190×70×10','190×70×13','190×70×14','190×75×13','190×75×14','190×80×14','190×90×13','190×90×14']
+        dims:[
+          {d:'190×65×13', prix:null},
+          {d:'190×65×14', prix:null},
+          {d:'190×70×10', prix:88.000},
+          {d:'190×70×13', prix:108.000},
+          {d:'190×70×14', prix:125.000},
+          {d:'190×75×13', prix:null},
+          {d:'190×75×14', prix:null},
+          {d:'190×80×14', prix:null},
+          {d:'190×90×13', prix:null},
+          {d:'190×90×14', prix:null},
+        ]
       },
       {
         id:'hr', label:'HR',
@@ -692,37 +768,60 @@ const catalogue = {
         desc:'Haute Résilience — mousse technique professionnelle, très résistante à l\'affaissement.',
         badge:'Pro',
         img:'images/matelas%20mousse/HR.jpg',
-        dims:['190×70×13','190×70×14','190×80×13','190×80×14']
+        dims:[
+          {d:'190×70×13', prix:183.000},
+          {d:'190×70×14', prix:209.000},
+          {d:'190×80×13', prix:null},
+          {d:'190×80×14', prix:null},
+        ]
       },
     ]
   },
 
   'mousse-tabka':{
     label:'Plaque de Mousse (TABKA)', icon:'🟫', parent:'mousse', isTabkaPage:true,
-    desc:'Plaques de mousse 190×140 cm — 5 densités, plusieurs épaisseurs disponibles.',
+    desc:'Plaques de mousse 190×140 cm — 7 densités, plusieurs épaisseurs disponibles.',
     baseDim:'190×140 cm',
     types:[
+      { id:'12-14', label:'12/14',       color:'#26A69A', bgColor:'#E0F2F1', desc:'Densité économique — dossiers et accoudoirs',       badge:'Économique',    img:'images/plaque%20mousse/15x17.jpg',
+        thicknesses:[
+          { ep:'0.5 cm', prix:4.500,  dim:'190×140 cm' },
+          { ep:'0.8 cm', prix:6.500,  dim:'180×130 cm' },
+          { ep:'2 cm',   prix:13.500, dim:'180×130 cm' },
+          { ep:'3 cm',   prix:20.500, dim:'180×130 cm' },
+          { ep:'4 cm',   prix:27.500, dim:'180×130 cm' },
+          { ep:'5 cm',   prix:34.000, dim:'180×130 cm' },
+        ]},
       { id:'13-15', label:'13/15',       color:'#607D8B', bgColor:'#ECEFF1', desc:'Densité légère — dossiers et accoudoirs',          badge:'Légère',       img:'images/plaque%20mousse/13x15.jpg',
         thicknesses:[{ ep:'0.8 cm', prix:5.500 }] },
       { id:'15-17', label:'15/17',       color:'#5C6BC0', bgColor:'#E8EAF6', desc:'Densité standard — usage général tapisserie',       badge:'Standard',     img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { ep:'0.9 cm', prix:7.200 }, { ep:'1 cm', prix:7.900 }, { ep:'2 cm', prix:15.800 },
-          { ep:'3 cm', prix:24.000 },  { ep:'4 cm', prix:32.000 }, { ep:'5 cm', prix:41.000 }
+          { ep:'0.9 cm', prix:8.500 }, { ep:'1 cm', prix:9.500 }, { ep:'2 cm', prix:19.000 },
+          { ep:'3 cm', prix:28.500 },  { ep:'4 cm', prix:37.000 }, { ep:'5 cm', prix:46.500 }
         ]},
       { id:'20-22', label:'20/22 Souple',color:'#43A047', bgColor:'#E8F5E9', desc:'Densité souple — assises confortables',            badge:'Souple',       img:'images/plaque%20mousse/20x22.jpg',
         thicknesses:[
           { ep:'1 cm', prix:10.800 }, { ep:'2 cm', prix:21.500 }, { ep:'3 cm', prix:32.400 },
           { ep:'4 cm', prix:43.000 }, { ep:'5 cm', prix:54.000 }
         ]},
+      { id:'22-24', label:'22/24',       color:'#8D6E63', bgColor:'#EFEBE9', desc:'Densité intermédiaire — confort et durabilité équilibrés', badge:'Intermédiaire', img:'images/plaque%20mousse/15x17.jpg',
+        thicknesses:[
+          { ep:'2 cm', prix:25.500 }, { ep:'3 cm', prix:38.500 },
+          { ep:'4 cm', prix:50.500 }, { ep:'5 cm', prix:64.000 }
+        ]},
       { id:'28-30', label:'28/30',       color:'#FB8C00', bgColor:'#FFF3E0', desc:'Haute densité — assises et sièges durables',        badge:'Haute densité', img:'images/plaque%20mousse/28x30.jpg',
         thicknesses:[
-          { ep:'1 cm', prix:11.000 }, { ep:'2 cm', prix:22.000 }, { ep:'3 cm', prix:34.000 },
-          { ep:'4 cm', prix:45.000 }, { ep:'5 cm', prix:57.000 }
+          { ep:'1 cm', prix:11.000 }, { ep:'2 cm', prix:27.500 }, { ep:'3 cm', prix:42.500 },
+          { ep:'4 cm', prix:54.500 }, { ep:'5 cm', prix:71.000 }
         ]},
       { id:'hr',    label:'HR',          color:'#E53935', bgColor:'#FFEBEE', desc:'Haute résilience — usage intensif professionnel',   badge:'HR Premium',   img:'images/plaque%20mousse/hr.jpg',
         thicknesses:[
           { ep:'1 cm', prix:24.000 }, { ep:'2 cm', prix:48.000 }, { ep:'3 cm', prix:72.000 },
           { ep:'4 cm', prix:96.000 }, { ep:'5 cm', prix:115.000 }
+        ]},
+      { id:'magic30', label:'Magic 30',  color:'#7B5EA7', bgColor:'#F3E5F5', desc:'Qualité Magic 30 — confort premium haut de gamme',  badge:'Premium',      img:'images/plaque%20mousse/magic.jpg',
+        thicknesses:[
+          { ep:'5 cm', prix:85.000 }
         ]},
     ]
   },
@@ -756,7 +855,7 @@ const catalogue = {
 
   ressort:{
     label:'Matelas Ressort', icon:'🛏️', isRessortPage:true,
-    desc:'Matelas à ressorts Super Siesta — 9 qualités, 14 dimensions disponibles.',
+    desc:'Matelas à ressorts Super Siesta — 10 qualités, 15 dimensions disponibles.',
     types:[
       { id:'soft',        label:'SOFT+',                color:'#2196F3', bgColor:'#E3F2FD', desc:'Confort doux idéal pour usage quotidien',            badge:'Entrée de gamme',  img:'images/matelas%20ressort/soft.jpg'      },
       { id:'venise',      label:'Venise+',              color:'#9C27B0', bgColor:'#F3E5F5', desc:'Confort équilibré avec bonne durabilité',            badge:'Milieu de gamme',  img:'images/matelas%20ressort/venise.jpg'    },
@@ -767,22 +866,24 @@ const catalogue = {
       { id:'relax-pt',    label:'RELAX+ Pillow Top',    color:'#BF360C', bgColor:'#FBE9E7', desc:'Relax+ avec surface pillow top luxueuse',           badge:'Premium',          img:'images/matelas%20ressort/relax.jpg'     },
       { id:'tendresse',   label:'Tendresse',            color:'#C2185B', bgColor:'#FCE4EC', desc:'Douceur extrême — confort haut de gamme',            badge:'Top gamme',        img:'images/matelas%20ressort/tendresse.jpg' },
       { id:'tendresse-pt',label:'Tendresse Pillow Top', color:'#880E4F', bgColor:'#F8BBD0', desc:'Tendresse avec surface pillow top haut de gamme',   badge:'Luxe',             img:'images/matelas%20ressort/tendresse.jpg' },
+      { id:'confort',      label:'Confort',              color:'#AB47BC', bgColor:'#F3E5F5', desc:'Gamme Confort — sensation moelleuse et accueillante', badge:'Grand Confort',    img:null },
     ],
     sizes:[
-      { dim:'120×60',  prices:[200,  240,  450,  340,  550,  420,  620,  570,  780]  },
-      { dim:'190×80',  prices:[260,  310,  620,  440,  750,  530,  880,  730,  1090] },
-      { dim:'190×90',  prices:[290,  340,  650,  490,  800,  590,  950,  800,  1160] },
-      { dim:'190×100', prices:[440,  490,  900,  670,  1090, 850,  1260, 1230, 1860] },
-      { dim:'190×110', prices:[480,  530,  940,  780,  1190, 930,  1340, 1290, 1700] },
-      { dim:'190×120', prices:[400,  460,  960,  720,  1130, 840,  1320, 1140, 1710] },
-      { dim:'190×140', prices:[410,  480,  930,  720,  1180, 860,  1400, 1189, 1790] },
-      { dim:'190×150', prices:[540,  630,  1100, 910,  1450, 1100, 1550, 1500, 2170] },
-      { dim:'190×160', prices:[460,  540,  990,  830,  1310, 990,  1550, 1370, 2090] },
-      { dim:'200×90',  prices:[410,  490,  900,  670,  1090, 780,  1190, 1070, 1480] },
-      { dim:'200×100', prices:[460,  530,  940,  750,  1160, 860,  1270, 1190, 1600] },
-      { dim:'200×120', prices:[540,  630,  1100, 880,  1340, 1080, 1550, 1480, 1940] },
-      { dim:'200×160', prices:[520,  610,  1030, 910,  1540, 1140, 1730, 1520, 2250] },
-      { dim:'200×180', prices:[620,  730,  1400, 1090, 1810, 1340, 2030, 1810, 2630] },
+      { dim:'120×60',  prices:[200,  240,  450,  340,  550,  420,  620,  570,  780,  null] },
+      { dim:'190×70',  prices:[null, null, null, null, null, null, null, null, null, 190]  },
+      { dim:'190×80',  prices:[260,  310,  620,  440,  750,  530,  880,  730,  1090, null] },
+      { dim:'190×90',  prices:[290,  340,  650,  490,  800,  590,  950,  800,  1160, null] },
+      { dim:'190×100', prices:[440,  490,  900,  670,  1090, 850,  1260, 1230, 1860, null] },
+      { dim:'190×110', prices:[480,  530,  940,  780,  1190, 930,  1340, 1290, 1700, null] },
+      { dim:'190×120', prices:[400,  460,  960,  720,  1130, 840,  1320, 1140, 1710, null] },
+      { dim:'190×140', prices:[410,  480,  930,  720,  1180, 860,  1400, 1189, 1790, null] },
+      { dim:'190×150', prices:[540,  630,  1100, 910,  1450, 1100, 1550, 1500, 2170, null] },
+      { dim:'190×160', prices:[460,  540,  990,  830,  1310, 990,  1550, 1370, 2090, null] },
+      { dim:'200×90',  prices:[410,  490,  900,  670,  1090, 780,  1190, 1070, 1480, null] },
+      { dim:'200×100', prices:[460,  530,  940,  750,  1160, 860,  1270, 1190, 1600, null] },
+      { dim:'200×120', prices:[540,  630,  1100, 880,  1340, 1080, 1550, 1480, 1940, null] },
+      { dim:'200×160', prices:[520,  610,  1030, 910,  1540, 1140, 1730, 1520, 2250, null] },
+      { dim:'200×180', prices:[620,  730,  1400, 1090, 1810, 1340, 2030, 1810, 2630, null] },
     ]
   },
 
@@ -1627,7 +1728,7 @@ function renderMoussePage(content, cat) {
   <div style="background:linear-gradient(135deg,#1B3A6E,#1B6E6A);border-radius:var(--radius-lg);padding:28px 32px;color:var(--white);margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
     <div>
       <div style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(43,190,200,.9);margin-bottom:6px">🛏️ Matelas Mousse</div>
-      <h2 style="font-family:'Raleway',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:6px">4 Qualités de Mousse Disponibles</h2>
+      <h2 style="font-family:'Raleway',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:6px">7 Qualités de Mousse Disponibles</h2>
       <p style="font-size:.88rem;color:rgba(255,255,255,.75);max-width:520px">Dimensions standard disponibles en stock. Toute dimension spéciale est réalisable sur commande — indiquez vos mesures dans le formulaire ci-dessous.</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
         ${cat.types.map(t=>`<span style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:.75rem;font-weight:600;padding:4px 12px;border-radius:50px">${t.label}</span>`).join('')}
@@ -1647,45 +1748,10 @@ function renderMoussePage(content, cat) {
     </div>
   </div>
 
-  <!-- Onglets de type -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px" id="mousse-type-tabs">
-    <button class="mousse-tab-btn active" onclick="switchMousseTab('all',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--teal);background:var(--teal);color:var(--white);font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:var(--transition)">Toutes les qualités</button>
-    ${cat.types.map(t=>`<button class="mousse-tab-btn" onclick="switchMousseTab('${t.id}',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:var(--transition)">${t.label}</button>`).join('')}
-  </div>
-
-  <!-- Grille des types de mousse -->
-  <div id="mousse-types-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:36px">
-    ${cat.types.map(t => `
-    <div class="mousse-type-card" data-type="${t.id}" style="background:var(--white);border:1.5px solid ${t.color}22;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition)">
-      ${t.img ? `<!-- Image bannière -->
-      <div style="height:150px;overflow:hidden;position:relative">
-        <img src="${t.img}" alt="${t.label}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="width:100%;height:100%;object-fit:cover">
-        <div style="position:absolute;top:10px;right:10px;background:${t.color};color:#fff;font-size:.68rem;font-weight:700;padding:3px 12px;border-radius:50px;letter-spacing:.04em">${t.badge}</div>
-      </div>` : ''}
-      <!-- Card header -->
-      <div style="background:${t.bgColor};border-bottom:1.5px solid ${t.color}22;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:1.1rem;font-weight:800;color:${t.color};font-family:'Raleway',sans-serif">${t.label}</div>
-          <div style="font-size:.78rem;color:var(--gray-600);margin-top:2px">${t.desc}</div>
-        </div>
-        ${!t.img ? `<span style="background:${t.color};color:var(--white);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:50px;white-space:nowrap">${t.badge}</span>` : ''}
-      </div>
-      <!-- Dimensions -->
-      <div style="padding:16px 20px">
-        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);margin-bottom:12px">📏 Dimensions disponibles (Longueur × Largeur × Épaisseur en cm)</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
-          ${t.dims.map(d=>`<span onclick="fillDim('${t.id}','${d}')" style="background:${t.bgColor};border:1px solid ${t.color}44;color:${t.color};font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;transition:.2s;font-family:'Poppins',sans-serif" onmouseover="this.style.background='${t.color}';this.style.color='#fff'" onmouseout="this.style.background='${t.bgColor}';this.style.color='${t.color}'">${d}</span>`).join('')}
-        </div>
-        <div style="font-size:.73rem;color:var(--gray-400);display:flex;align-items:center;gap:5px">
-          <span>💡</span> Cliquez sur une dimension pour la remplir dans le formulaire
-        </div>
-        <div class="stock-wrap" data-stock-id="mousse-${t.id}" style="margin-top:10px"></div>
-      </div>
-    </div>`).join('')}
-  </div>
-
+  <div class="mousse-2col" style="display:flex;gap:24px;align-items:flex-start">
+  <div class="mousse-col-form" style="order:2;width:380px;flex-shrink:0;position:sticky;top:90px">
   <!-- FORMULAIRE DE COMMANDE -->
-  <div style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:28px">
+  <div id="mousse-quote-form" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:28px">
     <div style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));padding:20px 28px;display:flex;align-items:center;gap:14px">
       <span style="font-size:1.6rem">🛒</span>
       <div>
@@ -1735,7 +1801,7 @@ function renderMoussePage(content, cat) {
           </div>
           <button onclick="clearDims()" style="padding:10px 14px;background:var(--gray-100);border:1.5px solid var(--gray-200);border-radius:var(--radius);cursor:pointer;font-size:.85rem;color:var(--gray-600);font-family:'Poppins',sans-serif;white-space:nowrap" title="Effacer">🔄 Réinitialiser</button>
         </div>
-        <div style="margin-top:8px;font-size:.75rem;color:var(--gray-400)">💡 Ou cliquez sur une dimension dans le tableau ci-dessus pour la remplir automatiquement</div>
+        <div style="margin-top:8px;font-size:.75rem;color:var(--gray-400)">💡 Ou cliquez sur une dimension "sur devis" ci-dessous pour la remplir automatiquement</div>
       </div>
 
       <!-- Ligne 3 : Quantité + Notes -->
@@ -1765,33 +1831,62 @@ function renderMoussePage(content, cat) {
       <!-- Boutons -->
       <div style="display:flex;gap:12px;flex-wrap:wrap">
         <button onclick="previewOrder()" style="flex:1;min-width:160px;padding:13px 20px;background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;color:var(--gray-800);cursor:pointer;transition:var(--transition)" onmouseover="this.style.background='var(--gray-100)'" onmouseout="this.style.background='var(--gray-50)'">👁️ Aperçu de la commande</button>
-        <button onclick="submitMousseOrder()" style="flex:2;min-width:200px;padding:13px 20px;background:linear-gradient(135deg,var(--teal),var(--navy-light));border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;color:var(--white);cursor:pointer;box-shadow:0 4px 16px rgba(43,190,200,.3);transition:var(--transition)" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">🛒 Envoyer la demande de devis</button>
+        <button onclick="submitMousseOrder()" style="flex:2;min-width:200px;padding:13px 20px;background:linear-gradient(135deg,var(--teal),var(--navy-light));border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;color:var(--white);cursor:pointer;box-shadow:0 4px 16px rgba(43,190,200,.3);transition:var(--transition)" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">🛒 Ajouter au Panier</button>
       </div>
     </div>
   </div>
+  </div><!-- /mousse-col-form -->
 
-  <!-- Tableau récapitulatif de commande sauvegardée -->
-  <div id="saved-orders-wrap" style="display:none">
-    <div style="font-size:.9rem;font-weight:700;color:var(--navy-dark);margin-bottom:14px;display:flex;align-items:center;gap:8px">📦 Mes demandes enregistrées <span id="saved-count" style="background:var(--teal);color:var(--white);font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:50px">0</span></div>
-    <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden">
-      <table style="width:100%;border-collapse:collapse">
-        <thead><tr>
-          <th style="text-align:left;font-size:.72rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px;background:var(--gray-50)">Qualité</th>
-          <th style="text-align:left;font-size:.72rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px;background:var(--gray-50)">Dimensions</th>
-          <th style="text-align:left;font-size:.72rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px;background:var(--gray-50)">Qté</th>
-          <th style="text-align:left;font-size:.72rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px;background:var(--gray-50)">Statut</th>
-          <th style="padding:12px 16px;background:var(--gray-50)"></th>
-        </tr></thead>
-        <tbody id="saved-orders-body"></tbody>
-      </table>
-    </div>
+  <div class="mousse-col-grid" style="order:1;flex:1;min-width:0">
+  <!-- Onglets de type -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px" id="mousse-type-tabs">
+    <button class="mousse-tab-btn active" onclick="switchMousseTab('all',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--teal);background:var(--teal);color:var(--white);font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:var(--transition)">Toutes les qualités</button>
+    ${cat.types.map(t=>`<button class="mousse-tab-btn" onclick="switchMousseTab('${t.id}',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer;transition:var(--transition)">${t.label}</button>`).join('')}
   </div>
+
+  <!-- Grille des types de mousse -->
+  <div id="mousse-types-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:36px">
+    ${cat.types.map(t => `
+    <div class="mousse-type-card" data-type="${t.id}" style="background:var(--white);border:1.5px solid ${t.color}22;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition)">
+      ${t.img ? `<!-- Image bannière -->
+      <div style="height:150px;overflow:hidden;position:relative">
+        <img src="${t.img}" alt="${t.label}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;top:10px;right:10px;background:${t.color};color:#fff;font-size:.68rem;font-weight:700;padding:3px 12px;border-radius:50px;letter-spacing:.04em">${t.badge}</div>
+      </div>` : ''}
+      <!-- Card header -->
+      <div style="background:${t.bgColor};border-bottom:1.5px solid ${t.color}22;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:1.1rem;font-weight:800;color:${t.color};font-family:'Raleway',sans-serif">${t.label}</div>
+          <div style="font-size:.78rem;color:var(--gray-600);margin-top:2px">${t.desc}</div>
+        </div>
+        ${!t.img ? `<span style="background:${t.color};color:var(--white);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:50px;white-space:nowrap">${t.badge}</span>` : ''}
+      </div>
+      <!-- Dimensions -->
+      <div style="padding:16px 20px">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-600);margin-bottom:12px">📏 Dimensions disponibles (Longueur × Largeur × Épaisseur en cm)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+          ${t.dims.map(d => d.prix != null ? `
+          <div style="display:flex;align-items:center;gap:7px;background:${t.bgColor};border:1px solid ${t.color}44;border-radius:8px;padding:6px 6px 6px 10px">
+            <span style="font-size:.78rem;font-weight:700;color:${t.color}">${d.d}</span>
+            <span style="font-size:.78rem;font-weight:800;color:var(--navy-dark)">${d.prix.toFixed(3)} DT</span>
+            <button onclick="addMousseToCart('${t.id}','${d.d}',${d.prix})" style="width:24px;height:24px;border:none;background:${t.color};color:#fff;border-radius:6px;cursor:pointer;font-size:.78rem;display:flex;align-items:center;justify-content:center" title="Ajouter au panier">🛒</button>
+          </div>` : `
+          <span onclick="fillDim('${t.id}','${d.d}')" style="background:var(--gray-50);border:1px dashed var(--gray-300);color:var(--gray-600);font-size:.75rem;font-weight:600;padding:6px 10px;border-radius:8px;cursor:pointer;transition:.2s;font-family:'Poppins',sans-serif" onmouseover="this.style.borderColor='${t.color}';this.style.color='${t.color}'" onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--gray-600)'" title="Sur devis — cliquer pour demander">${d.d} <span style="font-size:.68rem;opacity:.75">(sur devis)</span></span>`
+          ).join('')}
+        </div>
+        <div style="font-size:.73rem;color:var(--gray-400);display:flex;align-items:center;gap:5px">
+          <span>💡</span> Cliquez sur "sur devis" pour remplir le formulaire de demande personnalisée
+        </div>
+        <div class="stock-wrap" data-stock-id="mousse-${t.id}" style="margin-top:10px"></div>
+      </div>
+    </div>`).join('')}
+  </div>
+  </div><!-- /mousse-col-grid -->
+  </div><!-- /mousse-2col -->
+
   `;
 
   content.innerHTML = html;
-
-  // Load saved orders
-  renderSavedOrders();
 }
 
 /* ---- Mousse page interactions ---- */
@@ -1845,7 +1940,24 @@ function fillDim(typeId, dim) {
   const radio = document.querySelector(`input[name="mousse_type"][value="${typeId}"]`);
   if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
   updateRecap();
-  showToast('info', 'Dimension sélectionnée', dim + ' — ajustez la quantité et envoyez votre devis.');
+  document.getElementById('mousse-quote-form')?.scrollIntoView({ behavior:'smooth', block:'start' });
+  showToast('info', 'Dimension sélectionnée', dim + ' — ajustez la quantité et ajoutez au panier.');
+}
+
+function addMousseToCart(typeId, dim, prix) {
+  const cat = catalogue['mousse-matelas'];
+  const t   = cat.types.find(x => x.id === typeId);
+  Cart.add({
+    productId: 'matelas-' + typeId + '-' + dim.replace(/×/g,'x'),
+    code:      '',
+    catId:     'mousse-matelas',
+    name:      'Matelas Mousse ' + (t ? t.label : typeId),
+    variant:   dim + ' cm',
+    price:     prix.toFixed(3) + ' DT',
+    priceNum:  prix,
+    qty:       1,
+    icon:      '🛏️'
+  });
 }
 
 function clearDims() {
@@ -1894,24 +2006,24 @@ function submitMousseOrder() {
   const h = document.getElementById('dim-h')?.value;
   const q = parseInt(document.getElementById('qty')?.value || 1);
   const notes = document.getElementById('notes')?.value || '';
+
   if (!selectedMousseLabel) { showToast('error','Qualité requise','Veuillez sélectionner un type de mousse.'); return; }
   if (!l || !w || !h)        { showToast('error','Dimensions requises','Veuillez remplir les trois dimensions.'); return; }
 
-  const order = {
-    id:    'CMD-' + Date.now(),
-    type:  selectedMousseLabel,
-    dims:  `${l}×${w}×${h} cm`,
-    qty:   q,
-    notes: notes,
-    date:  new Date().toLocaleDateString('fr-FR'),
-    status:'En attente'
-  };
+  const dims = `${l}×${w}×${h} cm`;
+  Cart.add({
+    productId: 'matelas-devis-' + selectedMousseType + '-' + Date.now(),
+    code:      '',
+    catId:     'mousse-matelas',
+    name:      'Matelas Mousse ' + selectedMousseLabel,
+    variant:   dims,
+    price:     'Sur devis',
+    priceNum:  0,
+    qty:       q,
+    note:      notes,
+    icon:      '🛏️'
+  });
 
-  const orders = JSON.parse(localStorage.getItem('5f_mousse_orders') || '[]');
-  orders.unshift(order);
-  localStorage.setItem('5f_mousse_orders', JSON.stringify(orders));
-
-  showToast('success','Demande envoyée !', `Matelas ${selectedMousseLabel} — ${l}×${w}×${h}cm × ${q}u enregistré.`);
   clearDims();
   document.getElementById('qty').value = 1;
   document.getElementById('notes').value = '';
@@ -1920,7 +2032,8 @@ function submitMousseOrder() {
   document.querySelectorAll('.form-type-pill').forEach(p => { p.style.border = '2px solid var(--gray-200)'; p.style.background = 'var(--gray-50)'; });
   document.getElementById('form-type-info').style.display = 'none';
   document.getElementById('form-recap').style.display = 'none';
-  renderSavedOrders();
+
+  setTimeout(() => { window.location.href = 'panier.html'; }, 1200);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1973,7 +2086,7 @@ function renderTabkaTypeGrid(cat, typeIdx) {
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:700;padding:4px 14px;border-radius:50px">${t.badge}</span>
-      <span style="font-size:.75rem;color:var(--gray-400)">${cat.baseDim} — ${t.thicknesses.length} épaisseur${t.thicknesses.length>1?'s':''}</span>
+      <span style="font-size:.75rem;color:var(--gray-400)">${t.dim || cat.baseDim} — ${t.thicknesses.length} épaisseur${t.thicknesses.length>1?'s':''}</span>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:16px">
@@ -1990,12 +2103,12 @@ function renderTabkaTypeGrid(cat, typeIdx) {
       <div class="prod-card-body">
         <div class="p-cat">Plaque Mousse TABKA</div>
         <div class="p-name" style="font-size:.86rem">Tabka ${t.label}</div>
-        <div class="p-desc">${cat.baseDim} — Ép. ${th.ep}</div>
+        <div class="p-desc">${th.dim || t.dim || cat.baseDim} — Ép. ${th.ep}</div>
       </div>
       <div class="stock-wrap" data-stock-id="tabka-${typeIdx}-${th.ep.replace(/\s/g,'')}"></div>
       <div class="prod-card-footer">
         <div class="p-price">${th.prix.toFixed(3)} DT</div>
-        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix})">🛒</button>
+        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix},'${th.dim || t.dim || cat.baseDim}')">🛒</button>
       </div>
     </div>`).join('')}
   </div>`;
@@ -2017,14 +2130,15 @@ function switchTabkaTab(typeIdx, btn) {
   if (window.Stock) Stock.refreshAll();
 }
 
-function addTabkaToCart(typeIdx, ep, prix) {
+function addTabkaToCart(typeIdx, ep, prix, dim) {
   const cat = catalogue['mousse-tabka'];
   const typeLabel = cat.types[typeIdx].label;
   Cart.add({
     productId: 'tabka-' + typeIdx + '-' + ep.replace(/\s/g,''),
+    code:      '',
     catId:     'mousse-tabka',
     name:      'Plaque Mousse TABKA ' + typeLabel,
-    variant:   cat.baseDim + ' — Ép. ' + ep,
+    variant:   (dim || cat.baseDim) + ' — Ép. ' + ep,
     price:     prix.toFixed(3) + ' DT',
     priceNum:  prix,
     qty:       1,
@@ -2147,8 +2261,10 @@ function renderRessortTypeGrid(cat, typeIdx) {
         </div>
         <div class="stock-wrap" data-stock-id="ressort-${typeIdx}-${s.dim}"></div>
         <div class="prod-card-footer">
-          <div class="p-price">${prix} DT</div>
-          <button class="add-btn" onclick="event.stopPropagation();addRessortToCart('${s.dim}',${typeIdx},${prix})">🛒</button>
+          <div class="${prix != null ? 'p-price' : 'p-price na'}">${prix != null ? prix + ' DT' : 'Sur devis'}</div>
+          ${prix != null
+            ? `<button class="add-btn" onclick="event.stopPropagation();addRessortToCart('${s.dim}',${typeIdx},${prix})">🛒</button>`
+            : ''}
         </div>
       </div>`;
     }).join('')}
@@ -2175,6 +2291,7 @@ function addRessortToCart(dim, typeIdx, prix) {
   const typeLabel = catalogue.ressort.types[typeIdx].label;
   Cart.add({
     productId: 'ressort-' + typeIdx + '-' + dim,
+    code:      '',
     catId:     'ressort',
     name:      'Matelas Super Siesta ' + typeLabel,
     variant:   dim + ' cm',
@@ -2183,32 +2300,6 @@ function addRessortToCart(dim, typeIdx, prix) {
     qty:       1,
     icon:      '🛏️'
   });
-}
-
-function renderSavedOrders() {
-  const orders = JSON.parse(localStorage.getItem('5f_mousse_orders') || '[]');
-  const wrap = document.getElementById('saved-orders-wrap');
-  const body = document.getElementById('saved-orders-body');
-  const count = document.getElementById('saved-count');
-  if (!wrap || !body) return;
-  if (!orders.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = '';
-  if (count) count.textContent = orders.length;
-  body.innerHTML = orders.map(o => `
-    <tr>
-      <td style="padding:12px 16px;font-size:.84rem;font-weight:600;color:var(--navy-dark)">${o.type}</td>
-      <td style="padding:12px 16px;font-size:.84rem;color:var(--gray-800);font-weight:600">${o.dims}</td>
-      <td style="padding:12px 16px;font-size:.84rem;color:var(--gray-800)">${o.qty} u</td>
-      <td style="padding:12px 16px"><span style="background:rgba(221,107,32,.1);color:#DD6B20;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:50px">${o.status}</span></td>
-      <td style="padding:12px 16px"><button onclick="deleteOrder('${o.id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.8rem;padding:4px 10px;border-radius:6px;cursor:pointer">✕</button></td>
-    </tr>`).join('');
-}
-
-function deleteOrder(id) {
-  let orders = JSON.parse(localStorage.getItem('5f_mousse_orders') || '[]');
-  orders = orders.filter(o => o.id !== id);
-  localStorage.setItem('5f_mousse_orders', JSON.stringify(orders));
-  renderSavedOrders();
 }
 
 /* ===== OUTILS DE TAPISSERIE ===== */

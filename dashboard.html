@@ -215,6 +215,7 @@
       <div id="navAdminSection" style="display:none">
         <div class="nav-sect">Administration</div>
         <div class="s-link" id="navAdminOrders" onclick="showSection('admin-orders')"><span class="ico">📋</span> Commandes reçues <span class="bdg" id="adminOrdersBadge" style="background:#e53e3e;display:none">0</span></div>
+        <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">🛍️</span> Catalogue</div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📊</span> Gérer le Stock</div>
         <div class="s-link" id="navParametres" onclick="showSection('parametres')"><span class="ico">⚙️</span> Paramètres</div>
       </div>
@@ -531,8 +532,8 @@
 <div id="editPwdModal" style="display:none;position:fixed;inset:0;background:rgba(18,47,75,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
   <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center">
     <div style="width:60px;height:60px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 18px">🔐</div>
-    <h3 style="font-family:'Raleway',sans-serif;font-size:1.15rem;font-weight:800;color:#1B4E7A;margin-bottom:8px">Vérification requise</h3>
-    <p style="font-size:.82rem;color:#64748b;margin-bottom:20px">Saisissez le mot de passe du jour pour modifier cette commande.</p>
+    <h3 id="editPwdModalTitle" style="font-family:'Raleway',sans-serif;font-size:1.15rem;font-weight:800;color:#1B4E7A;margin-bottom:8px">Vérification requise</h3>
+    <p id="editPwdModalText" style="font-size:.82rem;color:#64748b;margin-bottom:20px">Saisissez le mot de passe du jour pour modifier cette commande.</p>
     <input id="editPwdInput" type="password" placeholder="Mot de passe du jour…"
       onkeydown="if(event.key==='Enter')verifyEditPwd()"
       style="width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.95rem;text-align:center;letter-spacing:.15em;outline:none;margin-bottom:8px">
@@ -775,6 +776,7 @@
      Ex: 16/06 → "0116."
   ══════════════════════════════════════════ */
   let _editTargetId = null;
+  let _pwdAction = 'edit';
 
   function getDailyPassword() {
     const d = new Date();
@@ -783,8 +785,22 @@
 
   function requestEditOrder(orderId) {
     _editTargetId = orderId;
+    _pwdAction = 'edit';
     document.getElementById('editPwdInput').value = '';
     document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModalTitle').textContent = 'Vérification requise';
+    document.getElementById('editPwdModalText').textContent  = 'Saisissez le mot de passe du jour pour modifier cette commande.';
+    document.getElementById('editPwdModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
+  }
+
+  function requestDeleteOrder(orderId) {
+    _editTargetId = orderId;
+    _pwdAction = 'delete';
+    document.getElementById('editPwdInput').value = '';
+    document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModalTitle').textContent = '🗑️ Suppression de commande';
+    document.getElementById('editPwdModalText').textContent  = 'Saisissez le mot de passe du jour pour supprimer définitivement cette commande.';
     document.getElementById('editPwdModal').style.display = 'flex';
     setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
   }
@@ -803,7 +819,29 @@
       return;
     }
     document.getElementById('editPwdModal').style.display = 'none';
-    openEditOrder(_editTargetId);
+    if (_pwdAction === 'delete') {
+      deleteOrderConfirmed(_editTargetId);
+    } else {
+      openEditOrder(_editTargetId);
+    }
+  }
+
+  function deleteOrderConfirmed(orderId) {
+    // Nettoyage localStorage (cohérence Mes Commandes / badges)
+    const orders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
+    localStorage.setItem('5f_orders', JSON.stringify(orders.filter(o => o.id !== orderId)));
+
+    if (typeof db !== 'undefined') {
+      db.collection('orders').doc(orderId).delete()
+        .then(() => showToast('success', 'Commande supprimée', 'N° ' + orderId))
+        .catch(e => { console.warn('deleteOrder Firestore:', e.message); showToast('error', 'Erreur Firestore', 'La suppression cloud a échoué.'); });
+    } else {
+      showToast('success', 'Commande supprimée', 'N° ' + orderId);
+    }
+
+    _allOrders = _allOrders.filter(o => (o._id || o.id) !== orderId);
+    renderAdminOrders(_allOrders);
+    updateOrdersStats(_allOrders);
   }
 
   let _editRowCounter = 0;
@@ -1354,7 +1392,7 @@
   }
 
   function showNewOrderNotification(order) {
-    const clientName = order.clientName || order.nom || 'Nouveau client';
+    const clientName = order.clientName || order.nom || order.name || 'Nouveau client';
     const city       = order.city || order.ville || '';
     const total      = order.totalDT || order.total || '—';
     const items      = Array.isArray(order.items) ? order.items : [];
@@ -1501,7 +1539,7 @@
     };
     const sc = statusColors[status] || statusColors['En attente'];
 
-    const clientName = o.clientName || o.nom  || '—';
+    const clientName = o.clientName || o.nom || o.name || '—';
     const phone      = o.phone      || o.tel  || '—';
     const city       = o.city       || o.ville|| '—';
     const total      = o.totalDT    || o.total|| '—';
@@ -1557,6 +1595,9 @@
           </button>
           <button onclick="requestEditOrder('${safeId}')" style="padding:7px 14px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
             ✏️ Modifier
+          </button>
+          <button onclick="requestDeleteOrder('${safeId}')" style="padding:7px 14px;background:#e53e3e;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
+            🗑️ Supprimer
           </button>
           <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total} DT</div>
         </div>
