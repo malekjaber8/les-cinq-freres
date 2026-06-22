@@ -8,4 +8,4 @@ Disallow: /register.html
 Disallow: /commandes.html
 
 # Sitemap
-Sitemap: https://www.lescinqfreres.com/sitemap.xml
+Sitemap: https://magasin-les-cinq-freres.netlify.app/sitemap.xml
