@@ -632,6 +632,9 @@
 <script src="firebase-init.js"></script>
 <script src="stock.js"></script>
 <script>
+/* Nombre de qualités Ressort d'origine (fixe — ne JAMAIS faire dépendre les codes MR de cat.types.length, qui grandit avec les ajouts admin) */
+const RESSORT_BASE_TYPES = 10;
+
 /* ===========================================================
    DATA CATALOGUE
    =========================================================== */
@@ -674,8 +677,8 @@ const catalogue = {
         badge:'Économique',
         img:null,
         dims:[
-          {d:'190×65×13', prix:52.500},
-          {d:'190×70×13', prix:57.000},
+          {code:'MM001', d:'190×65×13', prix:52.500},
+          {code:'MM002', d:'190×70×13', prix:57.000},
         ]
       },
       {
@@ -685,8 +688,8 @@ const catalogue = {
         badge:'Renforcée',
         img:null,
         dims:[
-          {d:'190×65×13', prix:58.500},
-          {d:'190×70×13', prix:63.000},
+          {code:'MM003', d:'190×65×13', prix:58.500},
+          {code:'MM004', d:'190×70×13', prix:63.000},
         ]
       },
       {
@@ -696,14 +699,14 @@ const catalogue = {
         badge:'Souple',
         img:'images/matelas%20mousse/20x22.webp',
         dims:[
-          {d:'190×60×14', prix:null},
-          {d:'190×65×13', prix:null},
-          {d:'190×65×14', prix:null},
-          {d:'190×65×10', prix:null},
-          {d:'190×70×13', prix:null},
-          {d:'190×70×14', prix:null},
-          {d:'190×80×13', prix:null},
-          {d:'190×80×14', prix:null},
+          {code:'MM005', d:'190×60×14', prix:null},
+          {code:'MM006', d:'190×65×13', prix:null},
+          {code:'MM007', d:'190×65×14', prix:null},
+          {code:'MM008', d:'190×65×10', prix:null},
+          {code:'MM009', d:'190×70×13', prix:null},
+          {code:'MM010', d:'190×70×14', prix:null},
+          {code:'MM011', d:'190×80×13', prix:null},
+          {code:'MM012', d:'190×80×14', prix:null},
         ]
       },
       {
@@ -713,7 +716,7 @@ const catalogue = {
         badge:'Souple+',
         img:null,
         dims:[
-          {d:'190×70×13', prix:77.000},
+          {code:'MM013', d:'190×70×13', prix:77.000},
         ]
       },
       {
@@ -723,24 +726,24 @@ const catalogue = {
         badge:'Populaire',
         img:'images/matelas%20mousse/28x30.webp',
         dims:[
-          {d:'190×60×13', prix:null},
-          {d:'190×60×14', prix:null},
-          {d:'190×65×13', prix:76.000},
-          {d:'190×65×14', prix:null},
-          {d:'190×65×15', prix:null},
-          {d:'190×65×10', prix:null},
-          {d:'190×70×10', prix:64.000},
-          {d:'190×70×13', prix:80.000},
-          {d:'190×70×14', prix:91.000},
-          {d:'190×70×20', prix:null},
-          {d:'190×75×13', prix:null},
-          {d:'190×75×14', prix:null},
-          {d:'190×80×10', prix:null},
-          {d:'190×80×13', prix:93.000},
-          {d:'190×80×14', prix:106.000},
-          {d:'190×80×20', prix:150.000},
-          {d:'190×90×14', prix:126.000},
-          {d:'190×95×14', prix:null},
+          {code:'MM014', d:'190×60×13', prix:null},
+          {code:'MM015', d:'190×60×14', prix:null},
+          {code:'MM016', d:'190×65×13', prix:76.000},
+          {code:'MM017', d:'190×65×14', prix:null},
+          {code:'MM018', d:'190×65×15', prix:null},
+          {code:'MM019', d:'190×65×10', prix:null},
+          {code:'MM020', d:'190×70×10', prix:64.000},
+          {code:'MM021', d:'190×70×13', prix:80.000},
+          {code:'MM022', d:'190×70×14', prix:91.000},
+          {code:'MM023', d:'190×70×20', prix:null},
+          {code:'MM024', d:'190×75×13', prix:null},
+          {code:'MM025', d:'190×75×14', prix:null},
+          {code:'MM026', d:'190×80×10', prix:null},
+          {code:'MM027', d:'190×80×13', prix:93.000},
+          {code:'MM028', d:'190×80×14', prix:106.000},
+          {code:'MM029', d:'190×80×20', prix:150.000},
+          {code:'MM030', d:'190×90×14', prix:126.000},
+          {code:'MM031', d:'190×95×14', prix:null},
         ]
       },
       {
@@ -750,16 +753,16 @@ const catalogue = {
         badge:'Premium',
         img:'images/matelas%20mousse/magic30.webp',
         dims:[
-          {d:'190×65×13', prix:null},
-          {d:'190×65×14', prix:null},
-          {d:'190×70×10', prix:88.000},
-          {d:'190×70×13', prix:108.000},
-          {d:'190×70×14', prix:125.000},
-          {d:'190×75×13', prix:null},
-          {d:'190×75×14', prix:null},
-          {d:'190×80×14', prix:null},
-          {d:'190×90×13', prix:null},
-          {d:'190×90×14', prix:null},
+          {code:'MM032', d:'190×65×13', prix:null},
+          {code:'MM033', d:'190×65×14', prix:null},
+          {code:'MM034', d:'190×70×10', prix:88.000},
+          {code:'MM035', d:'190×70×13', prix:108.000},
+          {code:'MM036', d:'190×70×14', prix:125.000},
+          {code:'MM037', d:'190×75×13', prix:null},
+          {code:'MM038', d:'190×75×14', prix:null},
+          {code:'MM039', d:'190×80×14', prix:null},
+          {code:'MM040', d:'190×90×13', prix:null},
+          {code:'MM041', d:'190×90×14', prix:null},
         ]
       },
       {
@@ -769,10 +772,10 @@ const catalogue = {
         badge:'Pro',
         img:'images/matelas%20mousse/HR.jpg',
         dims:[
-          {d:'190×70×13', prix:183.000},
-          {d:'190×70×14', prix:209.000},
-          {d:'190×80×13', prix:null},
-          {d:'190×80×14', prix:null},
+          {code:'MM042', d:'190×70×13', prix:183.000},
+          {code:'MM043', d:'190×70×14', prix:209.000},
+          {code:'MM044', d:'190×80×13', prix:null},
+          {code:'MM045', d:'190×80×14', prix:null},
         ]
       },
     ]
@@ -785,43 +788,43 @@ const catalogue = {
     types:[
       { id:'12-14', label:'12/14',       color:'#26A69A', bgColor:'#E0F2F1', desc:'Densité économique — dossiers et accoudoirs',       badge:'Économique',    img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { ep:'0.5 cm', prix:4.500,  dim:'190×140 cm' },
-          { ep:'0.8 cm', prix:6.500,  dim:'180×130 cm' },
-          { ep:'2 cm',   prix:13.500, dim:'180×130 cm' },
-          { ep:'3 cm',   prix:20.500, dim:'180×130 cm' },
-          { ep:'4 cm',   prix:27.500, dim:'180×130 cm' },
-          { ep:'5 cm',   prix:34.000, dim:'180×130 cm' },
+          { code:'MT001', ep:'0.5 cm', prix:4.500,  dim:'190×140 cm' },
+          { code:'MT002', ep:'0.8 cm', prix:6.500,  dim:'180×130 cm' },
+          { code:'MT003', ep:'2 cm',   prix:13.500, dim:'180×130 cm' },
+          { code:'MT004', ep:'3 cm',   prix:20.500, dim:'180×130 cm' },
+          { code:'MT005', ep:'4 cm',   prix:27.500, dim:'180×130 cm' },
+          { code:'MT006', ep:'5 cm',   prix:34.000, dim:'180×130 cm' },
         ]},
       { id:'13-15', label:'13/15',       color:'#607D8B', bgColor:'#ECEFF1', desc:'Densité légère — dossiers et accoudoirs',          badge:'Légère',       img:'images/plaque%20mousse/13x15.jpg',
-        thicknesses:[{ ep:'0.8 cm', prix:5.500 }] },
+        thicknesses:[{ code:'MT007', ep:'0.8 cm', prix:5.500 }] },
       { id:'15-17', label:'15/17',       color:'#5C6BC0', bgColor:'#E8EAF6', desc:'Densité standard — usage général tapisserie',       badge:'Standard',     img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { ep:'0.9 cm', prix:8.500 }, { ep:'1 cm', prix:9.500 }, { ep:'2 cm', prix:19.000 },
-          { ep:'3 cm', prix:28.500 },  { ep:'4 cm', prix:37.000 }, { ep:'5 cm', prix:46.500 }
+          { code:'MT008', ep:'0.9 cm', prix:8.500 }, { code:'MT009', ep:'1 cm', prix:9.500 }, { code:'MT010', ep:'2 cm', prix:19.000 },
+          { code:'MT011', ep:'3 cm', prix:28.500 },  { code:'MT012', ep:'4 cm', prix:37.000 }, { code:'MT013', ep:'5 cm', prix:46.500 }
         ]},
       { id:'20-22', label:'20/22 Souple',color:'#43A047', bgColor:'#E8F5E9', desc:'Densité souple — assises confortables',            badge:'Souple',       img:'images/plaque%20mousse/20x22.jpg',
         thicknesses:[
-          { ep:'1 cm', prix:10.800 }, { ep:'2 cm', prix:21.500 }, { ep:'3 cm', prix:32.400 },
-          { ep:'4 cm', prix:43.000 }, { ep:'5 cm', prix:54.000 }
+          { code:'MT014', ep:'1 cm', prix:10.800 }, { code:'MT015', ep:'2 cm', prix:21.500 }, { code:'MT016', ep:'3 cm', prix:32.400 },
+          { code:'MT017', ep:'4 cm', prix:43.000 }, { code:'MT018', ep:'5 cm', prix:54.000 }
         ]},
       { id:'22-24', label:'22/24',       color:'#8D6E63', bgColor:'#EFEBE9', desc:'Densité intermédiaire — confort et durabilité équilibrés', badge:'Intermédiaire', img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { ep:'2 cm', prix:25.500 }, { ep:'3 cm', prix:38.500 },
-          { ep:'4 cm', prix:50.500 }, { ep:'5 cm', prix:64.000 }
+          { code:'MT019', ep:'2 cm', prix:25.500 }, { code:'MT020', ep:'3 cm', prix:38.500 },
+          { code:'MT021', ep:'4 cm', prix:50.500 }, { code:'MT022', ep:'5 cm', prix:64.000 }
         ]},
       { id:'28-30', label:'28/30',       color:'#FB8C00', bgColor:'#FFF3E0', desc:'Haute densité — assises et sièges durables',        badge:'Haute densité', img:'images/plaque%20mousse/28x30.jpg',
         thicknesses:[
-          { ep:'1 cm', prix:11.000 }, { ep:'2 cm', prix:27.500 }, { ep:'3 cm', prix:42.500 },
-          { ep:'4 cm', prix:54.500 }, { ep:'5 cm', prix:71.000 }
+          { code:'MT023', ep:'1 cm', prix:11.000 }, { code:'MT024', ep:'2 cm', prix:27.500 }, { code:'MT025', ep:'3 cm', prix:42.500 },
+          { code:'MT026', ep:'4 cm', prix:54.500 }, { code:'MT027', ep:'5 cm', prix:71.000 }
         ]},
       { id:'hr',    label:'HR',          color:'#E53935', bgColor:'#FFEBEE', desc:'Haute résilience — usage intensif professionnel',   badge:'HR Premium',   img:'images/plaque%20mousse/hr.jpg',
         thicknesses:[
-          { ep:'1 cm', prix:24.000 }, { ep:'2 cm', prix:48.000 }, { ep:'3 cm', prix:72.000 },
-          { ep:'4 cm', prix:96.000 }, { ep:'5 cm', prix:115.000 }
+          { code:'MT028', ep:'1 cm', prix:24.000 }, { code:'MT029', ep:'2 cm', prix:48.000 }, { code:'MT030', ep:'3 cm', prix:72.000 },
+          { code:'MT031', ep:'4 cm', prix:96.000 }, { code:'MT032', ep:'5 cm', prix:115.000 }
         ]},
       { id:'magic30', label:'Magic 30',  color:'#7B5EA7', bgColor:'#F3E5F5', desc:'Qualité Magic 30 — confort premium haut de gamme',  badge:'Premium',      img:'images/plaque%20mousse/magic.jpg',
         thicknesses:[
-          { ep:'5 cm', prix:85.000 }
+          { code:'MT033', ep:'5 cm', prix:85.000 }
         ]},
     ]
   },
@@ -1867,11 +1870,13 @@ function renderMoussePage(content, cat) {
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
           ${t.dims.map(d => d.prix != null ? `
           <div style="display:flex;align-items:center;gap:7px;background:${t.bgColor};border:1px solid ${t.color}44;border-radius:8px;padding:6px 6px 6px 10px">
+            <span style="font-size:.62rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 5px">${d.code}</span>
             <span style="font-size:.78rem;font-weight:700;color:${t.color}">${d.d}</span>
             <span style="font-size:.78rem;font-weight:800;color:var(--navy-dark)">${d.prix.toFixed(3)} DT</span>
-            <button onclick="addMousseToCart('${t.id}','${d.d}',${d.prix})" style="width:24px;height:24px;border:none;background:${t.color};color:#fff;border-radius:6px;cursor:pointer;font-size:.78rem;display:flex;align-items:center;justify-content:center" title="Ajouter au panier">🛒</button>
+            <button onclick="addMousseToCart('${t.id}','${d.d}',${d.prix},'${d.code}')" style="width:24px;height:24px;border:none;background:${t.color};color:#fff;border-radius:6px;cursor:pointer;font-size:.78rem;display:flex;align-items:center;justify-content:center" title="Ajouter au panier">🛒</button>
           </div>` : `
-          <span onclick="fillDim('${t.id}','${d.d}')" style="background:var(--gray-50);border:1px dashed var(--gray-300);color:var(--gray-600);font-size:.75rem;font-weight:600;padding:6px 10px;border-radius:8px;cursor:pointer;transition:.2s;font-family:'Poppins',sans-serif" onmouseover="this.style.borderColor='${t.color}';this.style.color='${t.color}'" onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--gray-600)'" title="Sur devis — cliquer pour demander">${d.d} <span style="font-size:.68rem;opacity:.75">(sur devis)</span></span>`
+          <span onclick="fillDim('${t.id}','${d.d}')" style="background:var(--gray-50);border:1px dashed var(--gray-300);color:var(--gray-600);font-size:.75rem;font-weight:600;padding:6px 10px;border-radius:8px;cursor:pointer;transition:.2s;font-family:'Poppins',sans-serif" onmouseover="this.style.borderColor='${t.color}';this.style.color='${t.color}'" onmouseout="this.style.borderColor='var(--gray-300)';this.style.color='var(--gray-600)'" title="Sur devis — cliquer pour demander">
+            <span style="font-size:.62rem;font-weight:700;color:#94a3b8">${d.code}</span> ${d.d} <span style="font-size:.68rem;opacity:.75">(sur devis)</span></span>`
           ).join('')}
         </div>
         <div style="font-size:.73rem;color:var(--gray-400);display:flex;align-items:center;gap:5px">
@@ -1944,12 +1949,12 @@ function fillDim(typeId, dim) {
   showToast('info', 'Dimension sélectionnée', dim + ' — ajustez la quantité et ajoutez au panier.');
 }
 
-function addMousseToCart(typeId, dim, prix) {
+function addMousseToCart(typeId, dim, prix, code) {
   const cat = catalogue['mousse-matelas'];
   const t   = cat.types.find(x => x.id === typeId);
   Cart.add({
     productId: 'matelas-' + typeId + '-' + dim.replace(/×/g,'x'),
-    code:      '',
+    code:      code || '',
     catId:     'mousse-matelas',
     name:      'Matelas Mousse ' + (t ? t.label : typeId),
     variant:   dim + ' cm',
@@ -2000,6 +2005,14 @@ function previewOrder() {
   showToast('info','Aperçu généré','Vérifiez le récapitulatif et confirmez votre commande.');
 }
 
+/* ── Compteur séquentiel pour codes générés à la volée (devis sur mesure) ── */
+function nextDevisCode(prefix) {
+  const key = '5f_devis_counter_' + prefix;
+  const n = parseInt(localStorage.getItem(key) || '0') + 1;
+  localStorage.setItem(key, n);
+  return prefix + String(n).padStart(3, '0');
+}
+
 function submitMousseOrder() {
   const l = document.getElementById('dim-l')?.value;
   const w = document.getElementById('dim-w')?.value;
@@ -2013,7 +2026,7 @@ function submitMousseOrder() {
   const dims = `${l}×${w}×${h} cm`;
   Cart.add({
     productId: 'matelas-devis-' + selectedMousseType + '-' + Date.now(),
-    code:      '',
+    code:      nextDevisCode('MMD'),
     catId:     'mousse-matelas',
     name:      'Matelas Mousse ' + selectedMousseLabel,
     variant:   dims,
@@ -2101,14 +2114,17 @@ function renderTabkaTypeGrid(cat, typeIdx) {
         </div>
       </div>
       <div class="prod-card-body">
-        <div class="p-cat">Plaque Mousse TABKA</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <div class="p-cat">Plaque Mousse TABKA</div>
+          <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px;letter-spacing:.04em">CODE: ${th.code}</div>
+        </div>
         <div class="p-name" style="font-size:.86rem">Tabka ${t.label}</div>
         <div class="p-desc">${th.dim || t.dim || cat.baseDim} — Ép. ${th.ep}</div>
       </div>
       <div class="stock-wrap" data-stock-id="tabka-${typeIdx}-${th.ep.replace(/\s/g,'')}"></div>
       <div class="prod-card-footer">
         <div class="p-price">${th.prix.toFixed(3)} DT</div>
-        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix},'${th.dim || t.dim || cat.baseDim}')">🛒</button>
+        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix},'${th.dim || t.dim || cat.baseDim}','${th.code}')">🛒</button>
       </div>
     </div>`).join('')}
   </div>`;
@@ -2130,12 +2146,12 @@ function switchTabkaTab(typeIdx, btn) {
   if (window.Stock) Stock.refreshAll();
 }
 
-function addTabkaToCart(typeIdx, ep, prix, dim) {
+function addTabkaToCart(typeIdx, ep, prix, dim, code) {
   const cat = catalogue['mousse-tabka'];
   const typeLabel = cat.types[typeIdx].label;
   Cart.add({
     productId: 'tabka-' + typeIdx + '-' + ep.replace(/\s/g,''),
-    code:      '',
+    code:      code || '',
     catId:     'mousse-tabka',
     name:      'Plaque Mousse TABKA ' + typeLabel,
     variant:   (dim || cat.baseDim) + ' — Ép. ' + ep,
@@ -2241,8 +2257,11 @@ function renderRessortTypeGrid(cat, typeIdx) {
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:16px">
-    ${cat.sizes.map(s => {
+    ${cat.sizes.map((s, sizeIdx) => {
       const prix = s.prices[typeIdx];
+      const code = (typeIdx < RESSORT_BASE_TYPES)
+        ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3, '0')
+        : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3, '0');
       const cardImg = t.img
         ? `<img src="${t.img}" alt="${t.label}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="width:100%;height:100%;object-fit:cover">`
         : `<div style="text-align:center"><div style="font-size:2rem">🛏️</div></div>`;
@@ -2255,7 +2274,10 @@ function renderRessortTypeGrid(cat, typeIdx) {
           </div>
         </div>
         <div class="prod-card-body">
-          <div class="p-cat">Super Siesta</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+            <div class="p-cat">Super Siesta</div>
+            <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px;letter-spacing:.04em">CODE: ${code}</div>
+          </div>
           <div class="p-name" style="font-size:.86rem">${t.label}</div>
           <div class="p-desc">${s.dim} cm</div>
         </div>
@@ -2263,7 +2285,7 @@ function renderRessortTypeGrid(cat, typeIdx) {
         <div class="prod-card-footer">
           <div class="${prix != null ? 'p-price' : 'p-price na'}">${prix != null ? prix + ' DT' : 'Sur devis'}</div>
           ${prix != null
-            ? `<button class="add-btn" onclick="event.stopPropagation();addRessortToCart('${s.dim}',${typeIdx},${prix})">🛒</button>`
+            ? `<button class="add-btn" onclick="event.stopPropagation();addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')">🛒</button>`
             : ''}
         </div>
       </div>`;
@@ -2287,11 +2309,11 @@ function switchRessortTab(typeIdx, btn) {
   if (window.Stock) Stock.refreshAll();
 }
 
-function addRessortToCart(dim, typeIdx, prix) {
+function addRessortToCart(dim, typeIdx, prix, code) {
   const typeLabel = catalogue.ressort.types[typeIdx].label;
   Cart.add({
     productId: 'ressort-' + typeIdx + '-' + dim,
-    code:      '',
+    code:      code || '',
     catId:     'ressort',
     name:      'Matelas Super Siesta ' + typeLabel,
     variant:   dim + ' cm',
@@ -2305,45 +2327,45 @@ function addRessortToCart(dim, typeIdx, prix) {
 /* ===== OUTILS DE TAPISSERIE ===== */
 const toolCategories = [
   { icon:'📌', name:'Agrafes Tapisserie', desc:'Agrafes standard — Réf. QNR — boîte 10 000 unités', items:[
-    {name:'Agraphe 8',     ref:'Réf. QNR 004', price:'7,800 DT',  img:'images/outils/agr.png'},
-    {name:'Agraphe 10',    ref:'Réf. QNR 001', price:'8,800 DT',  img:'images/outils/agr.png'},
-    {name:'Agraphe 12',    ref:'Réf. QNR 002', price:'10,300 DT', img:'images/outils/agr.png'},
-    {name:'Agraphe 14',    ref:'Réf. QNR 003', price:'11,800 DT', img:'images/outils/agr.png'},
-    {name:'Agraphe 90/40', ref:'Réf. QNR 005', price:'25,000 DT', img:'images/outils/agr.png'},
+    {code:'OUT001', name:'Agraphe 8',     ref:'Réf. QNR 004', price:'7,800 DT',  img:'images/outils/agr.png'},
+    {code:'OUT002', name:'Agraphe 10',    ref:'Réf. QNR 001', price:'8,800 DT',  img:'images/outils/agr.png'},
+    {code:'OUT003', name:'Agraphe 12',    ref:'Réf. QNR 002', price:'10,300 DT', img:'images/outils/agr.png'},
+    {code:'OUT004', name:'Agraphe 14',    ref:'Réf. QNR 003', price:'11,800 DT', img:'images/outils/agr.png'},
+    {code:'OUT005', name:'Agraphe 90/40', ref:'Réf. QNR 005', price:'25,000 DT', img:'images/outils/agr.png'},
   ]},
   { icon:'🔩', name:'Pointes Têtes & Clous', desc:'Pointes H14 + Clou F10 — boîte de 12 barettes', items:[
-    {name:'Pointe Tête H14/T20 (boîte 12)', ref:'Réf. QNR0409', price:'8,500 DT', img:'images/outils/t20.png'},
-    {name:'Pointe Tête H14/T25 (boîte 12)', ref:'Réf. QNR0410', price:'9,900 DT', img:'images/outils/t25.png'},
-    {name:'Pointe Tête H14/T30 (boîte 12)', ref:'Réf. QNR0411', price:'11,900 DT', img:'images/outils/t30.png'},
-    {name:'Pointe Tête H14/T40 (boîte 12)', ref:'Réf. QNR0412', price:'14,000 DT', img:'images/outils/t40.png'},
-    {name:'Pointe Tête H14/T50 (boîte 12)', ref:'Réf. QNR0413', price:'17,000 DT', img:'images/outils/t50.png'},
-    {name:'Clou F10', ref:'Réf. QNR0290', price:'4,200 DT', img:'images/outils/f10.png'},
+    {code:'OUT006', name:'Pointe Tête H14/T20 (boîte 12)', ref:'Réf. QNR0409', price:'8,500 DT', img:'images/outils/t20.png'},
+    {code:'OUT007', name:'Pointe Tête H14/T25 (boîte 12)', ref:'Réf. QNR0410', price:'9,900 DT', img:'images/outils/t25.png'},
+    {code:'OUT008', name:'Pointe Tête H14/T30 (boîte 12)', ref:'Réf. QNR0411', price:'11,900 DT', img:'images/outils/t30.png'},
+    {code:'OUT009', name:'Pointe Tête H14/T40 (boîte 12)', ref:'Réf. QNR0412', price:'14,000 DT', img:'images/outils/t40.png'},
+    {code:'OUT010', name:'Pointe Tête H14/T50 (boîte 12)', ref:'Réf. QNR0413', price:'17,000 DT', img:'images/outils/t50.png'},
+    {code:'OUT011', name:'Clou F10', ref:'Réf. QNR0290', price:'4,200 DT', img:'images/outils/f10.png'},
   ]},
   { icon:'🔫', name:'Pistolets', desc:'Pistolets pour capitonnage professionnel — pneumatique et manuel', items:[
-    {name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
-    {name:'Pistolet de capitonnage pneumatique professionnel', ref:'', price:'450,000 DT', img:'images/outils/pisto-cap.png'},
+    {code:'OUT012', name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
+    {code:'OUT013', name:'Pistolet de capitonnage pneumatique professionnel', ref:'', price:'450,000 DT', img:'images/outils/pisto-cap.png'},
   ]},
   { icon:'✂️', name:'Ciseaux & Coupe-Fil', desc:'Ciseaux de tapisserie et coupe-fil professionnel', items:[
-    {name:'Ciseaux',    ref:'', price:'15,000 DT', img:'images/outil%20de%20tapissserie/ciseaux.jpg'},
-    {name:'Coupe-Fil',  ref:'', price:'3,000 DT',  img:'images/outil%20de%20tapissserie/coupe%20fil.jpg'},
+    {code:'OUT014', name:'Ciseaux',    ref:'', price:'15,000 DT', img:'images/outil%20de%20tapissserie/ciseaux.jpg'},
+    {code:'OUT015', name:'Coupe-Fil',  ref:'', price:'3,000 DT',  img:'images/outil%20de%20tapissserie/coupe%20fil.jpg'},
   ]},
   { icon:'🔩', name:'Vis de Tapisserie', desc:'Vis N°5 et N°7 — prix à l\'unité', items:[
-    {name:'Vis N°5', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%205.jpg'},
-    {name:'Vis N°7', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%207.jpg'},
+    {code:'OUT016', name:'Vis N°5', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%205.jpg'},
+    {code:'OUT017', name:'Vis N°7', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%207.jpg'},
   ]},
   { icon:'🛝', name:'Curseur & Patin-Glisseur', desc:'Accessoires de glissement pour pieds de meubles', items:[
-    {name:'Curseur',        ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Curseur.jpg'},
-    {name:'Patin-Glisseur', ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Patin-glisseur.jpg'},
+    {code:'OUT018', name:'Curseur',        ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Curseur.jpg'},
+    {code:'OUT019', name:'Patin-Glisseur', ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Patin-glisseur.jpg'},
   ]},
   { icon:'📦', name:'Fermeture, Film & Sangle', desc:'Fermeture éclair au rouleau, film étirable et sangle de protection', items:[
-    {name:'Fermeture Éclair (rouleau)', ref:'', price:'38,000 DT', img:'images/outil%20de%20tapissserie/fermeture.jpg'},
-    {name:'Film Étirable',              ref:'', price:'20,000 DT', img:'images/outil%20de%20tapissserie/film%20étirable.jpg'},
-    {name:'Sangle',                     ref:'', price:'50,000 DT', img:'images/outil%20de%20tapissserie/sangle.jpg'},
+    {code:'OUT020', name:'Fermeture Éclair (rouleau)', ref:'', price:'38,000 DT', img:'images/outil%20de%20tapissserie/fermeture.jpg'},
+    {code:'OUT021', name:'Film Étirable',              ref:'', price:'20,000 DT', img:'images/outil%20de%20tapissserie/film%20étirable.jpg'},
+    {code:'OUT022', name:'Sangle',                     ref:'', price:'50,000 DT', img:'images/outil%20de%20tapissserie/sangle.jpg'},
   ]},
   { icon:'🪢', name:'Cordons & Attaches', desc:'Cordons décoratifs et rouleaux d\'attache pour canapé', items:[
-    {name:'Cordon Petit',         ref:'', price:'11,000 DT', img:'images/outil%20de%20tapissserie/cordon%20petit.jpg'},
-    {name:'Cordon Moyen',         ref:'', price:'22,000 DT', img:'images/outil%20de%20tapissserie/cordon%20moyen%20.jpg'},
-    {name:'Rouleau Attache Sofa', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/rouleau%20attach%20sofa%20.jpg'},
+    {code:'OUT023', name:'Cordon Petit',         ref:'', price:'11,000 DT', img:'images/outil%20de%20tapissserie/cordon%20petit.jpg'},
+    {code:'OUT024', name:'Cordon Moyen',         ref:'', price:'22,000 DT', img:'images/outil%20de%20tapissserie/cordon%20moyen%20.jpg'},
+    {code:'OUT025', name:'Rouleau Attache Sofa', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/rouleau%20attach%20sofa%20.jpg'},
   ]},
 ];
 
@@ -2397,18 +2419,20 @@ function showToolCat(i) {
 }
 
 function toolItemCard(tc, item, catIdx, itemIdx) {
-  let nom, ref, prix, img;
+  let nom, ref, prix, img, code;
   if (typeof item === 'object') {
     nom  = item.name;
     ref  = item.ref   || '';
     prix = item.price || '';
     img  = item.img   || null;
+    code = item.code  || ('OUT-' + catIdx + '-' + itemIdx);
   } else {
     const parts = item.split(' — ');
     nom  = parts[0];
     ref  = parts.length === 3 ? parts[1] : '';
     prix = parts[parts.length - 1];
     img  = null;
+    code = 'OUT-' + catIdx + '-' + itemIdx;
   }
   const hasPrix  = prix && (prix.includes('DT') || prix.includes('dt'));
   const priceNum = parseFloat(prix.replace(/[^\d.,]/g,'').replace(',','.')) || 0;
@@ -2418,7 +2442,10 @@ function toolItemCard(tc, item, catIdx, itemIdx) {
       ${img ? `<img src="${img}" alt="${nom}">` : `<span class="placeholder">${tc.icon}</span>`}
     </div>
     <div class="prod-card-body">
-      <div class="p-cat">Outils de Tapisserie</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+        <div class="p-cat">Outils de Tapisserie</div>
+        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px;letter-spacing:.04em">CODE: ${code}</div>
+      </div>
       <div class="p-name">${nom}</div>
       <div class="p-desc">${ref}</div>
       <div class="p-variants"></div>
@@ -2525,20 +2552,23 @@ function addToCartFromModal(pid, catId, name, price, priceNum, icon) {
 function addToolToCart(catIdx, itemIdx) {
   const tc   = toolCategories[catIdx];
   const item = tc.items[itemIdx];
-  let nom, ref, prix;
+  let nom, ref, prix, code;
   if (typeof item === 'object') {
     nom  = item.name;
     ref  = item.ref   || '';
     prix = item.price || '';
+    code = item.code  || ('OUT-' + catIdx + '-' + itemIdx);
   } else {
     const parts = item.split(' — ');
     nom  = parts[0];
     ref  = parts.length === 3 ? parts[1] : '';
     prix = parts[parts.length - 1];
+    code = 'OUT-' + catIdx + '-' + itemIdx;
   }
   const priceNum = parseFloat(prix.replace(/[^\d.,]/g,'').replace(',','.')) || 0;
   Cart.add({
     productId: 'tool-' + catIdx + '-' + itemIdx,
+    code:      code,
     catId:     'outils',
     name:      nom,
     variant:   ref,
@@ -2834,30 +2864,97 @@ function globalSearchFn(q) {
   const match   = hay => hay.includes(ql) || hay.replace(/[\s\-_.\/]/g,'').includes(qlNorm);
   let cards = [];
 
-  // Recherche dans catalogue (products)
+  function miniCard(catLabel, icon, img, title, sub, code, prix, addOnclick) {
+    return `<div class="prod-card" style="cursor:default">
+      <div class="prod-card-img">
+        ${img ? `<img src="${img}" alt="${title}">` : `<span class="placeholder">${icon}</span>`}
+      </div>
+      <div class="prod-card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <div class="p-cat">${catLabel}</div>
+          <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px;letter-spacing:.04em">CODE: ${code}</div>
+        </div>
+        <div class="p-name">${title}</div>
+        <div class="p-desc">${sub}</div>
+        <div class="p-variants"></div>
+      </div>
+      <div class="prod-card-footer">
+        <div class="${prix != null ? 'p-price' : 'p-price na'}">${prix != null ? prix.toFixed(3) + ' DT' : 'Sur devis'}</div>
+        ${addOnclick ? `<button class="add-btn" title="Ajouter au panier" onclick="event.stopPropagation();${addOnclick}">🛒</button>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Recherche dans catalogue (products classiques)
   Object.entries(catalogue).forEach(([cid, cat]) => {
-    if (!cat.products) return;
-    cat.products.forEach(p => {
-      const haystack = [
-        p.name  || '',
-        p.desc  || '',
-        p.id    || '',
-        p.code  || '',
-        (p.variants || []).join(' '),
-        cat.label || '',
-      ].join(' ').toLowerCase();
-      if (match(haystack))
-        cards.push(productCard({ ...p, catId:cid, catLabel:cat.label, catIcon:cat.icon }, cid));
-    });
+    if (cat.products) {
+      cat.products.forEach(p => {
+        const haystack = [
+          p.name  || '',
+          p.desc  || '',
+          p.id    || '',
+          p.code  || '',
+          (p.variants || []).join(' '),
+          cat.label || '',
+        ].join(' ').toLowerCase();
+        if (match(haystack))
+          cards.push(productCard({ ...p, catId:cid, catLabel:cat.label, catIcon:cat.icon }, cid));
+      });
+    }
+
+    // Matelas Mousse (dimensions individuelles)
+    if (cat.isMoussePage && Array.isArray(cat.types)) {
+      cat.types.forEach(t => {
+        (t.dims || []).forEach(d => {
+          const haystack = [d.code||'', d.d||'', t.label||'', t.desc||'', cat.label||''].join(' ').toLowerCase();
+          if (match(haystack)) {
+            const onAdd = d.prix != null ? `addMousseToCart('${t.id}','${d.d}',${d.prix},'${d.code}')` : null;
+            cards.push(miniCard('Matelas Mousse', '🛏️', t.img, 'Matelas Mousse ' + t.label, d.d + ' cm', d.code, d.prix, onAdd));
+          }
+        });
+      });
+    }
+
+    // TABKA (épaisseurs individuelles)
+    if (cat.isTabkaPage && Array.isArray(cat.types)) {
+      cat.types.forEach(t => {
+        (t.thicknesses || []).forEach(th => {
+          const haystack = [th.code||'', th.ep||'', t.label||'', t.desc||'', cat.label||''].join(' ').toLowerCase();
+          if (match(haystack)) {
+            const dim = th.dim || t.dim || cat.baseDim;
+            const onAdd = `addTabkaToCart(${cat.types.indexOf(t)},'${th.ep}',${th.prix},'${dim}','${th.code}')`;
+            cards.push(miniCard('Plaque Mousse TABKA', '🟫', t.img, 'Tabka ' + t.label, dim + ' — Ép. ' + th.ep, th.code, th.prix, onAdd));
+          }
+        });
+      });
+    }
+
+    // Matelas Ressort (grille taille × qualité)
+    if (cat.isRessortPage && Array.isArray(cat.types) && Array.isArray(cat.sizes)) {
+      cat.sizes.forEach((s, sizeIdx) => {
+        cat.types.forEach((t, typeIdx) => {
+          const prix = s.prices[typeIdx];
+          const code = (typeIdx < RESSORT_BASE_TYPES)
+            ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3, '0')
+            : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3, '0');
+          const haystack = [code, s.dim||'', t.label||'', t.desc||'', cat.label||''].join(' ').toLowerCase();
+          if (match(haystack)) {
+            const onAdd = prix != null ? `addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')` : null;
+            cards.push(miniCard('Super Siesta', '🛏️', t.img, t.label, s.dim + ' cm', code, prix, onAdd));
+          }
+        });
+      });
+    }
   });
 
   // Recherche dans toolCategories (items)
   if (typeof toolCategories !== 'undefined') {
     toolCategories.forEach((tc, catIdx) => {
       (tc.items || []).forEach((item, itemIdx) => {
-        const nom = (typeof item === 'object' ? item.name : item.split(' — ')[0]) || '';
-        const ref = (typeof item === 'object' ? item.ref  : '') || '';
-        const haystack = [nom, ref, tc.name, tc.desc || ''].join(' ').toLowerCase();
+        const nom  = (typeof item === 'object' ? item.name : item.split(' — ')[0]) || '';
+        const ref  = (typeof item === 'object' ? item.ref  : '') || '';
+        const code = (typeof item === 'object' ? item.code : '') || '';
+        const haystack = [nom, ref, code, tc.name, tc.desc || ''].join(' ').toLowerCase();
         if (match(haystack))
           cards.push(toolItemCard(tc, item, catIdx, itemIdx));
       });
@@ -2881,14 +2978,88 @@ function sortProducts(val) {
 }
 
 // Mise à jour dynamique du compteur mécanisme
-(function updateMecaCount() {
+function updateMecaCount() {
   const n = (catalogue.mecanisme && catalogue.mecanisme.products) ? catalogue.mecanisme.products.length : 0;
   const el = document.getElementById('meca-count');
   if (el) el.textContent = n > 0 ? n : '…';
-})();
+}
+updateMecaCount();
+
+/* ===========================================================
+   FUSION DES ARTICLES AJOUTÉS PAR L'ADMIN (Firestore)
+   =========================================================== */
+function mergeAdminProducts(docs) {
+  docs.forEach(p => {
+    if (p.kind === 'tool') {
+      if (typeof toolCategories === 'undefined') return;
+      let tc = toolCategories.find(t => t.name === p.toolSubcat);
+      if (!tc) {
+        tc = { icon:'🔧', name: p.toolSubcat, desc: 'Articles ajoutés par l\'administrateur', items: [] };
+        toolCategories.push(tc);
+      }
+      tc.items.push({ code: p.code, name: p.name, ref: p.ref || '', price: p.price, img: p.img || null });
+    } else {
+      const cat = catalogue[p.catId];
+      if (!cat) return;
+      if (!Array.isArray(cat.products)) cat.products = [];
+      cat.products.push({
+        id: p.code, name: p.name, desc: p.desc || '', variants: [p.price], price: p.price, img: p.img || null
+      });
+    }
+  });
+}
+
+function mergeAdminSpecialEntries(docs) {
+  docs.forEach(e => {
+    if (e.targetCat === 'mousse-matelas' || e.targetCat === 'mousse-tabka') {
+      const cat = catalogue[e.targetCat];
+      if (!cat || !Array.isArray(cat.types)) return;
+      let type = cat.types.find(t => t.id === e.typeId);
+      if (!type) {
+        type = {
+          id: e.typeId, label: e.typeLabel || e.typeId,
+          color: e.typeColor || '#2BBEC8', bgColor: (e.typeColor || '#2BBEC8') + '14',
+          desc: 'Qualité ajoutée par l\'administrateur', badge: e.typeBadge || 'Nouveau',
+          img: e.typeImg || null,
+        };
+        if (e.targetCat === 'mousse-matelas') type.dims = []; else type.thicknesses = [];
+        cat.types.push(type);
+      }
+      if (e.targetCat === 'mousse-matelas') {
+        type.dims.push({ code: e.code, d: e.dim, prix: e.prix });
+      } else {
+        type.thicknesses.push({ code: e.code, ep: e.ep || e.dim, prix: e.prix, dim: e.dim });
+      }
+    } else if (e.targetCat === 'ressort') {
+      const cat = catalogue.ressort;
+      if (!cat || !Array.isArray(cat.types) || !Array.isArray(cat.sizes)) return;
+      if (cat.types.find(t => t.id === e.typeId)) return; // déjà fusionné
+      cat.types.push({
+        id: e.typeId, label: e.typeLabel, color: e.typeColor || '#2BBEC8', bgColor: (e.typeColor || '#2BBEC8') + '14',
+        desc: 'Qualité ajoutée par l\'administrateur', badge: e.typeBadge || 'Nouveau', img: e.typeImg || null
+      });
+      const newTypeIdx = cat.types.length - 1;
+      cat.sizes.forEach(s => {
+        const idx = (e.sizes || []).indexOf(s.dim);
+        s.prices[newTypeIdx] = idx > -1 ? e.prices[idx] : null;
+      });
+    }
+  });
+}
+
+function loadAdminArticles() {
+  if (typeof db === 'undefined') return Promise.resolve();
+  return Promise.all([
+    db.collection('admin_products').get().catch(() => ({ docs: [] })),
+    db.collection('admin_special_entries').get().catch(() => ({ docs: [] })),
+  ]).then(([snap1, snap2]) => {
+    mergeAdminProducts(snap1.docs.map(d => d.data()));
+    mergeAdminSpecialEntries(snap2.docs.map(d => d.data()));
+  }).catch(e => console.warn('loadAdminArticles:', e.message));
+}
 
 // Init — lire le paramètre ?cat= dans l'URL pour ouvrir directement la bonne catégorie
-(function init() {
+function initCatalogue() {
   const params = new URLSearchParams(window.location.search);
   const catParam = params.get('cat');
 
@@ -2919,6 +3090,14 @@ function sortProducts(val) {
   }
   // Initialiser le panneau filtre piètement
   initPietFilterPanel();
+}
+
+(function init() {
+  // Délai de sécurité : si Firestore est lent/indisponible, on affiche le catalogue statique après 2.5s max
+  let started = false;
+  const start = () => { if (started) return; started = true; updateMecaCount(); initCatalogue(); };
+  loadAdminArticles().then(start).catch(start);
+  setTimeout(start, 2500);
 })();
 </script>
 

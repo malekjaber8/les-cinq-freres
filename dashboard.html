@@ -216,6 +216,7 @@
         <div class="nav-sect">Administration</div>
         <div class="s-link" id="navAdminOrders" onclick="showSection('admin-orders')"><span class="ico">📋</span> Commandes reçues <span class="bdg" id="adminOrdersBadge" style="background:#e53e3e;display:none">0</span></div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">🛍️</span> Catalogue</div>
+        <div class="s-link" id="navArticleMgmt" onclick="showSection('articles')"><span class="ico">➕</span> Gestion des Articles</div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📊</span> Gérer le Stock</div>
         <div class="s-link" id="navParametres" onclick="showSection('parametres')"><span class="ico">⚙️</span> Paramètres</div>
       </div>
@@ -523,6 +524,62 @@
 
       </div><!-- end sec-parametres -->
 
+      <!-- ════════════ SECTION GESTION DES ARTICLES ════════════ -->
+      <div id="sec-articles" style="display:none">
+
+        <div style="margin-bottom:24px">
+          <h2 style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">➕ Gestion des Articles</h2>
+          <p style="font-size:.82rem;color:var(--gray-600)">Ajoutez un nouvel article au catalogue — il apparaîtra avec les mêmes fonctionnalités que les autres (recherche, panier, code...).</p>
+        </div>
+
+        <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:28px;max-width:640px;margin-bottom:28px">
+
+          <div style="margin-bottom:18px">
+            <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">1. Catégorie cible *</label>
+            <select id="artCatSelect" onchange="renderArticleFields()"
+              style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none;background:#fff">
+              <option value="">-- Choisir une catégorie --</option>
+              <optgroup label="Catégories standards">
+                <option value="tissu">Tissus d'Ameublement</option>
+                <option value="pietement">Piètements de Meuble</option>
+                <option value="socle">Socles de Table</option>
+                <option value="accessoires">Accessoires Canapé</option>
+                <option value="bordures">Bordures Décoratives</option>
+                <option value="coussins">Coussins</option>
+                <option value="chaise">Carcasses de Chaise</option>
+                <option value="agrafes">Agrafes</option>
+                <option value="miroirs">Miroirs</option>
+                <option value="mecanisme">Mécanismes</option>
+                <option value="poignees">Poignées</option>
+                <option value="colle">Colle &amp; Adhésifs</option>
+                <option value="outils">Outils de Tapisserie</option>
+              </optgroup>
+              <optgroup label="Catégories spéciales (dimensions / grille de prix)">
+                <option value="mousse-matelas">Matelas Mousse</option>
+                <option value="mousse-tabka">Plaque Mousse (TABKA)</option>
+                <option value="ressort">Matelas Ressort (Super Siesta)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div id="articleDynamicFields"></div>
+
+          <div id="artMsg" style="display:none;font-size:.8rem;font-weight:600;margin-bottom:14px;padding:10px 14px;border-radius:8px"></div>
+
+          <button onclick="submitNewArticle()" id="artSubmitBtn"
+            style="padding:11px 24px;background:linear-gradient(135deg,var(--teal),var(--navy-light));color:#fff;border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(43,190,200,.3)">
+            ✅ Créer cet article
+          </button>
+        </div>
+
+        <!-- Liste des articles déjà ajoutés -->
+        <div style="font-size:.9rem;font-weight:700;color:var(--navy-dark);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          📦 Articles ajoutés <span id="artListCount" style="background:var(--teal);color:#fff;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:50px">0</span>
+        </div>
+        <div id="artList"></div>
+
+      </div><!-- end sec-articles -->
+
     </div>
   </main>
 </div>
@@ -732,6 +789,7 @@
     document.getElementById('sec-mes-commandes').style.display   = id === 'mes-commandes' ? '' : 'none';
     document.getElementById('sec-admin-orders').style.display    = id === 'admin-orders'  ? '' : 'none';
     document.getElementById('sec-parametres').style.display      = id === 'parametres'    ? '' : 'none';
+    document.getElementById('sec-articles').style.display        = id === 'articles'      ? '' : 'none';
 
     if (id === 'parametres') {
       const cur = parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
@@ -739,7 +797,11 @@
       document.getElementById('paramSaveMsg').style.display = 'none';
     }
 
-    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres' };
+    if (id === 'articles') {
+      initArticleMgmt();
+    }
+
+    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres', articles:'Gestion des Articles' };
     document.getElementById('pageTitle').textContent = titles[id] || 'Tableau de Bord';
 
     document.querySelectorAll('.s-link').forEach(l => l.classList.remove('active'));
@@ -821,6 +883,8 @@
     document.getElementById('editPwdModal').style.display = 'none';
     if (_pwdAction === 'delete') {
       deleteOrderConfirmed(_editTargetId);
+    } else if (_pwdAction === 'delete-article') {
+      deleteArticleConfirmed(_editTargetId);
     } else {
       openEditOrder(_editTargetId);
     }
@@ -842,6 +906,271 @@
     _allOrders = _allOrders.filter(o => (o._id || o.id) !== orderId);
     renderAdminOrders(_allOrders);
     updateOrdersStats(_allOrders);
+  }
+
+  /* ══════════════════════════════════════════
+     GESTION DES ARTICLES (admin)
+  ══════════════════════════════════════════ */
+  const ART_STANDARD_LABELS = {
+    tissu:'Tissus d\'Ameublement', pietement:'Piètements de Meuble', socle:'Socles de Table',
+    accessoires:'Accessoires Canapé', bordures:'Bordures Décoratives', coussins:'Coussins',
+    chaise:'Carcasses de Chaise', agrafes:'Agrafes', miroirs:'Miroirs', mecanisme:'Mécanismes',
+    poignees:'Poignées', colle:'Colle &amp; Adhésifs'
+  };
+  const ART_TOOL_SUBCATS = ['Agrafes Tapisserie','Pointes Têtes & Clous','Pistolets','Ciseaux & Coupe-Fil','Vis de Tapisserie','Curseur & Patin-Glisseur','Fermeture, Film & Sangle','Cordons & Attaches'];
+  const ART_MOUSSE_TYPES  = [{id:'15-17',label:'15/17'},{id:'extra20-24',label:'Extra 20/24'},{id:'souple',label:'20/22 SOUPLE'},{id:'22-24-souple',label:'22/24 Souple'},{id:'standard',label:'28/30'},{id:'magic30',label:'Magic 30'},{id:'hr',label:'HR'}];
+  const ART_TABKA_TYPES   = [{id:'12-14',label:'12/14'},{id:'13-15',label:'13/15'},{id:'15-17',label:'15/17'},{id:'20-22',label:'20/22 Souple'},{id:'22-24',label:'22/24'},{id:'28-30',label:'28/30'},{id:'hr',label:'HR'},{id:'magic30',label:'Magic 30'}];
+  const ART_RESSORT_SIZES = ['120×60','190×70','190×80','190×90','190×100','190×110','190×120','190×140','190×150','190×160','200×90','200×100','200×120','200×160','200×180'];
+
+  function renderArticleFields() {
+    const cat = document.getElementById('artCatSelect').value;
+    const box = document.getElementById('articleDynamicFields');
+    if (!cat) { box.innerHTML = ''; return; }
+
+    const fS = "width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none";
+    const lS = "display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px";
+    const gS = "margin-bottom:16px";
+
+    if (cat === 'outils') {
+      box.innerHTML = `
+        <div style="${gS}">
+          <label style="${lS}">2. Sous-catégorie d'outil *</label>
+          <select id="artToolSubcat" style="${fS}" onchange="document.getElementById('artToolSubcatNew').style.display=this.value==='__new__'?'':'none'">
+            ${ART_TOOL_SUBCATS.map(s=>`<option value="${s}">${s}</option>`).join('')}
+            <option value="__new__">+ Nouvelle sous-catégorie…</option>
+          </select>
+          <input id="artToolSubcatNew" placeholder="Nom de la nouvelle sous-catégorie" style="${fS};margin-top:8px;display:none">
+        </div>
+        <div style="${gS}"><label style="${lS}">3. Code article *</label><input id="artCode" placeholder="Ex: OUT026" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">4. Nom de l'article *</label><input id="artName" placeholder="Ex: Pince à dégrafer" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">5. Référence fournisseur (optionnel)</label><input id="artRef" placeholder="Ex: Réf. QNR0500" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">6. Prix *</label><input id="artPrice" placeholder="Ex: 12,500 DT" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">7. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+      `;
+    } else if (ART_STANDARD_LABELS[cat]) {
+      box.innerHTML = `
+        <div style="${gS}"><label style="${lS}">2. Code article *</label><input id="artCode" placeholder="Ex: PM056" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">3. Nom de l'article *</label><input id="artName" placeholder="Ex: Sabot Gl 250" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">4. Désignation / Description</label><textarea id="artDesc" rows="2" style="${fS};resize:none" placeholder="Ex: Pied métal incliné, 15cm"></textarea></div>
+        <div style="${gS}"><label style="${lS}">5. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">6. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+      `;
+    } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
+      const types = cat === 'mousse-matelas' ? ART_MOUSSE_TYPES : ART_TABKA_TYPES;
+      const isTabka = cat === 'mousse-tabka';
+      box.innerHTML = `
+        <div style="${gS}">
+          <label style="${lS}">2. Qualité *</label>
+          <select id="artTypeSelect" style="${fS}" onchange="document.getElementById('artNewTypeBox').style.display=this.value==='__new__'?'':'none'">
+            ${types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('')}
+            <option value="__new__">+ Nouvelle qualité…</option>
+          </select>
+        </div>
+        <div id="artNewTypeBox" style="display:none;background:var(--gray-50);border-radius:10px;padding:14px;margin-bottom:16px">
+          <div style="${gS}"><label style="${lS}">Nom de la nouvelle qualité *</label><input id="artNewTypeLabel" placeholder="Ex: 30/32 Premium" style="${fS}"></div>
+          <div style="${gS}"><label style="${lS}">Badge</label><input id="artNewTypeBadge" placeholder="Ex: Premium" style="${fS}"></div>
+          <div><label style="${lS}">Couleur</label><input type="color" id="artNewTypeColor" value="#2BBEC8" style="width:60px;height:36px;border:1.5px solid var(--gray-200);border-radius:8px;cursor:pointer"></div>
+        </div>
+        <div style="${gS}"><label style="${lS}">3. Code article *</label><input id="artCode" placeholder="Ex: ${isTabka?'MT034':'MM046'}" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">4. Dimension (L×l×H cm) *</label><input id="artDim" placeholder="Ex: 190×70×15" style="${fS}"></div>
+        ${isTabka ? `<div style="${gS}"><label style="${lS}">5. Épaisseur (ex: 2 cm) *</label><input id="artEp" placeholder="Ex: 2 cm" style="${fS}"></div>` : ''}
+        <div style="${gS}"><label style="${lS}">${isTabka?'6':'5'}. Prix (DT) *</label><input id="artPrice" type="number" step="0.001" placeholder="Ex: 95.000" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">${isTabka?'7':'6'}. Chemin de l'image (qualité)</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+      `;
+    } else if (cat === 'ressort') {
+      box.innerHTML = `
+        <div style="background:var(--gray-50);border-radius:10px;padding:14px;margin-bottom:16px">
+          <div style="${gS}"><label style="${lS}">2. Nom de la nouvelle qualité *</label><input id="artNewTypeLabel" placeholder="Ex: Excellence+" style="${fS}"></div>
+          <div style="${gS}"><label style="${lS}">3. Badge</label><input id="artNewTypeBadge" placeholder="Ex: Très haut de gamme" style="${fS}"></div>
+          <div><label style="${lS}">4. Couleur</label><input type="color" id="artNewTypeColor" value="#2BBEC8" style="width:60px;height:36px;border:1.5px solid var(--gray-200);border-radius:8px;cursor:pointer"></div>
+        </div>
+        <div style="${gS}"><label style="${lS}">5. Chemin de l'image (qualité)</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        <div style="${gS}">
+          <label style="${lS}">6. Prix par dimension (DT) — laissez vide = "Sur devis"</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            ${ART_RESSORT_SIZES.map((d,i)=>`
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:.78rem;font-weight:600;color:var(--gray-700);width:80px">${d} cm</span>
+              <input type="number" step="1" id="artRessortPrice${i}" placeholder="DT" style="${fS};padding:7px 10px">
+            </div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function showArtMsg(type, text) {
+    const el = document.getElementById('artMsg');
+    el.style.display = '';
+    el.style.background = type === 'error' ? '#fee2e2' : '#dcfce7';
+    el.style.color      = type === 'error' ? '#b91c1c' : '#166534';
+    el.textContent = text;
+  }
+
+  function getArticlePhotoPath() {
+    const el = document.getElementById('artPhotoPath');
+    return el && el.value.trim() ? el.value.trim() : null;
+  }
+
+  function resetArticleBtn() {
+    const btn = document.getElementById('artSubmitBtn');
+    btn.disabled = false;
+    btn.textContent = '✅ Créer cet article';
+  }
+
+  async function submitNewArticle() {
+    const cat = document.getElementById('artCatSelect').value;
+    if (!cat) { showArtMsg('error','Veuillez choisir une catégorie.'); return; }
+    const btn = document.getElementById('artSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Création en cours…';
+
+    try {
+      if (cat === 'outils') {
+        const code  = document.getElementById('artCode').value.trim();
+        const name  = document.getElementById('artName').value.trim();
+        const price = document.getElementById('artPrice').value.trim();
+        const ref   = document.getElementById('artRef').value.trim();
+        let subcat  = document.getElementById('artToolSubcat').value;
+        if (subcat === '__new__') subcat = document.getElementById('artToolSubcatNew').value.trim();
+        if (!code || !name || !price || !subcat) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
+        const img = getArticlePhotoPath();
+        await db.collection('admin_products').add({
+          kind:'tool', catId:'outils', toolSubcat: subcat, code, name, ref, price, img: img || null, createdAt: Date.now()
+        });
+        showArtMsg('success', '✅ Article "' + name + '" ajouté avec succès au catalogue !');
+
+      } else if (ART_STANDARD_LABELS[cat]) {
+        const code  = document.getElementById('artCode').value.trim();
+        const name  = document.getElementById('artName').value.trim();
+        const desc  = document.getElementById('artDesc').value.trim();
+        const price = document.getElementById('artPrice').value.trim();
+        if (!code || !name || !price) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
+        const img = getArticlePhotoPath();
+        await db.collection('admin_products').add({
+          kind:'standard', catId: cat, code, name, desc, price, img: img || null, createdAt: Date.now()
+        });
+        showArtMsg('success', '✅ Article "' + name + '" ajouté avec succès au catalogue !');
+
+      } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
+        const typeSel = document.getElementById('artTypeSelect').value;
+        const code = document.getElementById('artCode').value.trim();
+        const dim  = document.getElementById('artDim').value.trim();
+        const epEl = document.getElementById('artEp');
+        const ep   = epEl ? epEl.value.trim() : '';
+        const prix = parseFloat(document.getElementById('artPrice').value);
+        if (!code || !dim || isNaN(prix)) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
+        let typeId = typeSel, typeLabel = null, typeBadge = '', typeColor = '#2BBEC8', img = null;
+        const isNewType = typeSel === '__new__';
+        if (isNewType) {
+          typeLabel = document.getElementById('artNewTypeLabel').value.trim();
+          typeBadge = document.getElementById('artNewTypeBadge').value.trim();
+          typeColor = document.getElementById('artNewTypeColor').value;
+          if (!typeLabel) { showArtMsg('error','Veuillez nommer la nouvelle qualité.'); resetArticleBtn(); return; }
+          typeId = 'adm-' + typeLabel.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+          img = getArticlePhotoPath();
+        }
+        await db.collection('admin_special_entries').add({
+          targetCat: cat, typeId, isNewType, typeLabel, typeBadge, typeColor, typeImg: img,
+          dim, ep, code, prix, createdAt: Date.now()
+        });
+        showArtMsg('success', '✅ Dimension "' + dim + (ep?(' — '+ep):'') + '" ajoutée avec succès !');
+
+      } else if (cat === 'ressort') {
+        const typeLabel = document.getElementById('artNewTypeLabel').value.trim();
+        const typeBadge = document.getElementById('artNewTypeBadge').value.trim();
+        const typeColor = document.getElementById('artNewTypeColor').value;
+        if (!typeLabel) { showArtMsg('error','Veuillez nommer la nouvelle qualité.'); resetArticleBtn(); return; }
+        const typeId = 'adm-' + typeLabel.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+        const img = getArticlePhotoPath();
+        const prices = ART_RESSORT_SIZES.map((d,i) => {
+          const v = document.getElementById('artRessortPrice'+i).value;
+          return v ? parseFloat(v) : null;
+        });
+        if (prices.every(p => p === null)) { showArtMsg('error','Renseignez au moins un prix pour une dimension.'); resetArticleBtn(); return; }
+        await db.collection('admin_special_entries').add({
+          targetCat: 'ressort', typeId, isNewType: true, typeLabel, typeBadge, typeColor, typeImg: img,
+          sizes: ART_RESSORT_SIZES, prices, createdAt: Date.now()
+        });
+        showArtMsg('success', '✅ Qualité "' + typeLabel + '" ajoutée avec succès !');
+      }
+
+      document.getElementById('artCatSelect').value = '';
+      document.getElementById('articleDynamicFields').innerHTML = '';
+      loadArticleList();
+    } catch (e) {
+      console.error(e);
+      showArtMsg('error', '❌ Erreur : ' + e.message);
+    }
+    resetArticleBtn();
+  }
+
+  function initArticleMgmt() {
+    loadArticleList();
+  }
+
+  let _artListCache = [];
+
+  function loadArticleList() {
+    if (typeof db === 'undefined') return;
+    Promise.all([
+      db.collection('admin_products').orderBy('createdAt','desc').limit(50).get().catch(()=>({docs:[]})),
+      db.collection('admin_special_entries').orderBy('createdAt','desc').limit(50).get().catch(()=>({docs:[]})),
+    ]).then(([snap1, snap2]) => {
+      const list1 = snap1.docs.map(d => ({ _id: d.id, _col:'admin_products', ...d.data() }));
+      const list2 = snap2.docs.map(d => ({ _id: d.id, _col:'admin_special_entries', ...d.data() }));
+      _artListCache = [...list1, ...list2].sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+      renderArticleList();
+    });
+  }
+
+  function renderArticleList() {
+    const wrap = document.getElementById('artList');
+    document.getElementById('artListCount').textContent = _artListCache.length;
+    if (!_artListCache.length) {
+      wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Aucun article ajouté pour l'instant.</div>`;
+      return;
+    }
+    const catNice = {'mousse-matelas':'Matelas Mousse','mousse-tabka':'TABKA','ressort':'Matelas Ressort'};
+    wrap.innerHTML = _artListCache.map(a => {
+      const isTool    = a.kind === 'tool';
+      const isSpecial = a._col === 'admin_special_entries';
+      const title = isSpecial
+        ? (a.targetCat === 'ressort' ? 'Ressort — ' + a.typeLabel : (a.isNewType ? a.typeLabel : a.typeId) + ' — ' + (a.dim||'') + (a.ep?(' / '+a.ep):''))
+        : a.name;
+      const catLabel = isSpecial ? catNice[a.targetCat] : (isTool ? ('Outils — '+a.toolSubcat) : (ART_STANDARD_LABELS[a.catId]||a.catId));
+      const price = isSpecial ? (a.targetCat==='ressort' ? 'Grille de prix' : (a.prix+' DT')) : a.price;
+      const img = isSpecial ? a.typeImg : a.img;
+      return `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="width:46px;height:46px;border-radius:10px;background:var(--gray-50);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+          ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover">` : '📦'}
+        </div>
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:.85rem;font-weight:700;color:var(--navy-dark)">${title}</div>
+          <div style="font-size:.75rem;color:var(--gray-500)">${catLabel||''}${a.code?(' · '+a.code):''}</div>
+        </div>
+        <div style="font-size:.85rem;font-weight:700;color:var(--teal-dark);white-space:nowrap">${price||'—'}</div>
+        <button onclick="requestDeleteArticle('${a._col}','${a._id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">🗑️ Supprimer</button>
+      </div>`;
+    }).join('');
+  }
+
+  function requestDeleteArticle(collection, docId) {
+    _editTargetId = collection + '::' + docId;
+    _pwdAction = 'delete-article';
+    document.getElementById('editPwdInput').value = '';
+    document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModalTitle').textContent = '🗑️ Suppression d\'article';
+    document.getElementById('editPwdModalText').textContent  = 'Saisissez le mot de passe du jour pour supprimer définitivement cet article du catalogue.';
+    document.getElementById('editPwdModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
+  }
+
+  function deleteArticleConfirmed(target) {
+    const [collection, docId] = target.split('::');
+    db.collection(collection).doc(docId).delete()
+      .then(() => { showToast('success','Article supprimé',''); loadArticleList(); })
+      .catch(e => showToast('error','Erreur', e.message));
   }
 
   let _editRowCounter = 0;
