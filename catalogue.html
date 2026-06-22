@@ -2535,10 +2535,113 @@ function openModal(pid, catId) {
       </div>
     </div>`;
 
-  document.getElementById('modalBody').innerHTML = p.img
+  const similarHTML = similarProductsHTML(p, cat, catId);
+  const reviewsHTML = `<div id="reviewsSection-${p.id}" style="padding:20px 28px 24px;border-top:1px solid var(--gray-100)">⏳ Chargement des avis…</div>`;
+  document.getElementById('modalBody').innerHTML = (p.img
     ? `<div class="modal-2col">${galleryHTML}${detailHTML}</div>`
-    : detailHTML;
+    : detailHTML) + reviewsHTML + similarHTML;
   document.getElementById('modalOverlay').classList.add('open');
+  loadProductReviews(p.id, p.name);
+}
+
+/* ── Avis clients (affichage + formulaire, modérés par l'admin) ── */
+function loadProductReviews(pid, pname) {
+  const box = document.getElementById('reviewsSection-' + pid);
+  if (!box) return;
+  if (typeof db === 'undefined') { renderReviewsSection(pid, pname, []); return; }
+  db.collection('reviews').where('productId','==',pid).where('approved','==',true).get()
+    .then(snap => renderReviewsSection(pid, pname, snap.docs.map(d => d.data())))
+    .catch(() => renderReviewsSection(pid, pname, []));
+}
+
+function renderReviewsSection(pid, pname, reviews) {
+  const box = document.getElementById('reviewsSection-' + pid);
+  if (!box) return;
+  const avg = reviews.length ? (reviews.reduce((s,r)=>s+(r.rating||0),0) / reviews.length) : 0;
+  const starsHTML = (n) => '⭐'.repeat(Math.round(n)) + '☆'.repeat(5-Math.round(n));
+
+  box.innerHTML = `
+    <h4 style="font-size:.78rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">
+      ⭐ Avis clients ${reviews.length ? `— ${avg.toFixed(1)}/5 (${reviews.length} avis)` : ''}
+    </h4>
+    ${reviews.length ? `<div style="margin-bottom:16px">${reviews.map(r => `
+      <div style="padding:10px 0;border-bottom:1px solid var(--gray-100)">
+        <div style="font-size:.85rem;font-weight:700;color:var(--navy-dark)">${starsHTML(r.rating)} <span style="color:var(--gray-500);font-weight:600;margin-left:4px">${r.clientName||'Client'}</span></div>
+        ${r.comment ? `<div style="font-size:.82rem;color:var(--gray-700);margin-top:3px">${r.comment}</div>` : ''}
+      </div>`).join('')}</div>` : `<p style="font-size:.82rem;color:var(--gray-400);margin-bottom:14px">Aucun avis pour le moment — soyez le premier à donner votre avis !</p>`}
+
+    <details style="margin-top:8px">
+      <summary style="cursor:pointer;font-size:.82rem;font-weight:700;color:var(--teal-dark)">✏️ Laisser un avis</summary>
+      <div style="margin-top:12px;padding:14px;background:var(--gray-50);border-radius:10px">
+        <input id="revName-${pid}" placeholder="Votre nom" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:'Poppins',sans-serif;font-size:.83rem;outline:none">
+        <div id="revStars-${pid}" style="margin-bottom:8px;font-size:1.3rem;cursor:pointer">${[1,2,3,4,5].map(i=>`<span onclick="setReviewRating('${pid}',${i})" data-star="${i}" style="opacity:.35">⭐</span>`).join('')}</div>
+        <textarea id="revComment-${pid}" rows="2" placeholder="Votre commentaire (optionnel)" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:'Poppins',sans-serif;font-size:.83rem;outline:none;resize:none"></textarea>
+        <button onclick="submitReview('${pid}','${pname.replace(/'/g,"\\'")}')" style="padding:9px 18px;background:var(--teal-dark);color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer">Envoyer mon avis</button>
+        <div id="revMsg-${pid}" style="display:none;font-size:.76rem;margin-top:8px;font-weight:600"></div>
+      </div>
+    </details>`;
+}
+
+const _reviewRatings = {};
+function setReviewRating(pid, n) {
+  _reviewRatings[pid] = n;
+  document.querySelectorAll(`#revStars-${pid} span`).forEach(s => {
+    s.style.opacity = (+s.dataset.star <= n) ? '1' : '.35';
+  });
+}
+
+function submitReview(pid, pname) {
+  const name    = document.getElementById('revName-' + pid).value.trim();
+  const comment = document.getElementById('revComment-' + pid).value.trim();
+  const rating  = _reviewRatings[pid] || 0;
+  const msgEl   = document.getElementById('revMsg-' + pid);
+
+  function showMsg(t, text) {
+    msgEl.style.display = '';
+    msgEl.style.color = t === 'error' ? '#c62828' : '#166534';
+    msgEl.textContent = text;
+  }
+
+  if (!name)     { showMsg('error', 'Veuillez indiquer votre nom.'); return; }
+  if (!rating)   { showMsg('error', 'Veuillez choisir une note (cliquez sur les étoiles).'); return; }
+  if (typeof db === 'undefined') { showMsg('error', 'Service indisponible pour le moment.'); return; }
+
+  db.collection('reviews').add({
+    productId: pid, productName: pname, clientName: name, rating, comment,
+    approved: false, createdAt: Date.now()
+  }).then(() => {
+    showMsg('success', '✅ Merci ! Votre avis sera publié après validation.');
+    document.getElementById('revName-' + pid).value = '';
+    document.getElementById('revComment-' + pid).value = '';
+    delete _reviewRatings[pid];
+    document.querySelectorAll(`#revStars-${pid} span`).forEach(s => s.style.opacity = '.35');
+  }).catch(() => showMsg('error', '❌ Erreur, veuillez réessayer.'));
+}
+
+/* ── Produits similaires (même catégorie, même matière si possible) ── */
+function similarProductsHTML(p, cat, catId) {
+  if (!cat.products) return '';
+  let pool = cat.products.filter(x => x.id !== p.id);
+  if (p.sub) {
+    const sameSub = pool.filter(x => x.sub === p.sub);
+    if (sameSub.length >= 4) pool = sameSub;
+  }
+  const similar = pool.slice(0, 4);
+  if (!similar.length) return '';
+  return `
+  <div style="padding:20px 28px 24px;border-top:1px solid var(--gray-100);margin-top:4px">
+    <h4 style="font-size:.78rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">✨ Vous pourriez aussi aimer</h4>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px">
+      ${similar.map(s => `
+        <div onclick="openModal('${s.id}','${catId}')" style="cursor:pointer;border:1px solid var(--gray-100);border-radius:10px;padding:8px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--gray-100)'">
+          <div style="width:100%;height:60px;background:var(--gray-50);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px">
+            ${s.img ? `<img src="${s.img}" style="width:100%;height:100%;object-fit:contain">` : `<span style="font-size:1.5rem">${cat.icon||'📦'}</span>`}
+          </div>
+          <div style="font-size:.7rem;font-weight:700;color:var(--navy-dark);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name}</div>
+          <div style="font-size:.68rem;color:var(--teal-dark);font-weight:700;margin-top:2px">${s.price}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
 }
 
 function addToCartFromModal(pid, catId, name, price, priceNum, icon) {

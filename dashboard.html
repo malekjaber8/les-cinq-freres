@@ -218,6 +218,8 @@
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">🛍️</span> Catalogue</div>
         <div class="s-link" id="navArticleMgmt" onclick="showSection('articles')"><span class="ico">➕</span> Gestion des Articles</div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📊</span> Gérer le Stock</div>
+        <div class="s-link" id="navPromo" onclick="showSection('promo')"><span class="ico">🏷️</span> Codes Promo</div>
+        <div class="s-link" id="navReviews" onclick="showSection('reviews')"><span class="ico">⭐</span> Avis Clients <span class="bdg" id="reviewsBadge" style="background:#e53e3e;display:none">0</span></div>
         <div class="s-link" id="navParametres" onclick="showSection('parametres')"><span class="ico">⚙️</span> Paramètres</div>
       </div>
       <!-- Liens client (cachés pour admin) -->
@@ -580,6 +582,65 @@
 
       </div><!-- end sec-articles -->
 
+      <!-- ════════════ SECTION CODES PROMO ════════════ -->
+      <div id="sec-promo" style="display:none">
+        <div style="margin-bottom:24px">
+          <h2 style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">🏷️ Codes Promo</h2>
+          <p style="font-size:.82rem;color:var(--gray-600)">Créez des codes de réduction que vos clients pourront utiliser au moment de commander.</p>
+        </div>
+
+        <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:28px;max-width:560px;margin-bottom:28px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+            <div>
+              <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">Code *</label>
+              <input id="promoCode" placeholder="Ex: BIENVENUE10" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none;text-transform:uppercase">
+            </div>
+            <div>
+              <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">Type *</label>
+              <select id="promoType" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none;background:#fff">
+                <option value="percent">Pourcentage (%)</option>
+                <option value="fixed">Montant fixe (DT)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+            <div>
+              <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">Valeur *</label>
+              <input id="promoValue" type="number" min="1" placeholder="Ex: 10" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none">
+            </div>
+            <div>
+              <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">Date d'expiration (optionnel)</label>
+              <input id="promoExpiry" type="date" style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none">
+            </div>
+          </div>
+          <div id="promoMsg" style="display:none;font-size:.8rem;font-weight:600;margin-bottom:14px;padding:10px 14px;border-radius:8px"></div>
+          <button onclick="createPromoCode()" id="promoSubmitBtn"
+            style="padding:11px 24px;background:linear-gradient(135deg,var(--teal),var(--navy-light));color:#fff;border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(43,190,200,.3)">
+            ✅ Créer le code
+          </button>
+        </div>
+
+        <div style="font-size:.9rem;font-weight:700;color:var(--navy-dark);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          📋 Codes existants <span id="promoListCount" style="background:var(--teal);color:#fff;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:50px">0</span>
+        </div>
+        <div id="promoList"></div>
+      </div><!-- end sec-promo -->
+
+      <!-- ════════════ SECTION AVIS CLIENTS ════════════ -->
+      <div id="sec-reviews" style="display:none">
+        <div style="margin-bottom:24px">
+          <h2 style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">⭐ Avis Clients</h2>
+          <p style="font-size:.82rem;color:var(--gray-600)">Validez les avis avant qu'ils n'apparaissent publiquement sur les pages produit.</p>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-bottom:20px" id="reviewsTabs">
+          <button class="mousse-tab-btn active" onclick="switchReviewsTab('pending',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--teal);background:var(--teal);color:#fff;font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer">⏳ En attente</button>
+          <button class="mousse-tab-btn" onclick="switchReviewsTab('approved',this)" style="padding:9px 18px;border-radius:50px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-800);font-family:'Poppins',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer">✅ Publiés</button>
+        </div>
+
+        <div id="reviewsList"></div>
+      </div><!-- end sec-reviews -->
+
     </div>
   </main>
 </div>
@@ -686,6 +747,7 @@
 <script src="cart.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="firebase-init.js"></script>
 <script>
   let currentUser = null;
@@ -699,8 +761,22 @@
     function boot(user) {
       if (!user) { window.location.href = 'login.html'; return; }
       if (user.role !== 'admin') { window.location.href = 'index.html'; return; }
-      currentUser = user;
-      renderUI();
+
+      // Admin : vérifier la vraie authentification Firebase avant d'accorder l'accès
+      if (typeof firebase === 'undefined' || typeof firebase.auth !== 'function') {
+        localStorage.removeItem('5f_session');
+        window.location.href = 'login.html';
+        return;
+      }
+      firebase.auth().onAuthStateChanged(fbUser => {
+        if (!fbUser || fbUser.email !== 'admin@cinqfreres.tn') {
+          localStorage.removeItem('5f_session');
+          window.location.href = 'login.html';
+          return;
+        }
+        currentUser = user;
+        renderUI();
+      });
     }
 
     if (typeof db !== 'undefined') {
@@ -736,6 +812,7 @@
       document.getElementById('navAdminSection').style.display  = '';
       document.getElementById('navClientSection').style.display = 'none';
       initAdminOrders();
+      updateReviewsBadge();
       showSection('admin-orders'); // vue par défaut pour l'admin
     }
 
@@ -790,6 +867,8 @@
     document.getElementById('sec-admin-orders').style.display    = id === 'admin-orders'  ? '' : 'none';
     document.getElementById('sec-parametres').style.display      = id === 'parametres'    ? '' : 'none';
     document.getElementById('sec-articles').style.display        = id === 'articles'      ? '' : 'none';
+    document.getElementById('sec-promo').style.display           = id === 'promo'         ? '' : 'none';
+    document.getElementById('sec-reviews').style.display         = id === 'reviews'        ? '' : 'none';
 
     if (id === 'parametres') {
       const cur = parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
@@ -801,7 +880,15 @@
       initArticleMgmt();
     }
 
-    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres', articles:'Gestion des Articles' };
+    if (id === 'promo') {
+      loadPromoList();
+    }
+
+    if (id === 'reviews') {
+      loadReviewsList();
+    }
+
+    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres', articles:'Gestion des Articles', promo:'Codes Promo', reviews:'Avis Clients' };
     document.getElementById('pageTitle').textContent = titles[id] || 'Tableau de Bord';
 
     document.querySelectorAll('.s-link').forEach(l => l.classList.remove('active'));
@@ -885,6 +972,10 @@
       deleteOrderConfirmed(_editTargetId);
     } else if (_pwdAction === 'delete-article') {
       deleteArticleConfirmed(_editTargetId);
+    } else if (_pwdAction === 'delete-promo') {
+      deletePromoConfirmed(_editTargetId);
+    } else if (_pwdAction === 'delete-review') {
+      deleteReviewConfirmed(_editTargetId);
     } else {
       openEditOrder(_editTargetId);
     }
@@ -1170,6 +1261,185 @@
     const [collection, docId] = target.split('::');
     db.collection(collection).doc(docId).delete()
       .then(() => { showToast('success','Article supprimé',''); loadArticleList(); })
+      .catch(e => showToast('error','Erreur', e.message));
+  }
+
+  /* ══════════════════════════════════════════
+     CODES PROMO (admin)
+  ══════════════════════════════════════════ */
+  let _promoListCache = [];
+
+  function createPromoCode() {
+    const code   = document.getElementById('promoCode').value.trim().toUpperCase();
+    const type   = document.getElementById('promoType').value;
+    const value  = parseFloat(document.getElementById('promoValue').value);
+    const expiry = document.getElementById('promoExpiry').value || null;
+    const msgEl  = document.getElementById('promoMsg');
+
+    function showPromoMsg(t, text) {
+      msgEl.style.display = '';
+      msgEl.style.background = t === 'error' ? '#fee2e2' : '#dcfce7';
+      msgEl.style.color      = t === 'error' ? '#b91c1c' : '#166534';
+      msgEl.textContent = text;
+    }
+
+    if (!code || isNaN(value) || value <= 0) { showPromoMsg('error','Veuillez remplir un code et une valeur valides.'); return; }
+    if (type === 'percent' && value > 100) { showPromoMsg('error','Un pourcentage ne peut pas dépasser 100.'); return; }
+
+    db.collection('promo_codes').where('code','==',code).limit(1).get().then(snap => {
+      if (!snap.empty) { showPromoMsg('error', 'Ce code existe déjà.'); return; }
+      return db.collection('promo_codes').add({ code, type, value, expiresAt: expiry, active: true, createdAt: Date.now() })
+        .then(() => {
+          showPromoMsg('success', '✅ Code "' + code + '" créé avec succès !');
+          document.getElementById('promoCode').value = '';
+          document.getElementById('promoValue').value = '';
+          document.getElementById('promoExpiry').value = '';
+          loadPromoList();
+        });
+    }).catch(e => showPromoMsg('error', '❌ Erreur : ' + e.message));
+  }
+
+  function loadPromoList() {
+    if (typeof db === 'undefined') return;
+    db.collection('promo_codes').orderBy('createdAt','desc').get().then(snap => {
+      _promoListCache = snap.docs.map(d => ({ _id: d.id, ...d.data() }));
+      renderPromoList();
+    }).catch(() => {});
+  }
+
+  function renderPromoList() {
+    const wrap = document.getElementById('promoList');
+    document.getElementById('promoListCount').textContent = _promoListCache.length;
+    if (!_promoListCache.length) {
+      wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Aucun code promo créé pour l'instant.</div>`;
+      return;
+    }
+    const today = new Date().toISOString().slice(0,10);
+    wrap.innerHTML = _promoListCache.map(p => {
+      const expired = p.expiresAt && p.expiresAt < today;
+      const statusLabel = expired ? '⏰ Expiré' : (p.active ? '✅ Actif' : '⏸️ Désactivé');
+      const statusColor = expired ? '#94a3b8' : (p.active ? '#166534' : '#b45309');
+      const valLabel = p.type === 'percent' ? p.value + '%' : p.value + ' DT';
+      return `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <div style="font-size:.9rem;font-weight:800;color:var(--navy-dark);letter-spacing:.04em">${p.code}</div>
+          <div style="font-size:.75rem;color:var(--gray-500)">${valLabel} de réduction${p.expiresAt?(' · expire le '+p.expiresAt):''}</div>
+        </div>
+        <div style="font-size:.78rem;font-weight:700;color:${statusColor}">${statusLabel}</div>
+        ${!expired ? `<button onclick="togglePromoActive('${p._id}',${p.active})" style="background:rgba(43,190,200,.08);border:none;color:var(--teal-dark);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer">${p.active?'⏸️ Désactiver':'▶️ Activer'}</button>` : ''}
+        <button onclick="requestDeletePromo('${p._id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer">🗑️ Supprimer</button>
+      </div>`;
+    }).join('');
+  }
+
+  function togglePromoActive(docId, currentActive) {
+    db.collection('promo_codes').doc(docId).update({ active: !currentActive })
+      .then(() => loadPromoList())
+      .catch(e => showToast('error','Erreur', e.message));
+  }
+
+  function requestDeletePromo(docId) {
+    _editTargetId = docId;
+    _pwdAction = 'delete-promo';
+    document.getElementById('editPwdInput').value = '';
+    document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModalTitle').textContent = '🗑️ Suppression de code promo';
+    document.getElementById('editPwdModalText').textContent  = 'Saisissez le mot de passe du jour pour supprimer définitivement ce code.';
+    document.getElementById('editPwdModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
+  }
+
+  function deletePromoConfirmed(docId) {
+    db.collection('promo_codes').doc(docId).delete()
+      .then(() => { showToast('success','Code supprimé',''); loadPromoList(); })
+      .catch(e => showToast('error','Erreur', e.message));
+  }
+
+  /* ══════════════════════════════════════════
+     AVIS CLIENTS (modération admin)
+  ══════════════════════════════════════════ */
+  let _reviewsListCache = [];
+  let _reviewsTab = 'pending';
+
+  function switchReviewsTab(tab, btn) {
+    _reviewsTab = tab;
+    document.querySelectorAll('#reviewsTabs .mousse-tab-btn').forEach(b => {
+      b.style.background = 'var(--white)'; b.style.borderColor = 'var(--gray-200)'; b.style.color = 'var(--gray-800)';
+    });
+    btn.style.background = 'var(--teal)'; btn.style.borderColor = 'var(--teal)'; btn.style.color = '#fff';
+    loadReviewsList();
+  }
+
+  function loadReviewsList() {
+    if (typeof db === 'undefined') return;
+    db.collection('reviews').where('approved','==', _reviewsTab === 'approved').get().then(snap => {
+      _reviewsListCache = snap.docs.map(d => ({ _id: d.id, ...d.data() })).sort((a,b) => (b.createdAt||0)-(a.createdAt||0));
+      renderReviewsList();
+      updateReviewsBadge();
+    }).catch(() => {});
+  }
+
+  function updateReviewsBadge() {
+    db.collection('reviews').where('approved','==', false).get().then(snap => {
+      const badge = document.getElementById('reviewsBadge');
+      if (!badge) return;
+      badge.textContent = snap.size;
+      badge.style.display = snap.size > 0 ? '' : 'none';
+    }).catch(() => {});
+  }
+
+  function renderReviewsList() {
+    const wrap = document.getElementById('reviewsList');
+    if (!_reviewsListCache.length) {
+      wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">${_reviewsTab==='pending' ? 'Aucun avis en attente.' : 'Aucun avis publié pour l\'instant.'}</div>`;
+      return;
+    }
+    wrap.innerHTML = _reviewsListCache.map(r => {
+      const stars = '⭐'.repeat(r.rating||0) + '☆'.repeat(5-(r.rating||0));
+      return `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:16px 18px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:var(--navy-dark)">${r.clientName||'Client'} <span style="color:var(--gray-400);font-weight:500">— ${r.productName||''}</span></div>
+            <div style="font-size:.9rem">${stars}</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            ${_reviewsTab === 'pending'
+              ? `<button onclick="approveReview('${r._id}')" style="background:rgba(34,197,94,.1);border:none;color:#166534;font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer">✅ Publier</button>
+                 <button onclick="rejectReview('${r._id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer">✕ Rejeter</button>`
+              : `<button onclick="requestDeleteReview('${r._id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer">🗑️ Retirer</button>`}
+          </div>
+        </div>
+        <div style="font-size:.84rem;color:var(--gray-700)">${r.comment||''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function approveReview(docId) {
+    db.collection('reviews').doc(docId).update({ approved: true })
+      .then(() => { showToast('success','Avis publié',''); loadReviewsList(); })
+      .catch(e => showToast('error','Erreur', e.message));
+  }
+
+  function rejectReview(docId) {
+    db.collection('reviews').doc(docId).delete()
+      .then(() => { showToast('success','Avis rejeté',''); loadReviewsList(); })
+      .catch(e => showToast('error','Erreur', e.message));
+  }
+
+  function requestDeleteReview(docId) {
+    _editTargetId = docId;
+    _pwdAction = 'delete-review';
+    document.getElementById('editPwdInput').value = '';
+    document.getElementById('editPwdErr').style.display = 'none';
+    document.getElementById('editPwdModalTitle').textContent = '🗑️ Retrait d\'avis publié';
+    document.getElementById('editPwdModalText').textContent  = 'Saisissez le mot de passe du jour pour retirer cet avis déjà publié.';
+    document.getElementById('editPwdModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('editPwdInput').focus(), 100);
+  }
+
+  function deleteReviewConfirmed(docId) {
+    db.collection('reviews').doc(docId).delete()
+      .then(() => { showToast('success','Avis retiré',''); loadReviewsList(); })
       .catch(e => showToast('error','Erreur', e.message));
   }
 
@@ -1524,6 +1794,9 @@
 
   function logout() {
     localStorage.removeItem('5f_session');
+    if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+      firebase.auth().signOut().catch(() => {});
+    }
     window.location.href = 'login.html';
   }
 
