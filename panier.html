@@ -623,19 +623,26 @@
 <script src="firebase-init.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  (function(){ if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: 'b89UGu12DceOzp3CCK' }); })();
+  (function(){ if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: '89UGu12DceOzp3CCK' }); })();
 
   function sendOrderConfirmationEmail(order) {
-    if (typeof emailjs === 'undefined' || !order.email) return;
+    if (typeof emailjs === 'undefined') { console.warn('EmailJS: SDK non chargé (vérifiez la connexion internet ou un bloqueur de pub).'); return; }
+    if (!order.email) { console.warn('EmailJS: aucun email client sur cette commande.'); return; }
     const itemsList = (order.items || []).map(i => `${i.icon||'📦'} ${i.name}${i.variant?' — '+i.variant:''} ×${i.qty} — ${i.price}`).join('\n');
     const totalStr  = (typeof order.total === 'number' ? order.total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) : order.total) + ' DT';
     emailjs.send('service_blfij4m', 'template_qjou7h9', {
       to_email:   order.email,
+      email:      order.email,
       to_name:    order.name,
       order_id:   order.id,
       items_list: itemsList,
       total:      totalStr,
-    }).catch(e => console.warn('EmailJS:', e.message || e));
+    }).then(() => {
+      console.log('EmailJS: email envoyé avec succès à', order.email);
+    }).catch(e => {
+      console.error('EmailJS ERREUR:', e.status, e.text || e.message || e);
+      showToast('error', 'Email non envoyé', (e.text || e.message || 'Erreur EmailJS') + ' — la commande est bien enregistrée.');
+    });
   }
 
   function getLivraisonFee() {
