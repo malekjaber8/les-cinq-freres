@@ -621,7 +621,23 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="firebase-init.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+  (function(){ if (typeof emailjs !== 'undefined') emailjs.init({ publicKey: 'b89UGu12DceOzp3CCK' }); })();
+
+  function sendOrderConfirmationEmail(order) {
+    if (typeof emailjs === 'undefined' || !order.email) return;
+    const itemsList = (order.items || []).map(i => `${i.icon||'📦'} ${i.name}${i.variant?' — '+i.variant:''} ×${i.qty} — ${i.price}`).join('\n');
+    const totalStr  = (typeof order.total === 'number' ? order.total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) : order.total) + ' DT';
+    emailjs.send('service_blfij4m', 'template_qjou7h9', {
+      to_email:   order.email,
+      to_name:    order.name,
+      order_id:   order.id,
+      items_list: itemsList,
+      total:      totalStr,
+    }).catch(e => console.warn('EmailJS:', e.message || e));
+  }
+
   function getLivraisonFee() {
     return parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
   }
@@ -885,6 +901,7 @@
         }
       }
 
+      sendOrderConfirmationEmail(order);
       Cart.clear();
       _appliedPromo = null;
       _lastOrder = order;
