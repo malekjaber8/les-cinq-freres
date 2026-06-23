@@ -44,6 +44,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Anti-glissement horizontal — mobile uniquement, ne touche pas le bureau */
+@media (max-width: 900px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+  }
+}
+
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
