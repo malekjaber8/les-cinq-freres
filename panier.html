@@ -164,6 +164,35 @@
       .panier-layout { grid-template-columns:1fr; }
       .order-summary { position:static; }
     }
+
+    /* === Corrections mobile uniquement (n'affecte jamais le format bureau) === */
+    @media(max-width:600px) {
+      .panier-nav { flex-wrap:wrap; height:auto; padding:10px 14px; row-gap:8px; }
+      .panier-nav .logo img { height:32px; }
+      .panier-nav .logo .brand { font-size:.82rem; }
+      .panier-nav .logo .sub { font-size:.6rem; }
+      .panier-nav > div { width:100%; justify-content:center; }
+      .panier-nav .btn { font-size:.74rem !important; padding:7px 10px !important; }
+
+      .steps-inner { padding:12px 8px !important; }
+      .step-item { gap:5px !important; }
+      .step-circle { width:24px !important; height:24px !important; font-size:.65rem !important; }
+      .step-label { font-size:.62rem !important; }
+      .step-line { margin:0 4px !important; }
+
+      /* Tableau du panier -> liste empilée pour éviter le débordement horizontal */
+      .cart-table thead { display:none; }
+      .cart-table, .cart-table tbody, .cart-table tr { display:block; width:100%; }
+      .cart-table tr { padding:14px 16px; border-top:1px solid var(--gray-100); }
+      .cart-table td { display:block; padding:4px 0 !important; border-top:none !important; }
+      .cart-table td.price-cell::before { content:'Prix unit. : '; font-size:.68rem; color:var(--gray-600); font-weight:700; }
+      .cart-table td.price-cell ~ td.price-cell::before { content:'Sous-total : '; }
+      .cart-table td:has(.qty-ctrl) { margin:8px 0; }
+      .cart-table td:has(.del-btn) { text-align:right; margin-top:6px; }
+
+      .summary-row { font-size:.8rem; }
+      .summary-total .val { font-size:1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -207,21 +236,21 @@
 </div>
 
 <!-- Steps -->
-<div style="max-width:1200px;margin:0 auto 24px;padding:0 24px">
-  <div style="display:flex;align-items:center;gap:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:16px 24px;box-shadow:var(--shadow-sm)">
-    <div style="display:flex;align-items:center;gap:10px;flex:1">
-      <div style="width:32px;height:32px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:.8rem;font-weight:700">1</div>
-      <span style="font-size:.85rem;font-weight:700;color:var(--teal-dark)">Panier</span>
+<div class="checkout-steps" style="max-width:1200px;margin:0 auto 24px;padding:0 24px">
+  <div class="steps-inner" style="display:flex;align-items:center;gap:0;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:16px 24px;box-shadow:var(--shadow-sm)">
+    <div class="step-item" style="display:flex;align-items:center;gap:10px;flex:1">
+      <div class="step-circle" style="width:32px;height:32px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:.8rem;font-weight:700">1</div>
+      <span class="step-label" style="font-size:.85rem;font-weight:700;color:var(--teal-dark)">Panier</span>
     </div>
-    <div style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
-    <div style="display:flex;align-items:center;gap:10px;flex:1">
-      <div style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700" id="step2Num">2</div>
-      <span style="font-size:.85rem;font-weight:600;color:var(--gray-600)" id="step2Label">Coordonnées</span>
+    <div class="step-line" style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
+    <div class="step-item" style="display:flex;align-items:center;gap:10px;flex:1">
+      <div class="step-circle" style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700" id="step2Num">2</div>
+      <span class="step-label" style="font-size:.85rem;font-weight:600;color:var(--gray-600)" id="step2Label">Coordonnées</span>
     </div>
-    <div style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
-    <div style="display:flex;align-items:center;gap:10px;flex:1">
-      <div style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700">3</div>
-      <span style="font-size:.85rem;font-weight:600;color:var(--gray-600)">Confirmation</span>
+    <div class="step-line" style="flex:1;height:2px;background:var(--gray-200);margin:0 12px"></div>
+    <div class="step-item" style="display:flex;align-items:center;gap:10px;flex:1">
+      <div class="step-circle" style="width:32px;height:32px;background:var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:.8rem;font-weight:700">3</div>
+      <span class="step-label" style="font-size:.85rem;font-weight:600;color:var(--gray-600)">Confirmation</span>
     </div>
   </div>
 </div>
