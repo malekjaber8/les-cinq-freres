@@ -192,6 +192,11 @@
 
       .summary-row { font-size:.8rem; }
       .summary-total .val { font-size:1.1rem; }
+
+      /* L'input code promo n'a pas de largeur min. par défaut -> forçait tout le récap à déborder */
+      #promoInput { min-width:0 !important; }
+      .order-summary, .summary-body, .summary-row, .panier-layout, .panier-layout > div { max-width:100%; min-width:0; }
+      .summary-row .lbl, .summary-row .val { min-width:0; word-break:break-word; }
     }
   </style>
 </head>
