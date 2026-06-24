@@ -821,6 +821,10 @@ footer {
   .products-grid { grid-template-columns: 1fr 1fr; }
   .auth-page { grid-template-columns: 1fr; }
   .auth-left { display: none; }
+  .store-locations-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+  .store-images-grid { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 1400px) {
   .nav-links, .nav-cta { display: none; }
