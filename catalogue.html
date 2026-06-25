@@ -2742,7 +2742,7 @@ const PIET_COLOR_GROUPS = [
   { label:'Rose Gold',         icon:'🌸', match:['rose gold'] },
 ];
 const PIET_H_MIN = 4;
-const PIET_H_MAX = 25;
+const PIET_H_MAX = 85;
 
 /* ── Construire le panneau filtre dans la sidebar ── */
 function initPietFilterPanel() {
@@ -2759,8 +2759,8 @@ function initPietFilterPanel() {
       </div>
       <div class="pfp-dual-range">
         <div class="pfp-track"><div class="pfp-fill" id="pfFill"></div></div>
-        <input type="range" id="pfMin" min="${PIET_H_MIN}" max="${PIET_H_MAX}" value="${PIET_H_MIN}" step="0.5" oninput="updatePietRange('min')">
-        <input type="range" id="pfMax" min="${PIET_H_MIN}" max="${PIET_H_MAX}" value="${PIET_H_MAX}" step="0.5" oninput="updatePietRange('max')">
+        <input type="range" id="pfMin" min="${PIET_H_MIN}" max="${PIET_H_MAX}" value="${PIET_H_MIN}" step="1" oninput="updatePietRange('min')">
+        <input type="range" id="pfMax" min="${PIET_H_MIN}" max="${PIET_H_MAX}" value="${PIET_H_MAX}" step="1" oninput="updatePietRange('max')">
       </div>
     </div>
     <!-- Matière -->
