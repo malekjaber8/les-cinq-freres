@@ -2476,7 +2476,8 @@ function toolItemCard(tc, item, catIdx, itemIdx) {
 
 /* ===== MODAL ===== */
 function openModal(pid, catId) {
-  const cat = catalogue[catId];
+  let cat = catalogue[catId];
+  if (cat && !cat.products && cat.parent) { catId = cat.parent; cat = catalogue[catId]; }
   if (!cat || !cat.products) return;
   const p = cat.products.find(x => x.id === pid);
   if (!p) return;
