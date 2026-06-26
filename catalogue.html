@@ -1483,9 +1483,15 @@ function productCard(p, catId) {
        </div>`
     : `<div class="${p.price==='À confirmer'||p.price==='Sur devis'?'p-price na':'p-price'}">${p.price}</div>`;
 
+  const hasMultipleVariants = p.variants && p.variants.length > 1;
   const addBtn = isRouleau
     ? `<button class="add-btn" title="Commander ce rouleau"
         onclick="event.stopPropagation();confirmRouleauOAT('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}','${firstVariant}','${icon}')">
+        🛒
+       </button>`
+    : hasMultipleVariants
+    ? `<button class="add-btn" title="Choisir une variante"
+        onclick="event.stopPropagation();openModal('${p.id}','${catId}')">
         🛒
        </button>`
     : `<button class="add-btn" title="Ajouter au panier"
@@ -2507,9 +2513,10 @@ function openModal(pid, catId) {
       <div style="display:flex;gap:14px;align-items:end;margin-bottom:20px;flex-wrap:wrap">
         <div style="flex:1;min-width:150px">
           <label style="font-size:.76rem;font-weight:700;color:var(--gray-700);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Variante</label>
-          <select id="modalVariant" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.85rem;outline:none;background:#fff">
+          <select id="modalVariant" onchange="updateModalVariantPrice()" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.85rem;outline:none;background:#fff">
             ${p.variants.map(v=>`<option value="${v}">${v}</option>`).join('')}
           </select>
+          <div id="modalVariantPriceTag" style="margin-top:6px;font-size:.88rem;font-weight:800;color:var(--teal-dark)"></div>
         </div>
         <div style="width:110px">
           <label style="font-size:.76rem;font-weight:700;color:var(--gray-700);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Quantité</label>
@@ -2525,12 +2532,15 @@ function openModal(pid, catId) {
       <table class="var-table" style="margin-bottom:22px">
         <thead><tr><th>Variante</th><th>Prix</th><th>Stock</th></tr></thead>
         <tbody>
-          ${p.variants.map(v => `
-            <tr onclick="document.getElementById('modalVariant').value='${v}'" style="cursor:pointer">
+          ${p.variants.map(v => {
+            const vPrice = extractVariantPrice(v) || (p.price !== 'À confirmer' && p.price !== 'Sur devis' ? p.price : null);
+            return `
+            <tr onclick="document.getElementById('modalVariant').value='${v}';updateModalVariantPrice()" style="cursor:pointer">
               <td style="font-weight:500">${v}</td>
-              <td class="price-cell">${p.price !== 'À confirmer' && p.price !== 'Sur devis' ? p.price : '<span style="color:var(--gray-400);font-style:italic">Sur devis</span>'}</td>
+              <td class="price-cell">${vPrice ? vPrice : '<span style="color:var(--gray-400);font-style:italic">Sur devis</span>'}</td>
               <td><span class="stock-dot in-stock"></span>En stock</td>
-            </tr>`).join('')}
+            </tr>`;
+          }).join('')}
         </tbody>
       </table>
 
@@ -2548,6 +2558,7 @@ function openModal(pid, catId) {
     ? `<div class="modal-2col">${galleryHTML}${detailHTML}</div>`
     : detailHTML) + reviewsHTML + similarHTML;
   document.getElementById('modalOverlay').classList.add('open');
+  updateModalVariantPrice();
   loadProductReviews(p.id, p.name);
 }
 
@@ -2650,10 +2661,28 @@ function similarProductsHTML(p, cat, catId) {
   </div>`;
 }
 
+/* ── Extrait le prix propre à une variante, ex: "Gold — 12cm — 7,500 DT" -> "7,500 DT" ── */
+function extractVariantPrice(v) {
+  const m = String(v||'').match(/([\d]+(?:[.,]\d+)?)\s*DT/);
+  return m ? (m[1] + ' DT') : null;
+}
+
+/* ── Met à jour le prix affiché selon la variante choisie dans la modale ── */
+function updateModalVariantPrice() {
+  const sel = document.getElementById('modalVariant');
+  const tag = document.getElementById('modalVariantPriceTag');
+  if (!sel || !tag) return;
+  const vPrice = extractVariantPrice(sel.value);
+  tag.textContent = vPrice ? '💰 ' + vPrice : '';
+}
+
 function addToCartFromModal(pid, catId, name, price, priceNum, icon) {
   const variant = document.getElementById('modalVariant')?.value || '';
   const qty     = parseInt(document.getElementById('modalQty')?.value || 1);
-  Cart.add({ productId:pid, catId, name, variant, price, priceNum, qty, icon });
+  const vPrice  = extractVariantPrice(variant);
+  const finalPrice    = vPrice || price;
+  const finalPriceNum = vPrice ? parseFloat(vPrice.replace(/[^\d.,]/g,'').replace(',','.')) : priceNum;
+  Cart.add({ productId:pid, catId, name, variant, price:finalPrice, priceNum:finalPriceNum, qty, icon });
   closeModalBtn();
 }
 
