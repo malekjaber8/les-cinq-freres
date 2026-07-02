@@ -632,7 +632,7 @@
     { tag:'🛏️ Nouveau',         title:'Matelas Ressort',     sub2:'Collection 2025',     sub3:'Confort Premium !', desc:"Matelas à ressorts ensachés — Médico, Relax, Tendresse, Venise et plus. Livraison rapide partout en Tunisie.",      b1:'5 modèles',      b2:'Livraison 24h', accent:'#4338ca', img:'images/matelas ressort/medico.jpg',                     btn:'Voir les matelas' },
     { tag:'🌿 En Stock',        title:'Fibre Polyester',     sub2:'3 kg & 5 kg',         sub3:'Garnissage Top !',  desc:"Fibre polyester super douce pour coussins, canapés et meubles rembourrés. Disponible immédiatement.",              b1:'Prix imbattable',b2:'Stock dispo',   accent:'#059669', img:'images/fibre/fibre.jpg',                                btn:'Commander' },
     { tag:'🎞️ Rouleau OAT',    title:'OAT Polyester',       sub2:'150g / 250g / 350g',  sub3:'En Rouleau !',      desc:"Rouleaux OAT super souples — largeur 180 cm et 240 cm. Idéal pour le garnissage de meubles et matelas.",            b1:'180 & 240 cm',   b2:'Prix rouleau',  accent:'#0891b2', img:'images/polyester/rouleau.jpg',                          btn:'Voir les OAT' },
-    { tag:'🛋️ Confort',         title:'Coussins',            sub2:'45×45 · 50×50 · 70×40',sub3:'Toutes Tailles !', desc:"Coussins fibre, mélange et repol — disponibles en plusieurs dimensions et remplissages. Profitez des prix pro.",   b1:'3 tailles',      b2:'3 remplissages',accent:'#db2777', img:'images/coussin/coussin 45x45 fibre .jpg',               btn:'Voir les coussins' },
+    { tag:'🛋️ Confort',         title:'Coussins',            sub2:'45×45 · 50×50 · 70×40',sub3:'Toutes Tailles !', desc:"Coussins fibre, mélange et repol — disponibles en plusieurs dimensions et remplissages. Profitez des prix pro.",   b1:'3 tailles',      b2:'3 remplissages',accent:'#db2777', img:'images/outils/agr.png',               btn:'Voir les coussins' },
     { tag:'⭐ Sélection',       title:'Piètements Métal',    sub2:'+55 Modèles',         sub3:'Gold · Chrome · Noir !',desc:"Sabots, tubes et piètements métal pour canapés et fauteuils — gold, chrome, fumé, noir. Large choix de hauteurs.",b1:'+55 modèles',    b2:'Toutes finitions',accent:'#1B4E7A',img:'images/pietement-metal/gl43.png',                      btn:'Voir piètements' },
     { tag:'🌲 Naturel',         title:'Piètements Bois',     sub2:'13 cm & 20 cm',       sub3:'Naturel & Rayé !',  desc:"Sabots en bois naturel, rayé, 3 boules et 4 boules — finition soignée pour vos meubles haut de gamme.",            b1:'6 modèles',      b2:'Finition pro',  accent:'#92400e', img:'images/pietement-bois/sabot en bois.jpg',               btn:'Voir bois' },
     { tag:'🟡 Design',          title:'Piètements Plastique',sub2:'11 Modèles',          sub3:'Cristina · Milano !',desc:"Sabots plastique — Cristina, Elina, Milano, Venise et plus. Résistants et élégants pour tous types de meubles.",   b1:'11 modèles',     b2:'Résistant',     accent:'#7c3aed', img:'images/pietement-plastique/cristina.png',               btn:'Voir plastique' },
@@ -770,75 +770,195 @@
       </p>
     </div>
 
-    <!-- Categories showcase -->
-    <div class="products-grid">
+    <!-- Categories showcase — grille image avec rotation automatique -->
+    <style>
+    .cat-showcase { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .cat-sc-card { position:relative; border-radius:16px; overflow:hidden; cursor:pointer; height:210px; box-shadow:0 2px 12px rgba(27,78,122,.12); border:1.5px solid var(--gray-100); transition:transform .3s, box-shadow .3s, border-color .3s; background:#fff; }
+    .cat-sc-card:hover { transform:translateY(-6px); box-shadow:0 12px 32px rgba(27,78,122,.18); border-color:var(--teal); }
+    .cat-sc-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .9s ease; }
+    .cat-sc-img.hidden { opacity:0; }
+    .cat-sc-body { position:absolute; bottom:0; left:0; right:0; padding:18px 18px 16px; background:linear-gradient(transparent 0%, rgba(18,47,75,.75) 40%, rgba(18,47,75,.97) 100%); }
+    .cat-sc-top { position:absolute; top:12px; left:12px; display:flex; align-items:center; gap:6px; }
+    .cat-sc-badge { background:var(--teal); color:#fff; font-size:.6rem; font-weight:800; padding:3px 10px; border-radius:50px; letter-spacing:.06em; text-transform:uppercase; }
+    .cat-sc-icon { font-size:1.5rem; display:block; margin-bottom:5px; }
+    .cat-sc-name { font-family:'Raleway',sans-serif; font-size:.95rem; font-weight:800; color:#fff; margin-bottom:2px; line-height:1.2; }
+    .cat-sc-sub { font-size:.7rem; color:rgba(255,255,255,.7); font-weight:500; }
+    .cat-sc-btn { position:absolute; bottom:14px; right:14px; width:30px; height:30px; background:var(--teal); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.85rem; color:#fff; opacity:0; transform:scale(.7); transition:opacity .25s, transform .25s; }
+    .cat-sc-card:hover .cat-sc-btn { opacity:1; transform:scale(1); }
+    .cat-sc-dots { position:absolute; top:14px; right:14px; display:flex; gap:4px; }
+    .cat-sc-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.45); transition:background .4s; }
+    .cat-sc-dot.on { background:var(--teal); }
+    @media(max-width:900px){ .cat-showcase { grid-template-columns:repeat(2,1fr); } .cat-sc-card { height:180px; } }
+    @media(max-width:480px){ .cat-showcase { grid-template-columns:repeat(2,1fr); gap:10px; } .cat-sc-card { height:155px; } .cat-sc-name { font-size:.83rem; } .cat-sc-icon { font-size:1.2rem; } }
+    </style>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=tissu'" style="cursor:pointer">
-        <div class="product-card-icon">🧵</div>
-        <h3>Tissus d'Ameublement</h3>
-        <p>Velours, jacquard, microfibre, lin, simili cuir — 12 types de tissus pour tous vos projets de tapisserie.</p>
-        <div class="product-tags"><span>Velours</span><span>Microfibre</span><span>Simili cuir</span><span>12 types</span></div>
+    <div class="cat-showcase">
+
+      <!-- Carcasses de Chaise -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=chaise'">
+        <img class="cat-sc-img" src="images/carcasses/asya.png" alt="">
+        <img class="cat-sc-img hidden" src="images/carcasses/c003.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/carcasses/c006.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/carcasses/mozart.png" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,#1B4E7A,#2BBEC8)"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🪑</span>
+          <div class="cat-sc-name">Carcasses de Chaise</div>
+          <div class="cat-sc-sub">Tapissée, Bois brut, Inox — 15 modèles</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=mousse-tabka'" style="cursor:pointer;border-top:3px solid var(--teal)">
-        <div class="product-card-icon">🛏️</div>
-        <h3>Mousse & Rembourrage</h3>
-        <p>Matelas mousse, plaques TABKA (HR25→HR40), fibre polyester et polystyrène OAT — toute la famille mousse réunie.</p>
-        <div class="product-tags"><span>Matelas mousse</span><span>TABKA</span><span>Polyester</span><span>Polystyrène</span></div>
+      <!-- Piètements -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=pietement'">
+        <img class="cat-sc-img" src="images/pietement-metal/em32.png" alt="">
+        <img class="cat-sc-img hidden" src="images/pietement-bois/classique.png" alt="">
+        <img class="cat-sc-img hidden" src="images/pietement-metal/gl102.png" alt="">
+        <img class="cat-sc-img hidden" src="images/pietement-plastique/elina.png" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🦵</span>
+          <div class="cat-sc-name">Piètements de Meuble</div>
+          <div class="cat-sc-sub">Bois, Métal, Plastique — 50+ modèles</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=ressort'" style="cursor:pointer">
-        <div class="product-card-icon">🔩</div>
-        <h3>Matelas Ressort</h3>
-        <p>Ressorts Bonnell, ensachés, plateaux de ressorts pour canapés et matelas. Acier traité anti-rouille.</p>
-        <div class="product-tags"><span>Bonnell</span><span>Ensaché</span><span>Plateau</span></div>
+      <!-- Miroirs -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=miroirs'">
+        <img class="cat-sc-img" src="images/miroire/miroire-rond-40.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/miroire/genova-doree-d60.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/miroire/miroire-60x180-blanc.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/miroire/miroire-eve-noire-50x70.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🪞</span>
+          <div class="cat-sc-name">Miroirs Décoratifs</div>
+          <div class="cat-sc-sub">Arche, rond, soleil, pleine longueur</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=pietement'" style="cursor:pointer">
-        <div class="product-card-icon">🪑</div>
-        <h3>Piètements de Meuble</h3>
-        <p>Pieds en bois (tourné, carré, conique), métal (épingle, tube, carré peint) et plastique (standard, réglable).</p>
-        <div class="product-tags"><span>Bois</span><span>Métal</span><span>Plastique</span><span>15 modèles</span></div>
+      <!-- Mousse & Rembourrage -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=mousse-tabka'">
+        <img class="cat-sc-img" src="images/matelas mousse/HR.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas mousse/medico.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas mousse/relax.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas mousse/venise.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🛏️</span>
+          <div class="cat-sc-name">Mousse & Rembourrage</div>
+          <div class="cat-sc-sub">Matelas mousse, TABKA, Polyester, OAT</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=agrafes'" style="cursor:pointer">
-        <div class="product-card-icon">📌</div>
-        <h3>Agrafes</h3>
-        <p>Séries 53, 80, 71 — agrafes galvanisées, clous tapissier dorés, nickelés et noirs. Fichier de prix disponible.</p>
-        <div class="product-tags"><span>Série 53</span><span>Série 80</span><span>Clous déco</span><span>10+ types</span></div>
+      <!-- Socles de Table -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=socle'">
+        <img class="cat-sc-img" src="images/socle table/ST001.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/socle table/ST002.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/socle table/ST003.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/socle table/ST004.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy),var(--navy-dark))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🔲</span>
+          <div class="cat-sc-name">Socles de Table</div>
+          <div class="cat-sc-sub">Tulipe, cruciforme, en X — Métal & Bois</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=socle'" style="cursor:pointer">
-        <div class="product-card-icon">🔲</div>
-        <h3>Socles de Table</h3>
-        <p>Bases tulipe, cruciforme, en X — en métal peint, bois massif et inox poli. Pour toutes tables.</p>
-        <div class="product-tags"><span>Métal</span><span>Bois</span><span>Inox</span></div>
+      <!-- Outils de Tapisserie -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=outils'">
+        <img class="cat-sc-img" src="images/outil de tapissserie/accesoire lion.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/outils/t50.png" alt="">
+        <img class="cat-sc-img hidden" src="images/outil de tapissserie/Curseur.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/outil de tapissserie/Patin-glisseur.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🛠️</span>
+          <div class="cat-sc-name">Outils de Tapisserie</div>
+          <div class="cat-sc-sub">Pistolets, colles, accessoires — 100+ articles</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=chaise'" style="cursor:pointer">
-        <div class="product-card-icon">🪑</div>
-        <h3>Carcasses de Chaise</h3>
-        <p>Carcasses tapissées (Asya, Goda, Mozart, Sultan…) et carcasses bois brut — 15 modèles pour tous styles.</p>
-        <div class="product-tags"><span>Tapissée</span><span>Bois brut</span><span>15 modèles</span></div>
+      <!-- Tissus d'Ameublement -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=tissu'">
+        <img class="cat-sc-img" src="images/tissue/aurora.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/tissue/diva.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/tissue/luna.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/tissue/palermo.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🧵</span>
+          <div class="cat-sc-name">Tissus d'Ameublement</div>
+          <div class="cat-sc-sub">Velours, microfibre, simili cuir — 12 types</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=miroirs'" style="cursor:pointer">
-        <div class="product-card-icon">🪞</div>
-        <h3>Miroirs</h3>
-        <p>Miroirs ronds, rectangulaires, arche, soleil et pleine longueur. Avec ou sans cadre, sur mesure possible.</p>
-        <div class="product-tags"><span>Rond</span><span>Arche</span><span>Pleine longueur</span><span>8 modèles</span></div>
+      <!-- Matelas Ressort -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=ressort'">
+        <img class="cat-sc-img" src="images/matelas ressort/medico.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas ressort/relax.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas ressort/soft.jpg" alt="">
+        <img class="cat-sc-img hidden" src="images/matelas ressort/venise.jpg" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy),var(--teal-dark))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">🔩</span>
+          <div class="cat-sc-name">Matelas Ressort</div>
+          <div class="cat-sc-sub">Bonnell, ensaché, plateau — Acier anti-rouille</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
-      <div class="product-card" onclick="window.location.href='catalogue.html?cat=outils'" style="cursor:pointer;background:linear-gradient(135deg,rgba(27,78,122,.03),rgba(43,190,200,.05))">
-        <div class="product-card-icon">🛠️</div>
-        <h3>Outils de Tapisserie</h3>
-        <p>Pistolets, colles, ciseaux, sangles, produits de traitement et tout le matériel professionnel — 12 familles, 100+ articles.</p>
-        <div class="product-tags"><span>Pistolets</span><span>Colles</span><span>Outils coupe</span><span>100+ articles</span></div>
+      <!-- Agrafes & Clous -->
+      <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=agrafes'">
+        <img class="cat-sc-img" src="images/outils/agr.png" alt="">
+        <img class="cat-sc-img hidden" src="images/outils/t25.png" alt="">
+        <img class="cat-sc-img hidden" src="images/outils/t50.png" alt="">
+        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light))"></div>
+        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-body">
+          <span class="cat-sc-icon">📌</span>
+          <div class="cat-sc-name">Agrafes & Clous</div>
+          <div class="cat-sc-sub">Séries 53, 80, 71 — Galvanisé, doré, nickelé</div>
+          <span class="cat-sc-btn">Voir tout →</span>
+        </div>
       </div>
 
     </div>
 
-    <div style="text-align:center;margin-top:40px">
+    <!-- Script rotation automatique des images -->
+    <script>
+    (function(){
+      document.querySelectorAll('.cat-sc-card').forEach(function(card){
+        var imgs = card.querySelectorAll('.cat-sc-img');
+        var dots = card.querySelectorAll('.cat-sc-dot');
+        if(imgs.length < 2) return;
+        var cur = 0;
+        setInterval(function(){
+          imgs[cur].classList.add('hidden');
+          dots[cur].classList.remove('on');
+          cur = (cur + 1) % imgs.length;
+          imgs[cur].classList.remove('hidden');
+          dots[cur].classList.add('on');
+        }, 3000);
+      });
+    })();
+    </script>
+
+    <div style="text-align:center;margin-top:44px">
       <a href="catalogue.html" class="btn btn-primary btn-lg">
         <span>📦</span> Voir le Catalogue Complet
       </a>
@@ -883,7 +1003,7 @@
 
       <a href="catalogue.html?cat=coussins" style="text-decoration:none;background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition);display:block" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
         <div style="height:150px;background:var(--gray-50);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
-          <img src="images/coussin/coussin 45x45 fibre .jpg" alt="Coussin" style="max-width:100%;max-height:100%;object-fit:contain;padding:12px" onerror="this.parentElement.innerHTML='<span style=\'font-size:2.5rem\'>🛋️</span>'">
+          <img src="images/outils/agr.png" alt="Coussin" style="max-width:100%;max-height:100%;object-fit:contain;padding:12px" onerror="this.parentElement.innerHTML='<span style=\'font-size:2.5rem\'>🛋️</span>'">
           <span style="position:absolute;top:10px;left:10px;background:var(--teal);color:#fff;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:50px">Nouveau</span>
         </div>
         <div style="padding:14px 16px">
