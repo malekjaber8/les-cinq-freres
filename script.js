@@ -3,6 +3,7 @@
 // =============================================
 
 // Bouton flottant Visite Virtuelle 360° — injecté sur toutes les pages
+document.addEventListener('DOMContentLoaded', function() {
 (function() {
   const css = `
     #fab360{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:801;text-decoration:none;animation:float360 3s ease-in-out infinite}
@@ -27,6 +28,7 @@
   btn.innerHTML = '<div id="fab360-inner"><span style="font-size:1.3rem">🔭</span><span>Visite <strong>360°</strong></span><span id="fab360-badge">LIVE</span></div>';
   document.body.appendChild(btn);
 })();
+});
 
 // Toggle password visibility
 function togglePass(inputId, btn) {
