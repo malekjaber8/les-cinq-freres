@@ -1234,8 +1234,9 @@
 <style>
 #fab360 {
   position: fixed;
-  bottom: 160px;
-  right: 20px;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 801;
   text-decoration: none;
   animation: float360 3s ease-in-out infinite;
@@ -1277,16 +1278,16 @@
 }
 #fab360:hover #fab360-inner { transform: scale(1.06); }
 @keyframes float360 {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-8px); }
 }
 @keyframes borderSpin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 @media(max-width:600px) {
-  #fab360 { bottom: 130px; right: 12px; }
-  #fab360-inner { padding: 11px 14px; font-size: .78rem; gap: 7px; }
+  #fab360 { bottom: 72px; }
+  #fab360-inner { padding: 10px 16px; font-size: .78rem; gap: 7px; }
 }
 </style>
 

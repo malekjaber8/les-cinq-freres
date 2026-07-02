@@ -5,14 +5,14 @@
 // Bouton flottant Visite Virtuelle 360° — injecté sur toutes les pages
 (function() {
   const css = `
-    #fab360{position:fixed;bottom:160px;right:20px;z-index:801;text-decoration:none;animation:float360 3s ease-in-out infinite}
-    #fab360-inner{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#0f2d4a,#1A99A3);color:#fff;padding:13px 20px;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:700;box-shadow:0 6px 24px rgba(43,190,200,.5);position:relative;transition:transform .2s;white-space:nowrap}
+    #fab360{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:801;text-decoration:none;animation:float360 3s ease-in-out infinite}
+    #fab360-inner{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#0f2d4a,#1A99A3);color:#fff;padding:13px 22px;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;box-shadow:0 6px 24px rgba(43,190,200,.5);position:relative;transition:transform .2s;white-space:nowrap}
     #fab360-inner::before{content:'';position:absolute;inset:-3px;border-radius:50px;background:linear-gradient(135deg,#2BBEC8,#fff,#1A99A3);z-index:-1;animation:borderSpin 3s linear infinite;opacity:.6}
     #fab360-badge{background:#fff;color:#1A99A3;font-size:.7rem;font-weight:900;padding:2px 7px;border-radius:50px;letter-spacing:.04em}
     #fab360:hover #fab360-inner{transform:scale(1.06)}
-    @keyframes float360{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes float360{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
     @keyframes borderSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-    @media(max-width:600px){#fab360{bottom:130px;right:12px}#fab360-inner{padding:11px 14px;font-size:.78rem;gap:7px}}
+    @media(max-width:600px){#fab360{bottom:72px}#fab360-inner{padding:10px 16px;font-size:.78rem;gap:7px}}
   `;
   const style = document.createElement('style');
   style.textContent = css;
