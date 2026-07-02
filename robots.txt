@@ -1,11 +1,11 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
-# Pages privées — ne pas indexer
+# Pages privÃ©es â€” ne pas indexer
 Disallow: /dashboard.html
 Disallow: /login.html
 Disallow: /register.html
 Disallow: /commandes.html
 
 # Sitemap
-Sitemap: https://magasin-les-cinq-freres.netlify.app/sitemap.xml
+Sitemap: https://magasinlescinqfreres.com/sitemap.xml
