@@ -2268,94 +2268,72 @@ function renderRessortPage(content, cat) {
     </div>
   </div>
 
-  <!-- ONGLETS TYPES -->
-  <div style="margin-bottom:22px">
-    <div style="font-size:.8rem;font-weight:700;color:var(--gray-600);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em">Choisir la qualité :</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap" id="ressort-type-tabs">
-      ${cat.types.map((t,i) => `<button class="ressort-tab-btn" data-idx="${i}"
-        onclick="switchRessortTab(${i},this)"
-        style="padding:8px 16px;border-radius:50px;border:1.5px solid ${i===0?t.color:'var(--gray-200)'};
-          background:${i===0?t.color:'var(--white)'};color:${i===0?'#fff':'var(--gray-800)'};
-          font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap">
-        ${t.label}</button>`).join('')}
-    </div>
-  </div>
+  <!-- TOUTES LES QUALITÉS -->
+  <style>
+  .ressort-card { display:grid; grid-template-columns:300px 1fr; gap:0; border:1.5px solid var(--gray-100); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:22px; }
+  .ressort-img-col { position:relative; min-height:260px; background:var(--gray-50); }
+  .ressort-img-col img { width:100%; height:100%; object-fit:cover; display:block; }
+  .ressort-img-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; }
+  .ressort-info-col { padding:20px 22px; display:flex; flex-direction:column; }
+  .ressort-price-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.82rem; }
+  .ressort-price-table th { text-align:left; padding:7px 10px; background:var(--gray-50); font-size:.7rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid var(--gray-100); }
+  .ressort-price-table td { padding:6px 10px; border-bottom:1px solid var(--gray-100); color:var(--gray-800); }
+  .ressort-price-table tr:last-child td { border-bottom:none; }
+  .ressort-price-table tr:hover td { background:rgba(43,190,200,.04); }
+  .ressort-dim { font-weight:700; color:var(--navy-dark); font-size:.83rem; }
+  .ressort-prix { font-weight:800; color:var(--teal-dark); font-size:.88rem; white-space:nowrap; }
+  .ressort-code { font-size:.68rem; color:var(--gray-400); background:var(--gray-50); border-radius:4px; padding:1px 6px; }
+  .ressort-add { background:none; border:1.5px solid var(--gray-200); border-radius:7px; width:28px; height:28px; cursor:pointer; font-size:.85rem; transition:var(--transition); }
+  .ressort-add:hover { background:var(--teal); border-color:var(--teal); color:#fff; }
+  @media(max-width:768px){
+    .ressort-card { grid-template-columns:1fr; }
+    .ressort-img-col { min-height:200px; }
+  }
+  </style>
 
-  <!-- GRILLE PRIX -->
-  <div id="ressort-price-grid">${renderRessortTypeGrid(cat, 0)}</div>`;
-}
-
-function renderRessortTypeGrid(cat, typeIdx) {
-  const t = cat.types[typeIdx];
-  const bannerImg = t.img
-    ? `<img src="${t.img}" alt="${t.label}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="width:110px;height:80px;object-fit:cover;border-radius:10px;border:2px solid ${t.color}55;flex-shrink:0">`
-    : `<div style="font-size:2.5rem">🛏️</div>`;
-  return `
-  <div style="background:${t.bgColor};border:1.5px solid ${t.color}44;border-radius:var(--radius-lg);padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
-    <div style="display:flex;align-items:center;gap:16px">
-      ${bannerImg}
-      <div>
-        <div style="font-size:1.1rem;font-weight:800;color:${t.color};font-family:'Raleway',sans-serif">${t.label}</div>
-        <div style="font-size:.82rem;color:var(--gray-600);margin-top:3px">${t.desc}</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:700;padding:4px 14px;border-radius:50px">${t.badge}</span>
-      <span style="font-size:.75rem;color:var(--gray-400)">${cat.sizes.length} dimensions</span>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:16px">
-    ${cat.sizes.map((s, sizeIdx) => {
+  ${cat.types.map((t, typeIdx) => {
+    const rows = cat.sizes.map((s, sizeIdx) => {
       const prix = s.prices[typeIdx];
       const code = (typeIdx < RESSORT_BASE_TYPES)
-        ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3, '0')
-        : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3, '0');
-      const cardImg = t.img
-        ? `<img src="${t.img}" alt="${t.label}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="width:100%;height:100%;object-fit:cover">`
-        : `<div style="text-align:center"><div style="font-size:2rem">🛏️</div></div>`;
-      return `<div class="prod-card" style="cursor:default">
-        <div class="prod-card-img" style="height:108px;overflow:hidden;position:relative;padding:0">
-          ${cardImg}
-          <div style="position:absolute;bottom:0;left:0;right:0;background:${t.color}CC;padding:3px 6px;text-align:center">
-            <span style="font-size:1rem;font-weight:800;color:#fff;font-family:'Raleway',sans-serif">${s.dim}</span>
-            <span style="font-size:.6rem;color:rgba(255,255,255,.85)"> cm</span>
-          </div>
+        ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3,'0')
+        : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3,'0');
+      return `<tr>
+        <td class="ressort-dim">${s.dim} cm</td>
+        <td class="ressort-prix">${prix != null ? prix + ' DT' : '<span style="color:var(--gray-400);font-style:italic;font-size:.75rem">Sur devis</span>'}</td>
+        <td><span class="ressort-code">${code}</span></td>
+        <td><div class="stock-wrap" data-stock-id="ressort-${typeIdx}-${s.dim}" style="display:inline"></div></td>
+        <td>${prix != null ? `<button class="ressort-add" onclick="addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')" title="Ajouter au panier">🛒</button>` : ''}</td>
+      </tr>`;
+    }).join('');
+
+    return `<div class="ressort-card">
+      <!-- Image gauche -->
+      <div class="ressort-img-col">
+        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')" style="cursor:zoom-in">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem">🛏️</div>`}
+        <div class="ressort-img-overlay" style="background:linear-gradient(transparent,rgba(0,0,0,.75))">
+          <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:800;padding:3px 12px;border-radius:50px">${t.badge}</span>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;margin-top:6px;text-shadow:0 1px 4px rgba(0,0,0,.4)">${t.label}</div>
         </div>
-        <div class="prod-card-body">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
-            <div class="p-cat">Super Siesta</div>
-            <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px;letter-spacing:.04em">CODE: ${code}</div>
-          </div>
-          <div class="p-name" style="font-size:.86rem">${t.label}</div>
-          <div class="p-desc">${s.dim} cm</div>
+      </div>
+      <!-- Info + tableau droite -->
+      <div class="ressort-info-col">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+          <span style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:${t.color}">${t.label}</span>
+          <span style="background:${t.color}18;color:${t.color};border:1px solid ${t.color}44;font-size:.7rem;font-weight:700;padding:2px 10px;border-radius:50px">${t.badge}</span>
         </div>
-        <div class="stock-wrap" data-stock-id="ressort-${typeIdx}-${s.dim}"></div>
-        <div class="prod-card-footer">
-          <div class="${prix != null ? 'p-price' : 'p-price na'}">${prix != null ? prix + ' DT' : 'Sur devis'}</div>
-          ${prix != null
-            ? `<button class="add-btn" onclick="event.stopPropagation();addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')">🛒</button>`
-            : ''}
+        <p style="font-size:.83rem;color:var(--gray-600);margin-bottom:12px;line-height:1.5">${t.desc}</p>
+        <div style="flex:1;overflow-x:auto">
+          <table class="ressort-price-table">
+            <thead><tr><th>Dimension</th><th>Prix</th><th>Code</th><th>Stock</th><th></th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
         </div>
-      </div>`;
-    }).join('')}
-  </div>`;
+      </div>
+    </div>`;
+  }).join('')}
+`;
 }
 
-function switchRessortTab(typeIdx, btn) {
-  const cat = catalogue.ressort;
-  document.querySelectorAll('.ressort-tab-btn').forEach((b, i) => {
-    const t = cat.types[i];
-    b.style.background  = 'var(--white)';
-    b.style.borderColor = 'var(--gray-200)';
-    b.style.color       = 'var(--gray-800)';
-  });
-  const t = cat.types[typeIdx];
-  btn.style.background  = t.color;
-  btn.style.borderColor = t.color;
-  btn.style.color       = '#fff';
-  document.getElementById('ressort-price-grid').innerHTML = renderRessortTypeGrid(cat, typeIdx);
-  if (window.Stock) Stock.refreshAll();
-}
 
 function addRessortToCart(dim, typeIdx, prix, code) {
   const typeLabel = catalogue.ressort.types[typeIdx].label;
