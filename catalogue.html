@@ -60,17 +60,32 @@
     .cat-item.active .c-count { background:rgba(43,190,200,.15); color:var(--teal-dark); }
     .sidebar-sep { height:1px; background:var(--gray-100); margin:12px 20px; }
 
-    /* Sub-items */
-    .cat-sub { display:none; flex-direction:column; }
+    /* Sub-items — chaque sous-catégorie dans son propre rectangle */
+    .cat-sub {
+      display:none; flex-direction:column; gap:5px;
+      padding:6px 12px 10px 12px;
+    }
     .cat-sub.open { display:flex; }
     .cat-sub-item {
-      padding:8px 20px 8px 54px;
-      font-size:.82rem; color:var(--gray-600);
+      padding:9px 14px;
+      font-size:.81rem; font-weight:600;
+      color:var(--navy-dark);
       cursor:pointer; transition:var(--transition);
-      border-left:3px solid transparent;
+      border-radius:8px;
+      border:1.5px solid var(--gray-200);
+      background:var(--white);
+      box-shadow:0 1px 4px rgba(27,78,122,.07);
     }
-    .cat-sub-item:hover  { background:var(--gray-50); color:var(--navy); }
-    .cat-sub-item.active { color:var(--teal-dark); font-weight:600; border-left-color:var(--teal); background:rgba(43,190,200,.05); }
+    .cat-sub-item:hover {
+      background:rgba(43,190,200,.08);
+      border-color:var(--teal);
+      color:var(--teal-dark);
+    }
+    .cat-sub-item.active {
+      background:rgba(43,190,200,.12);
+      border-color:var(--teal);
+      color:var(--teal-dark); font-weight:700;
+    }
 
     /* ===== MAIN CONTENT ===== */
     .cat-main { flex:1; padding:24px 28px; min-width:0; }
