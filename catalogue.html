@@ -2283,15 +2283,15 @@ function renderRessortPage(content, cat) {
   .ressort-tab { padding:9px 18px; border-radius:50px; border:2px solid var(--gray-200); background:var(--white); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:var(--transition); color:var(--gray-700); white-space:nowrap; }
   .ressort-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
   .ressort-tab.active { color:#fff; border-color:transparent; }
-  .ressort-detail { display:grid; grid-template-columns:280px 200px minmax(300px,420px); gap:0; align-items:stretch; border:1.5px solid var(--gray-100); border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(27,78,122,.10); }
+  .ressort-detail { display:grid; grid-template-columns:280px 260px minmax(300px,420px); gap:0; align-items:stretch; border:1.5px solid var(--gray-100); border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(27,78,122,.10); }
   .ressort-left-card { display:contents; }
   .ressort-img-box { position:relative; min-height:400px; }
   .ressort-img-box img { width:100%; height:100%; object-fit:cover; object-position:center center; display:block; cursor:zoom-in; }
   .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 14px; background:linear-gradient(transparent,rgba(0,0,0,.88)); }
-  .ressort-specs-box { padding:16px 16px 12px; background:var(--white); border-left:1px solid var(--gray-100); border-right:1px solid var(--gray-100); display:flex; flex-direction:column; }
-  .ressort-specs-box li { font-size:.78rem; color:var(--navy-dark); padding:7px 0 7px 10px; border-bottom:1px solid var(--gray-100); list-style:none; border-left:2px solid transparent; transition:.2s; }
-  .ressort-specs-box li:last-child { border-bottom:none; }
-  .ressort-specs-box li:hover { border-left-color:var(--teal); background:rgba(43,190,200,.04); padding-left:14px; }
+  .ressort-specs-box { padding:16px 14px 12px; background:var(--white); border-left:1px solid var(--gray-100); border-right:1px solid var(--gray-100); display:flex; flex-direction:column; }
+  .ressort-specs-box ul { display:flex; flex-direction:column; gap:6px; margin:0; padding:0; }
+  .ressort-specs-box li { font-size:.9rem; color:var(--navy-dark); font-weight:600; padding:9px 12px; border-radius:10px; list-style:none; background:var(--gray-50); border:1px solid var(--gray-100); transition:.2s; line-height:1.5; }
+  .ressort-specs-box li:hover { background:rgba(43,190,200,.08); border-color:rgba(43,190,200,.3); transform:translateX(3px); }
   .ressort-right-col { display:flex; flex-direction:column; gap:0; }
   .ressort-price-table { width:100%; border-collapse:collapse; font-size:.79rem; }
   .ressort-price-table th { text-align:left; padding:6px 10px; background:var(--navy-dark); color:#fff; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
@@ -2301,8 +2301,8 @@ function renderRessortPage(content, cat) {
   .ressort-dim-cell { font-weight:700; color:var(--navy-dark); }
   .ressort-prix-cell { font-weight:800; color:var(--teal-dark); white-space:nowrap; }
   .ressort-code-cell { font-size:.68rem; color:var(--gray-400); background:var(--gray-50); border-radius:4px; padding:1px 7px; }
-  .ressort-add-btn { background:none; border:1.5px solid var(--gray-200); border-radius:7px; width:28px; height:28px; cursor:pointer; font-size:.85rem; transition:var(--transition); }
-  .ressort-add-btn:hover { background:var(--teal); border-color:var(--teal); color:#fff; }
+  .ressort-add-btn { background:linear-gradient(135deg,var(--teal),var(--navy-light)); border:none; border-radius:8px; width:30px; height:30px; cursor:pointer; font-size:.85rem; transition:var(--transition); color:#fff; box-shadow:0 2px 8px rgba(43,190,200,.3); }
+  .ressort-add-btn:hover { transform:scale(1.12); box-shadow:0 4px 14px rgba(43,190,200,.5); }
   @media(max-width:860px){ .ressort-detail { grid-template-columns:1fr; } .ressort-img-box { min-height:220px; } }
   </style>
 
@@ -2334,7 +2334,16 @@ function buildRessortDetail(cat, typeIdx) {
   }).join('');
 
   const specsHTML = (t.specs && t.specs.length)
-    ? `<div class="ressort-specs-box"><div style="font-size:.7rem;font-weight:700;color:${t.color};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">✦ Caractéristiques</div><ul style="margin:0;padding:0">${t.specs.map(s=>`<li style="border-left-color:${t.color}22">${s}</li>`).join('')}</ul></div>`
+    ? `<div class="ressort-specs-box">
+        <div style="font-size:.7rem;font-weight:800;color:${t.color};text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="display:inline-flex;width:22px;height:22px;background:${t.color}18;border:1.5px solid ${t.color}55;border-radius:6px;align-items:center;justify-content:center;font-size:.75rem">✦</span>
+          Caractéristiques
+        </div>
+        <ul>${t.specs.map(s => {
+          const highlighted = s.replace(/(\d[\d\s,\.\/+]*(?:cm|kg|m²|mm|ans|%|kg\/m3|ressorts))/gi, '<strong style="color:'+t.color+'">' + '$1' + '</strong>');
+          return `<li>${highlighted}</li>`;
+        }).join('')}</ul>
+      </div>`
     : '';
 
   return `<div class="ressort-detail">
