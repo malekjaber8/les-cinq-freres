@@ -568,8 +568,18 @@
       <span class="c-icon">🔧</span> Colles &amp; Adhésifs <span class="c-count">14</span>
     </div>
 
-    <div class="cat-item" onclick="showCat('outils',this)">
+    <div class="cat-item" onclick="toggleSub('outils-sub',this,'outils')">
       <span class="c-icon">🛠️</span> Outils de Tapisserie <span class="c-count">8 cat.</span>
+    </div>
+    <div class="cat-sub" id="outils-sub">
+      <div class="cat-sub-item" onclick="showToolCat(0,event)">📌 Agrafes Tapisserie</div>
+      <div class="cat-sub-item" onclick="showToolCat(1,event)">🔩 Pointes Têtes &amp; Clous</div>
+      <div class="cat-sub-item" onclick="showToolCat(2,event)">🔫 Pistolets</div>
+      <div class="cat-sub-item" onclick="showToolCat(3,event)">✂️ Ciseaux &amp; Coupe-Fil</div>
+      <div class="cat-sub-item" onclick="showToolCat(4,event)">🔩 Vis de Tapisserie</div>
+      <div class="cat-sub-item" onclick="showToolCat(5,event)">🛝 Curseur &amp; Patin-Glisseur</div>
+      <div class="cat-sub-item" onclick="showToolCat(6,event)">📦 Fermeture, Film &amp; Sangle</div>
+      <div class="cat-sub-item" onclick="showToolCat(7,event)">🪢 Cordons &amp; Attaches</div>
     </div>
   </aside>
 
@@ -2411,10 +2421,12 @@ function toolsPreview() {
   </div>`;
 }
 
-function showToolCat(i) {
+function showToolCat(i, e) {
+  if (e && e.stopPropagation) e.stopPropagation();
   const tc      = toolCategories[i];
   const content = document.getElementById('catContent');
   document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+  closeMobileSidebar();
   currentCat = 'outils';
 
   const cards = tc.items.map((item, j) => toolItemCard(tc, item, i, j)).join('');
