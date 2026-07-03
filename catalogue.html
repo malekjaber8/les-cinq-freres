@@ -1528,7 +1528,7 @@ function productCard(p, catId) {
 
   return `<div class="prod-card" onclick="openModal('${p.id}','${catId}')">
     <div class="prod-card-img"${imgBg}>
-      ${p.img ? `<img src="${p.img}" alt="${p.name}"${imgMix} class="zoomable" onclick="event.stopPropagation();openLightbox(this.src,this.alt)">` : `<span class="placeholder">${icon}</span>`}
+      ${p.img ? `<img src="${p.img}" alt="${p.name}"${imgMix} class="zoomable" onclick="openModal('${p.id}','${catId}')">` : `<span class="placeholder">${icon}</span>`}
     </div>
     <div class="prod-card-body">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
