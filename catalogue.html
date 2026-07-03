@@ -890,16 +890,25 @@ const catalogue = {
     label:'Matelas Ressort', icon:'🛏️', isRessortPage:true,
     desc:'Matelas à ressorts Super Siesta — 10 qualités, 15 dimensions disponibles.',
     types:[
-      { id:'soft',        label:'SOFT+',                color:'#2196F3', bgColor:'#E3F2FD', desc:'Confort doux idéal pour usage quotidien',            badge:'Entrée de gamme',  img:'images/matelas%20ressort/soft.jpg'      },
-      { id:'venise',      label:'Venise+',              color:'#9C27B0', bgColor:'#F3E5F5', desc:'Confort équilibré avec bonne durabilité',            badge:'Milieu de gamme',  img:'images/matelas%20ressort/venise.jpg'    },
-      { id:'venise-pt',   label:'Venise+ Pillow Top',   color:'#7B1FA2', bgColor:'#EDE7F6', desc:'Venise+ avec surface pillow top moelleuse',         badge:'Confort amélioré', img:'images/matelas%20ressort/venise.jpg'    },
-      { id:'medico',      label:'MEDICO+',              color:'#388E3C', bgColor:'#E8F5E9', desc:'Soutien médical recommandé pour le dos',             badge:'Orthopédique',     img:'images/matelas%20ressort/medico.jpg'    },
-      { id:'medico-pt',   label:'MEDICO+ Pillow Top',   color:'#2E7D32', bgColor:'#F1F8E9', desc:'Medico+ avec surface pillow top',                   badge:'Ortho + Confort',  img:'images/matelas%20ressort/medico.jpg'    },
-      { id:'relax',       label:'RELAX+',               color:'#E65100', bgColor:'#FFF3E0', desc:'Confort relaxant pour un sommeil profond',           badge:'Haut de gamme',    img:'images/matelas%20ressort/relax.jpg'     },
-      { id:'relax-pt',    label:'RELAX+ Pillow Top',    color:'#BF360C', bgColor:'#FBE9E7', desc:'Relax+ avec surface pillow top luxueuse',           badge:'Premium',          img:'images/matelas%20ressort/relax.jpg'     },
-      { id:'tendresse',   label:'Tendresse',            color:'#C2185B', bgColor:'#FCE4EC', desc:'Douceur extrême — confort haut de gamme',            badge:'Top gamme',        img:'images/matelas%20ressort/tendresse.jpg' },
-      { id:'tendresse-pt',label:'Tendresse Pillow Top', color:'#880E4F', bgColor:'#F8BBD0', desc:'Tendresse avec surface pillow top haut de gamme',   badge:'Luxe',             img:'images/matelas%20ressort/tendresse.jpg' },
-      { id:'confort',      label:'Confort',              color:'#AB47BC', bgColor:'#F3E5F5', desc:'Gamme Confort — sensation moelleuse et accueillante', badge:'Grand Confort',    img:null },
+      { id:'soft', label:'SOFT+', color:'#2196F3', bgColor:'#E3F2FD', desc:'Confort doux idéal pour usage quotidien', badge:'Entrée de gamme', img:'images/matelas%20ressort/soft.jpg',
+        specs:['📏 Hauteur : 22 cm','⚖️ Supporte jusqu\'à 80 kg/pers. (160 kg couple)','🔩 Ressorts box diamètre 2.1mm','🔄 Réversible été/hiver','🧵 80% coton anti-acarien','🛡️ Garantie : 3 ans'] },
+      { id:'venise', label:'Venise+', color:'#9C27B0', bgColor:'#F3E5F5', desc:'Confort équilibré avec bonne durabilité', badge:'Milieu de gamme', img:'images/matelas%20ressort/venise.jpg',
+        specs:['📏 Hauteur : 23 cm','⚖️ Supporte jusqu\'à 90 kg/pers. (180 kg couple)','🔩 Ressorts Bonnell','🔄 Réversible été/hiver','🧵 100% coton anti-acarien','🔥 Résistant au feu','🛡️ Garantie : 5 ans'] },
+      { id:'venise-pt', label:'Venise+ Pillow Top', color:'#7B1FA2', bgColor:'#EDE7F6', desc:'Venise+ avec couche mémoire de forme 8 cm', badge:'Confort amélioré', img:'images/matelas%20ressort/venise.jpg',
+        specs:['🧠 8 cm de mousse à mémoire de forme','📏 Hauteur : 31 cm','⚖️ Supporte jusqu\'à 90 kg/pers.','🔩 Ressorts Bonnell','🔄 Réversible été/hiver','🧵 100% coton anti-acarien','🔥 Résistant au feu','🛡️ Garantie : 5 ans'] },
+      { id:'medico', label:'MEDICO+', color:'#388E3C', bgColor:'#E8F5E9', desc:'Soutien orthopédique recommandé pour le dos', badge:'Orthopédique', img:'images/matelas%20ressort/medico.jpg',
+        specs:['📏 Hauteur : 25 cm','⚖️ Supporte jusqu\'à 110 kg/pers.','🔩 Ressorts Bonnell','🔵 Face 1 : mi-ferme (contours du corps)','🟢 Face 2 : souple et relaxante (Nouveau)','🧵 Tissu anti-acarien','🔥 Ignifugé (résistant au feu)','🛡️ Garantie : 9 ans'] },
+      { id:'medico-pt', label:'MEDICO+ Pillow Top', color:'#2E7D32', bgColor:'#F1F8E9', desc:'Medico+ gamme souple avec mémoire de forme', badge:'Ortho + Confort', img:'images/matelas%20ressort/medico.jpg',
+        specs:['🌊 Gamme souple','🧠 8 cm de mousse à mémoire de forme','📏 Hauteur : 32 cm','⚖️ Supporte jusqu\'à 110 kg/pers.','🔩 Ressorts Bonnell (soutien homogène)','🔵 Face mi-ferme avec mousse épaisse','🔄 Réversible été/hiver','🧵 Tissu anti-acarien','🔥 Résistant au feu','🛡️ Garantie : 9 ans'] },
+      { id:'relax', label:'RELAX+', color:'#E65100', bgColor:'#FFF3E0', desc:'Ressorts ensachés — indépendance de couchage', badge:'Haut de gamme', img:'images/matelas%20ressort/relax.jpg',
+        specs:['📏 Épaisseur : 27 cm','⚖️ Supporte jusqu\'à 130 kg/pers.','🔩 Ressorts ensachés (indépendance de couchage)','💪 Mousse 33 kg/m³ côté mi-ferme','😌 Mousse 35 kg/m³ côté relaxante','🔄 Réversible face été / face hiver','🧵 Tissu anti-acarien','🔥 Retardateur de flamme','🔢 210 ressorts/m²','🛡️ Garantie : 10 ans'] },
+      { id:'relax-pt', label:'RELAX+ Pillow Top', color:'#BF360C', bgColor:'#FBE9E7', desc:'Relax+ avec couche mémoire de forme luxueuse', badge:'Premium', img:'images/matelas%20ressort/relax.jpg',
+        specs:['🧠 8 cm de mousse à mémoire de forme','📏 Hauteur : 33 cm','⚖️ Supporte jusqu\'à 130 kg/pers.','🔩 Ressorts ensachés (excellente indépendance)','🔵 Deuxième face mi-ferme','🧵 100% coton anti-acarien','💨 Aérateur anti-humidité','🔥 Résistant au feu','🛡️ Garantie : 10 ans'] },
+      { id:'tendresse', label:'Tendresse', color:'#C2185B', bgColor:'#FCE4EC', desc:'Ressorts ensachés haute qualité, supporte 150 kg', badge:'Top gamme', img:'images/matelas%20ressort/tendresse.jpg',
+        specs:['✨ Ressorts de haute qualité','📏 Hauteur : 30 cm','⚖️ Supporte jusqu\'à 150 kg/pers.','🔩 Ressorts ensachés','💪 Mousse 33,5 kg/m³ côté mi-ferme','😌 Mousse 35 kg/m³ côté relaxante','🔄 Conception réversible','🧵 Anti-acarien, antitaches, anti-humidité','🔥 Résistance au feu','🛡️ Garantie : 11 ans'] },
+      { id:'tendresse-pt', label:'Tendresse Pillow Top', color:'#880E4F', bgColor:'#F8BBD0', desc:'Tendresse avec mémoire de forme — le summum du luxe', badge:'Luxe', img:'images/matelas%20ressort/tendresse.jpg',
+        specs:['✨ Ressorts de haute qualité','🌊 Gamme souple','🧠 8 cm de mousse à mémoire de forme','📏 Hauteur : 35 cm','⚖️ Supporte jusqu\'à 150 kg/pers.','🔩 Ressorts ensachés (indépendance optimale)','🔄 Matelas réversible','🧵 Anti-acarien, antitaches, anti-humidité','🔥 Résistant au feu','🛡️ Garantie : 11 ans'] },
+      { id:'confort', label:'Confort', color:'#AB47BC', bgColor:'#F3E5F5', desc:'Gamme Confort — sensation moelleuse et accueillante', badge:'Grand Confort', img:null, specs:[] },
     ],
     sizes:[
       { dim:'120×60',  prices:[200,  240,  450,  340,  550,  420,  620,  570,  780,  null] },
@@ -2268,72 +2277,106 @@ function renderRessortPage(content, cat) {
     </div>
   </div>
 
-  <!-- TOUTES LES QUALITÉS -->
+  <!-- FILTRES PAR TYPE -->
   <style>
-  .ressort-card { display:grid; grid-template-columns:300px 1fr; gap:0; border:1.5px solid var(--gray-100); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:22px; }
-  .ressort-img-col { position:relative; min-height:260px; background:var(--gray-50); }
-  .ressort-img-col img { width:100%; height:100%; object-fit:cover; display:block; }
-  .ressort-img-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; }
-  .ressort-info-col { padding:20px 22px; display:flex; flex-direction:column; }
-  .ressort-price-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.82rem; }
-  .ressort-price-table th { text-align:left; padding:7px 10px; background:var(--gray-50); font-size:.7rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid var(--gray-100); }
-  .ressort-price-table td { padding:6px 10px; border-bottom:1px solid var(--gray-100); color:var(--gray-800); }
+  .ressort-filter-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .ressort-tab { padding:9px 18px; border-radius:50px; border:2px solid var(--gray-200); background:var(--white); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:var(--transition); color:var(--gray-700); white-space:nowrap; }
+  .ressort-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
+  .ressort-tab.active { color:#fff; border-color:transparent; }
+  .ressort-detail { display:grid; grid-template-columns:340px 1fr; gap:24px; align-items:start; }
+  .ressort-img-box { position:relative; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-lg); }
+  .ressort-img-box img { width:100%; height:320px; object-fit:cover; display:block; cursor:zoom-in; }
+  .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:16px; background:linear-gradient(transparent,rgba(0,0,0,.8)); }
+  .ressort-specs-box { background:var(--white); border:1.5px solid var(--gray-100); border-radius:var(--radius-lg); padding:18px 20px; margin-top:14px; }
+  .ressort-specs-box li { font-size:.82rem; color:var(--gray-700); padding:5px 0; border-bottom:1px solid var(--gray-100); list-style:none; }
+  .ressort-specs-box li:last-child { border-bottom:none; }
+  .ressort-right-col { display:flex; flex-direction:column; gap:0; }
+  .ressort-price-table { width:100%; border-collapse:collapse; font-size:.83rem; }
+  .ressort-price-table th { text-align:left; padding:8px 12px; background:var(--navy-dark); color:#fff; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+  .ressort-price-table td { padding:7px 12px; border-bottom:1px solid var(--gray-100); color:var(--gray-800); }
   .ressort-price-table tr:last-child td { border-bottom:none; }
-  .ressort-price-table tr:hover td { background:rgba(43,190,200,.04); }
-  .ressort-dim { font-weight:700; color:var(--navy-dark); font-size:.83rem; }
-  .ressort-prix { font-weight:800; color:var(--teal-dark); font-size:.88rem; white-space:nowrap; }
-  .ressort-code { font-size:.68rem; color:var(--gray-400); background:var(--gray-50); border-radius:4px; padding:1px 6px; }
-  .ressort-add { background:none; border:1.5px solid var(--gray-200); border-radius:7px; width:28px; height:28px; cursor:pointer; font-size:.85rem; transition:var(--transition); }
-  .ressort-add:hover { background:var(--teal); border-color:var(--teal); color:#fff; }
-  @media(max-width:768px){
-    .ressort-card { grid-template-columns:1fr; }
-    .ressort-img-col { min-height:200px; }
-  }
+  .ressort-price-table tr:hover td { background:rgba(43,190,200,.05); }
+  .ressort-dim-cell { font-weight:700; color:var(--navy-dark); }
+  .ressort-prix-cell { font-weight:800; color:var(--teal-dark); white-space:nowrap; }
+  .ressort-code-cell { font-size:.68rem; color:var(--gray-400); background:var(--gray-50); border-radius:4px; padding:1px 7px; }
+  .ressort-add-btn { background:none; border:1.5px solid var(--gray-200); border-radius:7px; width:28px; height:28px; cursor:pointer; font-size:.85rem; transition:var(--transition); }
+  .ressort-add-btn:hover { background:var(--teal); border-color:var(--teal); color:#fff; }
+  @media(max-width:860px){ .ressort-detail { grid-template-columns:1fr; } .ressort-img-box img { height:220px; } }
   </style>
 
-  ${cat.types.map((t, typeIdx) => {
-    const rows = cat.sizes.map((s, sizeIdx) => {
-      const prix = s.prices[typeIdx];
-      const code = (typeIdx < RESSORT_BASE_TYPES)
-        ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3,'0')
-        : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3,'0');
-      return `<tr>
-        <td class="ressort-dim">${s.dim} cm</td>
-        <td class="ressort-prix">${prix != null ? prix + ' DT' : '<span style="color:var(--gray-400);font-style:italic;font-size:.75rem">Sur devis</span>'}</td>
-        <td><span class="ressort-code">${code}</span></td>
-        <td><div class="stock-wrap" data-stock-id="ressort-${typeIdx}-${s.dim}" style="display:inline"></div></td>
-        <td>${prix != null ? `<button class="ressort-add" onclick="addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')" title="Ajouter au panier">🛒</button>` : ''}</td>
-      </tr>`;
-    }).join('');
+  <div class="ressort-filter-bar" id="ressort-tabs">
+    ${cat.types.map((t,i) => `<button class="ressort-tab${i===0?' active':''}" onclick="switchRessortView(${i},this)" style="${i===0?`background:${t.color};border-color:${t.color}`:''}">
+      ${t.label}
+    </button>`).join('')}
+  </div>
 
-    return `<div class="ressort-card">
-      <!-- Image gauche -->
-      <div class="ressort-img-col">
-        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')" style="cursor:zoom-in">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:4rem">🛏️</div>`}
-        <div class="ressort-img-overlay" style="background:linear-gradient(transparent,rgba(0,0,0,.75))">
-          <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:800;padding:3px 12px;border-radius:50px">${t.badge}</span>
-          <div style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;margin-top:6px;text-shadow:0 1px 4px rgba(0,0,0,.4)">${t.label}</div>
-        </div>
-      </div>
-      <!-- Info + tableau droite -->
-      <div class="ressort-info-col">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
-          <span style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:${t.color}">${t.label}</span>
-          <span style="background:${t.color}18;color:${t.color};border:1px solid ${t.color}44;font-size:.7rem;font-weight:700;padding:2px 10px;border-radius:50px">${t.badge}</span>
-        </div>
-        <p style="font-size:.83rem;color:var(--gray-600);margin-bottom:12px;line-height:1.5">${t.desc}</p>
-        <div style="flex:1;overflow-x:auto">
-          <table class="ressort-price-table">
-            <thead><tr><th>Dimension</th><th>Prix</th><th>Code</th><th>Stock</th><th></th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-  }).join('')}
+  <div id="ressort-detail-panel">${buildRessortDetail(cat, 0)}</div>
 `;
 }
 
+
+function buildRessortDetail(cat, typeIdx) {
+  const t = cat.types[typeIdx];
+  const rows = cat.sizes.map((s, sizeIdx) => {
+    const prix = s.prices[typeIdx];
+    const code = (typeIdx < RESSORT_BASE_TYPES)
+      ? 'MR' + String(sizeIdx * RESSORT_BASE_TYPES + typeIdx + 1).padStart(3,'0')
+      : 'MRA' + String((typeIdx - RESSORT_BASE_TYPES) * cat.sizes.length + sizeIdx + 1).padStart(3,'0');
+    return `<tr>
+      <td class="ressort-dim-cell">${s.dim} cm</td>
+      <td class="ressort-prix-cell">${prix != null ? prix + ' DT' : '<span style="color:var(--gray-400);font-style:italic;font-size:.75rem">Sur devis</span>'}</td>
+      <td><span class="ressort-code-cell">${code}</span></td>
+      <td><div class="stock-wrap" data-stock-id="ressort-${typeIdx}-${s.dim}" style="display:inline"></div></td>
+      <td>${prix != null ? `<button class="ressort-add-btn" onclick="addRessortToCart('${s.dim}',${typeIdx},${prix},'${code}')" title="Ajouter au panier">🛒</button>` : ''}</td>
+    </tr>`;
+  }).join('');
+
+  const specsHTML = (t.specs && t.specs.length)
+    ? `<div class="ressort-specs-box"><ul>${t.specs.map(s=>`<li>${s}</li>`).join('')}</ul></div>`
+    : '';
+
+  return `<div class="ressort-detail">
+    <!-- Gauche : image + caractéristiques -->
+    <div>
+      <div class="ressort-img-box">
+        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')">` : `<div style="height:320px;display:flex;align-items:center;justify-content:center;background:var(--gray-50);font-size:5rem">🛏️</div>`}
+        <div class="ressort-img-box-overlay">
+          <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:800;padding:3px 12px;border-radius:50px">${t.badge}</span>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.4rem;font-weight:900;color:#fff;margin-top:6px">${t.label}</div>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.8);margin-top:2px">${t.desc}</div>
+        </div>
+      </div>
+      ${specsHTML}
+    </div>
+    <!-- Droite : tableau prix -->
+    <div class="ressort-right-col">
+      <div style="font-family:'Raleway',sans-serif;font-size:1rem;font-weight:800;color:var(--navy-dark);margin-bottom:12px">📋 Dimensions & Tarifs — <span style="color:${t.color}">${t.label}</span></div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm)">
+        <table class="ressort-price-table">
+          <thead><tr><th>Dimension</th><th>Prix</th><th>Code</th><th>Stock</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+function switchRessortView(typeIdx, btn) {
+  const cat = catalogue.ressort;
+  document.querySelectorAll('.ressort-tab').forEach((b, i) => {
+    b.classList.remove('active');
+    b.style.background   = 'var(--white)';
+    b.style.borderColor  = 'var(--gray-200)';
+    b.style.color        = 'var(--gray-700)';
+  });
+  const t = cat.types[typeIdx];
+  btn.classList.add('active');
+  btn.style.background  = t.color;
+  btn.style.borderColor = t.color;
+  btn.style.color       = '#fff';
+  document.getElementById('ressort-detail-panel').innerHTML = buildRessortDetail(cat, typeIdx);
+  if (window.Stock) Stock.refreshAll();
+}
 
 function addRessortToCart(dim, typeIdx, prix, code) {
   const typeLabel = catalogue.ressort.types[typeIdx].label;
