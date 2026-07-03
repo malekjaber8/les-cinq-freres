@@ -2283,13 +2283,15 @@ function renderRessortPage(content, cat) {
   .ressort-tab { padding:9px 18px; border-radius:50px; border:2px solid var(--gray-200); background:var(--white); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:var(--transition); color:var(--gray-700); white-space:nowrap; }
   .ressort-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
   .ressort-tab.active { color:#fff; border-color:transparent; }
-  .ressort-detail { display:grid; grid-template-columns:280px minmax(0,480px); gap:20px; align-items:start; }
-  .ressort-img-box { position:relative; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-lg); }
-  .ressort-img-box img { width:100%; height:320px; object-fit:cover; display:block; cursor:zoom-in; }
-  .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:16px; background:linear-gradient(transparent,rgba(0,0,0,.8)); }
-  .ressort-specs-box { background:var(--white); border:1.5px solid var(--gray-100); border-radius:var(--radius-lg); padding:18px 20px; margin-top:14px; }
-  .ressort-specs-box li { font-size:.82rem; color:var(--gray-700); padding:5px 0; border-bottom:1px solid var(--gray-100); list-style:none; }
+  .ressort-detail { display:grid; grid-template-columns:270px minmax(0,500px); gap:28px; align-items:start; }
+  .ressort-left-card { background:var(--white); border-radius:20px; overflow:hidden; box-shadow:0 8px 32px rgba(27,78,122,.13); border:1.5px solid var(--gray-100); }
+  .ressort-img-box { position:relative; }
+  .ressort-img-box img { width:100%; height:240px; object-fit:cover; display:block; cursor:zoom-in; }
+  .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; background:linear-gradient(transparent,rgba(0,0,0,.85)); }
+  .ressort-specs-box { padding:14px 16px 8px; }
+  .ressort-specs-box li { font-size:.79rem; color:var(--navy-dark); padding:6px 0 6px 10px; border-bottom:1px solid var(--gray-100); list-style:none; border-left:2px solid transparent; transition:.2s; }
   .ressort-specs-box li:last-child { border-bottom:none; }
+  .ressort-specs-box li:hover { border-left-color:var(--teal); background:rgba(43,190,200,.04); padding-left:14px; }
   .ressort-right-col { display:flex; flex-direction:column; gap:0; }
   .ressort-price-table { width:100%; border-collapse:collapse; font-size:.79rem; }
   .ressort-price-table th { text-align:left; padding:6px 10px; background:var(--navy-dark); color:#fff; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
@@ -2332,20 +2334,21 @@ function buildRessortDetail(cat, typeIdx) {
   }).join('');
 
   const specsHTML = (t.specs && t.specs.length)
-    ? `<div class="ressort-specs-box"><ul>${t.specs.map(s=>`<li>${s}</li>`).join('')}</ul></div>`
+    ? `<div class="ressort-specs-box"><div style="font-size:.7rem;font-weight:700;color:${t.color};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">✦ Caractéristiques</div><ul style="margin:0;padding:0">${t.specs.map(s=>`<li style="border-left-color:${t.color}22">${s}</li>`).join('')}</ul></div>`
     : '';
 
   return `<div class="ressort-detail">
-    <!-- Gauche : image + caractéristiques -->
-    <div>
+    <!-- Gauche : carte image + caractéristiques -->
+    <div class="ressort-left-card">
       <div class="ressort-img-box">
-        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')">` : `<div style="height:320px;display:flex;align-items:center;justify-content:center;background:var(--gray-50);font-size:5rem">🛏️</div>`}
+        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')">` : `<div style="height:240px;display:flex;align-items:center;justify-content:center;background:var(--gray-50);font-size:5rem">🛏️</div>`}
         <div class="ressort-img-box-overlay">
-          <span style="background:${t.color};color:#fff;font-size:.7rem;font-weight:800;padding:3px 12px;border-radius:50px">${t.badge}</span>
-          <div style="font-family:'Raleway',sans-serif;font-size:1.4rem;font-weight:900;color:#fff;margin-top:6px">${t.label}</div>
-          <div style="font-size:.8rem;color:rgba(255,255,255,.8);margin-top:2px">${t.desc}</div>
+          <span style="background:${t.color};color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.05em">${t.badge}</span>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;margin-top:5px;line-height:1.2">${t.label}</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.75);margin-top:3px">${t.desc}</div>
         </div>
       </div>
+      <div style="height:3px;background:linear-gradient(90deg,${t.color},${t.color}88,transparent)"></div>
       ${specsHTML}
     </div>
     <!-- Droite : tableau prix -->
