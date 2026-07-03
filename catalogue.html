@@ -2283,13 +2283,13 @@ function renderRessortPage(content, cat) {
   .ressort-tab { padding:9px 18px; border-radius:50px; border:2px solid var(--gray-200); background:var(--white); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:var(--transition); color:var(--gray-700); white-space:nowrap; }
   .ressort-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
   .ressort-tab.active { color:#fff; border-color:transparent; }
-  .ressort-detail { display:grid; grid-template-columns:270px minmax(0,500px); gap:28px; align-items:start; }
-  .ressort-left-card { background:var(--white); border-radius:20px; overflow:hidden; box-shadow:0 8px 32px rgba(27,78,122,.13); border:1.5px solid var(--gray-100); }
-  .ressort-img-box { position:relative; }
-  .ressort-img-box img { width:100%; height:240px; object-fit:cover; display:block; cursor:zoom-in; }
-  .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; background:linear-gradient(transparent,rgba(0,0,0,.85)); }
-  .ressort-specs-box { padding:14px 16px 8px; }
-  .ressort-specs-box li { font-size:.79rem; color:var(--navy-dark); padding:6px 0 6px 10px; border-bottom:1px solid var(--gray-100); list-style:none; border-left:2px solid transparent; transition:.2s; }
+  .ressort-detail { display:grid; grid-template-columns:200px 220px 1fr; gap:0; align-items:stretch; border:1.5px solid var(--gray-100); border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(27,78,122,.10); }
+  .ressort-left-card { display:contents; }
+  .ressort-img-box { position:relative; min-height:400px; }
+  .ressort-img-box img { width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; }
+  .ressort-img-box-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 14px; background:linear-gradient(transparent,rgba(0,0,0,.88)); }
+  .ressort-specs-box { padding:16px 16px 12px; background:var(--white); border-left:1px solid var(--gray-100); border-right:1px solid var(--gray-100); display:flex; flex-direction:column; }
+  .ressort-specs-box li { font-size:.78rem; color:var(--navy-dark); padding:7px 0 7px 10px; border-bottom:1px solid var(--gray-100); list-style:none; border-left:2px solid transparent; transition:.2s; }
   .ressort-specs-box li:last-child { border-bottom:none; }
   .ressort-specs-box li:hover { border-left-color:var(--teal); background:rgba(43,190,200,.04); padding-left:14px; }
   .ressort-right-col { display:flex; flex-direction:column; gap:0; }
@@ -2303,7 +2303,7 @@ function renderRessortPage(content, cat) {
   .ressort-code-cell { font-size:.68rem; color:var(--gray-400); background:var(--gray-50); border-radius:4px; padding:1px 7px; }
   .ressort-add-btn { background:none; border:1.5px solid var(--gray-200); border-radius:7px; width:28px; height:28px; cursor:pointer; font-size:.85rem; transition:var(--transition); }
   .ressort-add-btn:hover { background:var(--teal); border-color:var(--teal); color:#fff; }
-  @media(max-width:860px){ .ressort-detail { grid-template-columns:1fr; } .ressort-img-box img { height:220px; } }
+  @media(max-width:860px){ .ressort-detail { grid-template-columns:1fr; } .ressort-img-box { min-height:220px; } }
   </style>
 
   <div class="ressort-filter-bar" id="ressort-tabs">
@@ -2338,28 +2338,26 @@ function buildRessortDetail(cat, typeIdx) {
     : '';
 
   return `<div class="ressort-detail">
-    <!-- Gauche : carte image + caractéristiques -->
-    <div class="ressort-left-card">
-      <div class="ressort-img-box">
-        ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')">` : `<div style="height:240px;display:flex;align-items:center;justify-content:center;background:var(--gray-50);font-size:5rem">🛏️</div>`}
-        <div class="ressort-img-box-overlay">
-          <span style="background:${t.color};color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.05em">${t.badge}</span>
-          <div style="font-family:'Raleway',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;margin-top:5px;line-height:1.2">${t.label}</div>
-          <div style="font-size:.75rem;color:rgba(255,255,255,.75);margin-top:3px">${t.desc}</div>
-        </div>
+    <!-- Colonne 1 : Photo -->
+    <div class="ressort-img-box">
+      ${t.img ? `<img src="${t.img}" alt="${t.label}" onclick="openLightbox(this.src,'${t.label}')">` : `<div style="height:100%;min-height:400px;display:flex;align-items:center;justify-content:center;background:var(--gray-50);font-size:5rem">🛏️</div>`}
+      <div class="ressort-img-box-overlay">
+        <span style="background:${t.color};color:#fff;font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.06em">${t.badge}</span>
+        <div style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;margin-top:5px;line-height:1.2">${t.label}</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.75);margin-top:3px">${t.desc}</div>
       </div>
-      <div style="height:3px;background:linear-gradient(90deg,${t.color},${t.color}88,transparent)"></div>
-      ${specsHTML}
     </div>
-    <!-- Droite : tableau prix -->
-    <div class="ressort-right-col">
-      <div style="font-family:'Raleway',sans-serif;font-size:1rem;font-weight:800;color:var(--navy-dark);margin-bottom:12px">📋 Dimensions & Tarifs — <span style="color:${t.color}">${t.label}</span></div>
-      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm)">
-        <table class="ressort-price-table">
+    <!-- Colonne 2 : Caractéristiques -->
+    <div class="ressort-specs-box">
+      <div style="font-size:.68rem;font-weight:800;color:${t.color};text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:2px;background:${t.color};border-radius:2px"></span>Caractéristiques</div>
+      <ul style="margin:0;padding:0;flex:1">${(t.specs||[]).map(s=>`<li>${s}</li>`).join('')}</ul>
+    </div>
+    <!-- Colonne 3 : tableau prix -->
+    <div class="ressort-right-col" style="overflow-y:auto">
+      <table class="ressort-price-table" style="height:100%">
           <thead><tr><th>Dimension</th><th>Prix</th><th>Code</th><th>Stock</th><th></th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
-      </div>
     </div>
   </div>`;
 }
