@@ -2,8 +2,11 @@
 // Global Utilities — Les Cinq Frères
 // =============================================
 
-// Bouton flottant Visite Virtuelle 360° — injecté sur toutes les pages
+// Bouton flottant Visite Virtuelle 360° — page principale uniquement
 document.addEventListener('DOMContentLoaded', function() {
+const _p = window.location.pathname;
+const _isHome = _p === '/' || _p === '/index.html' || _p.endsWith('/index.html');
+if (!_isHome) return;
 (function() {
   const css = `
     #fab360{position:fixed !important;bottom:90px !important;left:50% !important;transform:translateX(-50%) !important;z-index:9999 !important;text-decoration:none !important;display:block !important;visibility:visible !important;opacity:1 !important;animation:float360 3s ease-in-out infinite !important;}
