@@ -166,13 +166,12 @@
     }
 
     /* === Corrections mobile uniquement (n'affecte jamais le format bureau) === */
-    @media(max-width:600px) {
-      .panier-nav { flex-wrap:wrap; height:auto; padding:10px 14px; row-gap:8px; }
-      .panier-nav .logo img { height:32px; }
-      .panier-nav .logo .brand { font-size:.82rem; }
-      .panier-nav .logo .sub { font-size:.6rem; }
-      .panier-nav > div { width:100%; justify-content:center; }
-      .panier-nav .btn { font-size:.74rem !important; padding:7px 10px !important; }
+    @media(max-width:768px) {
+      .panier-nav { flex-wrap:nowrap; height:auto; padding:10px 14px; justify-content:space-between; }
+      .panier-nav .logo img { height:42px; }
+      .panier-nav .logo .brand, .panier-nav .logo .sub { display:none; }
+      .panier-nav > div { width:auto; justify-content:flex-end; }
+      .panier-nav .btn { font-size:.74rem !important; padding:7px 10px !important; white-space:nowrap; }
 
       .steps-inner { padding:12px 8px !important; }
       .step-item { gap:5px !important; }
