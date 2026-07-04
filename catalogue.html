@@ -1387,7 +1387,7 @@ function toggleSub(subId, el, catId) {
   if (sub) sub.classList.toggle('open');
   currentCat = catId;
   render(catId);
-  closeMobileSidebar();
+  // Ne pas fermer la sidebar mobile — l'utilisateur doit voir les sous-catégories
 }
 
 function render(id) {
