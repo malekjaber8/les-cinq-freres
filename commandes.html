@@ -26,9 +26,13 @@
     .cmd-nav-right { display:flex; align-items:center; gap:10px; }
     .cmd-nav-right .btn-outline-navy { color:#fff !important; border-color:rgba(255,255,255,.4) !important; background:rgba(255,255,255,.1) !important; }
     .cmd-nav-right button[onclick="logout()"] { color:rgba(255,255,255,.8) !important; }
-    @media(max-width:600px) {
-      .cmd-nav { padding:10px 14px; height:auto; }
-      .cmd-nav-logo .sub { display:none; }
+    @media(max-width:768px) {
+      .cmd-nav { padding:10px 14px; height:auto; flex-wrap:nowrap; justify-content:space-between; }
+      .cmd-nav-logo .brand, .cmd-nav-logo .sub { display:none; }
+      .cmd-nav-logo img { height:42px; }
+      .cmd-nav-right { gap:6px; flex-wrap:nowrap; }
+      .cmd-nav-right .btn { padding:7px 10px !important; font-size:.74rem !important; white-space:nowrap; }
+      .cmd-nav-right button[onclick="logout()"] { font-size:.74rem !important; padding:7px 8px !important; white-space:nowrap; }
     }
 
     .cmd-wrap { max-width:820px; margin:0 auto; padding:32px 20px; }
