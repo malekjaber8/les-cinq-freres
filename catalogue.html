@@ -18,19 +18,23 @@
 
     /* ===== TOP NAV ===== */
     .cat-navbar {
-      background:var(--white);
-      border-bottom:1px solid var(--gray-100);
+      background:linear-gradient(135deg, var(--navy-dark), var(--teal-dark));
+      border-bottom:none;
       padding:0 28px;
       height:64px;
       display:flex; align-items:center; justify-content:space-between;
       position:sticky; top:0; z-index:200;
-      box-shadow:var(--shadow-sm);
+      box-shadow:0 2px 12px rgba(18,47,75,.3);
     }
     .cat-nav-logo { display:flex; align-items:center; gap:12px; }
-    .cat-nav-logo img { height:40px; border-radius:6px; }
-    .cat-nav-logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.95rem; color:var(--navy-dark); }
-    .cat-nav-logo .sub   { font-size:.7rem; color:var(--teal-dark); }
+    .cat-nav-logo img { height:40px; border-radius:6px; background:rgba(255,255,255,.95); padding:3px; }
+    .cat-nav-logo .brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:.95rem; color:#fff; }
+    .cat-nav-logo .sub   { font-size:.7rem; color:rgba(255,255,255,.75); }
     .cat-nav-right { display:flex; align-items:center; gap:10px; }
+    .cat-nav-right .btn-outline-navy { color:#fff !important; border-color:rgba(255,255,255,.4) !important; background:rgba(255,255,255,.1) !important; }
+    .cat-nav-right .btn-outline-navy:hover { background:rgba(255,255,255,.2) !important; }
+    .cat-nav-right a[style*="gray-600"] { color:rgba(255,255,255,.7) !important; }
+    .cat-nav-left-group { display:flex; align-items:center; gap:10px; }
 
     /* ===== LAYOUT ===== */
     .cat-layout { display:flex; min-height:calc(100vh - 64px); }
@@ -391,10 +395,15 @@
         background:var(--gray-50); box-sizing:border-box;
       }
       .desktop-search-wrap { display:none !important; }
-      .cat-navbar { flex-wrap:wrap; height:auto; padding:10px 14px; row-gap:8px; }
+      .cat-navbar { flex-wrap:nowrap; height:auto; padding:10px 14px; justify-content:space-between; background:linear-gradient(135deg, var(--navy-dark), var(--teal-dark)) !important; border-bottom:none; box-shadow:0 2px 12px rgba(18,47,75,.3); }
+      .cat-nav-left-group { display:flex; align-items:center; gap:8px; flex-shrink:0; }
       .cat-nav-logo { flex-shrink:0; }
-      .cat-nav-logo .brand, .cat-nav-logo .sub { white-space:nowrap; }
-      .cat-nav-right { flex-wrap:wrap; justify-content:flex-end; }
+      .cat-nav-logo .brand, .cat-nav-logo .sub { display:none; }
+      .cat-nav-logo img { height:42px; border-radius:8px; padding:3px; background:rgba(255,255,255,.95); }
+      .cat-nav-right { flex-wrap:nowrap; gap:5px; justify-content:flex-end; }
+      .cat-nav-right .btn { padding:7px 10px !important; font-size:.74rem !important; white-space:nowrap; color:#fff !important; border-color:rgba(255,255,255,.4) !important; background:rgba(255,255,255,.1) !important; }
+      .cat-nav-right .btn:hover { background:rgba(255,255,255,.25) !important; }
+      .mob-cat-btn { background:rgba(255,255,255,.15) !important; border:1.5px solid rgba(255,255,255,.4) !important; color:#fff !important; }
       .cat-sidebar.open {
         display:block; position:fixed; top:0; left:0; bottom:0;
         z-index:350; width:82vw; max-width:300px; height:100vh;
@@ -409,7 +418,14 @@
       }
     }
     @media(max-width:600px){
-      .prod-grid { grid-template-columns:repeat(2,1fr); }
+      /* Force vue liste sur mobile — masque les boutons de changement de vue */
+      .view-toggle { display:none !important; }
+      .prod-grid { grid-template-columns:1fr !important; }
+      .prod-grid .prod-card { display:flex !important; flex-direction:row; }
+      .prod-grid .prod-card-img { width:90px !important; height:auto !important; min-height:90px; flex-shrink:0; border-radius:0; }
+      .prod-grid .prod-card-body { flex:1; padding:10px; min-width:0; }
+      .prod-grid .stock-wrap { display:none !important; }
+      .prod-grid .prod-card-footer { border-top:0; border-left:1px solid var(--gray-100); flex-direction:column; align-items:center; justify-content:center; padding:10px; gap:8px; min-width:80px; flex-shrink:0; }
       .tools-grid { grid-template-columns:repeat(2,1fr); }
       .cat-content { padding:12px 10px; }
       .hide-xs { display:none !important; }
@@ -425,16 +441,19 @@
 
 <!-- NAV -->
 <nav class="cat-navbar">
-  <div class="cat-nav-logo">
-    <a href="index.html"><img src="logo.png" alt="Logo"></a>
-    <div>
-      <div class="brand">Les Cinq Frères</div>
-      <div class="sub">Catalogue Produits</div>
+  <!-- Groupe gauche mobile : Catégories + Logo -->
+  <div class="cat-nav-left-group">
+    <button class="mob-cat-btn" onclick="toggleMobileSidebar()">☰ Catégories</button>
+    <div class="cat-nav-logo">
+      <a href="index.html"><img src="logo.png" alt="Logo"></a>
+      <div>
+        <div class="brand">Les Cinq Frères</div>
+        <div class="sub">Catalogue Produits</div>
+      </div>
     </div>
   </div>
   <div class="cat-nav-right">
-    <!-- Bouton catégories mobile -->
-    <button class="mob-cat-btn" onclick="toggleMobileSidebar()">☰ Catégories</button>
+    <!-- Bouton catégories mobile (supprimé ici, déplacé à gauche) -->
     <div class="desktop-search-wrap" style="position:relative">
       <input type="text" placeholder="Rechercher un article…" id="globalSearch"
              style="padding:9px 14px 9px 36px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.85rem;width:260px;outline:none;background:var(--gray-50)"
@@ -443,7 +462,7 @@
     </div>
     <!-- Bouton commandes client (affiché si connecté) -->
     <a href="commandes.html" id="navCmdBtn" style="position:relative;padding:8px 12px;font-size:.8rem" class="btn btn-outline-navy">
-      📋 <span class="hide-xs">Mes Commandes</span>
+      📋 Cmde
       <span id="navCmdCount" style="display:none;position:absolute;top:-5px;right:-5px;background:#e53e3e;color:#fff;font-size:.6rem;font-weight:800;padding:2px 5px;border-radius:50px;min-width:16px;text-align:center"></span>
     </a>
     <!-- Bouton admin dashboard -->
@@ -919,11 +938,9 @@ const catalogue = {
         specs:['✨ Ressorts de haute qualité','📏 Hauteur : 30 cm','⚖️ Supporte jusqu\'à 150 kg/pers.','🔩 Ressorts ensachés','💪 Mousse 33,5 kg/m³ côté mi-ferme','😌 Mousse 35 kg/m³ côté relaxante','🔄 Conception réversible','🧵 Anti-acarien, antitaches, anti-humidité','🔥 Résistance au feu','🛡️ Garantie : 11 ans'] },
       { id:'tendresse-pt', label:'Tendresse Pillow Top', color:'#880E4F', bgColor:'#F8BBD0', desc:'Tendresse avec mémoire de forme — le summum du luxe', badge:'Luxe', img:'images/matelas%20ressort/tendresse.jpg',
         specs:['✨ Ressorts de haute qualité','🌊 Gamme souple','🧠 8 cm de mousse à mémoire de forme','📏 Hauteur : 35 cm','⚖️ Supporte jusqu\'à 150 kg/pers.','🔩 Ressorts ensachés (indépendance optimale)','🔄 Matelas réversible','🧵 Anti-acarien, antitaches, anti-humidité','🔥 Résistant au feu','🛡️ Garantie : 11 ans'] },
-      { id:'confort', label:'Confort', color:'#AB47BC', bgColor:'#F3E5F5', desc:'Gamme Confort — sensation moelleuse et accueillante', badge:'Grand Confort', img:null, specs:[] },
     ],
     sizes:[
       { dim:'120×60',  prices:[200,  240,  450,  340,  550,  420,  620,  570,  780,  null] },
-      { dim:'190×70',  prices:[null, null, null, null, null, null, null, null, null, 190]  },
       { dim:'190×80',  prices:[260,  310,  620,  440,  750,  530,  880,  730,  1090, null] },
       { dim:'190×90',  prices:[290,  340,  650,  490,  800,  590,  950,  800,  1160, null] },
       { dim:'190×100', prices:[440,  490,  900,  670,  1090, 850,  1260, 1230, 1860, null] },
@@ -2384,7 +2401,7 @@ function renderRessortPage(content, cat) {
   .ressort-tab { padding:9px 18px; border-radius:50px; border:2px solid var(--gray-200); background:var(--white); font-family:'Poppins',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:var(--transition); color:var(--gray-700); white-space:nowrap; }
   .ressort-tab:hover { border-color:var(--teal); color:var(--teal-dark); }
   .ressort-tab.active { color:#fff; border-color:transparent; }
-  .ressort-detail { display:grid; grid-template-columns:280px 260px minmax(300px,420px); gap:0; align-items:stretch; border:1.5px solid var(--gray-100); border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(27,78,122,.10); }
+  .ressort-detail { display:grid; grid-template-columns:280px 260px 1fr; gap:0; align-items:stretch; border:1.5px solid var(--gray-100); border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(27,78,122,.10); }
   .ressort-left-card { display:contents; }
   .ressort-img-box { position:relative; min-height:400px; }
   .ressort-img-box img { width:100%; height:100%; object-fit:cover; object-position:center center; display:block; cursor:zoom-in; }
