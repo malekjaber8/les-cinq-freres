@@ -1436,17 +1436,53 @@ function render(id) {
   if (window.Stock) Stock.refreshAll();
 }
 
+/* ── Séparateur de groupe dans la vue Tous les Articles ── */
+function _sep(icon, title, color) {
+  return `<div style="display:flex;align-items:center;gap:14px;margin:36px 0 22px;padding:13px 20px;background:linear-gradient(135deg,${color}14,${color}06);border-left:4px solid ${color};border-radius:0 12px 12px 0">
+    <span style="font-size:1.5rem">${icon}</span>
+    <span style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:${color}">${title}</span>
+  </div>`;
+}
+
 function renderAll(content) {
   let html = `<div class="sec-header"><div><h2>🏠 Tous les Articles</h2><p>Explorez notre catalogue complet</p></div></div>`;
 
-  // Mousse Matelas uniquement → résumé cliquable (matrices complexes)
+  /* ═══ STRUCTURES & BASES ═══ */
+  html += _sep('🪑', 'Structures & Bases', '#1B4E7A');
+
+  ['pietement','chaise','socle'].forEach(cid => {
+    const cat = catalogue[cid];
+    if (!cat || !cat.products) return;
+    html += `<div style="margin-bottom:32px">
+      <div class="sec-header"><div><h2>${cat.icon} ${cat.label}</h2><p>${cat.desc||''}</p></div><span class="item-count">${cat.products.length} articles</span></div>
+      <div class="prod-grid">${cat.products.map(p => productCard(p, cid)).join('')}</div>
+    </div>`;
+  });
+
+  /* ═══ MATÉRIAUX & REMBOURRAGE ═══ */
+  html += _sep('🛏️', 'Matériaux & Rembourrage', '#2BBEC8');
+
+  // Matelas Ressort
+  const ressort = catalogue['ressort'];
+  if (ressort && ressort.types) {
+    html += `<div style="margin-bottom:28px">
+      <div class="sec-header"><div><h2>${ressort.icon} ${ressort.label}</h2><p>${ressort.desc||''}</p></div>
+        <a href="#" onclick="showCat('ressort',null);return false" class="btn btn-outline-navy" style="padding:7px 16px;font-size:.8rem">Voir tout →</a></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+        ${ressort.types.map(t=>`<div onclick="showCat('ressort',null)" style="cursor:pointer;border:1.5px solid ${t.color}44;border-radius:12px;overflow:hidden;background:${t.bgColor};transition:var(--transition)" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow=''">
+          ${t.img?`<img src="${t.img}" alt="${t.label}" style="width:100%;height:80px;object-fit:cover">`:`<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem">🛏️</div>`}
+          <div style="padding:7px 10px"><div style="font-size:.74rem;font-weight:800;color:${t.color}">${t.label}</div><div style="font-size:.62rem;color:var(--gray-600)">${t.badge}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Mousse Matelas → résumé cliquable
   const mousse = catalogue['mousse-matelas'];
   if (mousse) {
     html += `<div style="margin-bottom:28px">
-      <div class="sec-header">
-        <div><h2>${mousse.icon||'🛏️'} ${mousse.label}</h2><p>${mousse.desc||''}</p></div>
-        <a href="#" onclick="showCat('mousse-matelas',null);return false" class="btn btn-outline-navy" style="padding:7px 16px;font-size:.8rem">Voir tout →</a>
-      </div>
+      <div class="sec-header"><div><h2>${mousse.icon||'🛏️'} ${mousse.label}</h2><p>${mousse.desc||''}</p></div>
+        <a href="#" onclick="showCat('mousse-matelas',null);return false" class="btn btn-outline-navy" style="padding:7px 16px;font-size:.8rem">Voir tout →</a></div>
       <div style="background:var(--gray-50);border:1.5px dashed var(--gray-200);border-radius:var(--radius-lg);padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         ${(mousse.types||[]).map(t=>`<span style="background:var(--white);border:1px solid var(--gray-200);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--navy-dark)" onclick="showCat('mousse-matelas',null)">${t.label}</span>`).join('')}
         <span style="font-size:.78rem;color:var(--gray-400);margin-left:8px">→ Cliquez pour voir les dimensions et tarifs</span>
@@ -1454,95 +1490,62 @@ function renderAll(content) {
     </div>`;
   }
 
-  // TABKA → tous les articles affichés comme cartes produits
+  // TABKA → toutes les plaques
   const tabka = catalogue['mousse-tabka'];
   if (tabka && tabka.types) {
-    let tabkaCards = '';
-    tabka.types.forEach((t, typeIdx) => {
-      (t.thicknesses || []).forEach(th => {
-        tabkaCards += `<div class="prod-card" onclick="showCat('mousse-tabka',null)" style="cursor:pointer">
-          <div class="prod-card-img">${t.img ? `<img src="${t.img}" alt="${t.label}" style="width:100%;height:100%;object-fit:cover">` : `<span class="placeholder">🟫</span>`}</div>
+    let cards = '';
+    tabka.types.forEach(t => {
+      (t.thicknesses||[]).forEach(th => {
+        cards += `<div class="prod-card" onclick="showCat('mousse-tabka',null)" style="cursor:pointer">
+          <div class="prod-card-img">${t.img?`<img src="${t.img}" alt="${t.label}" style="width:100%;height:100%;object-fit:cover">`:`<span class="placeholder">🟫</span>`}</div>
           <div class="prod-card-body">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
-              <div class="p-cat">TABKA ${t.label}</div>
-              <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px">${th.code}</div>
-            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px"><div class="p-cat">TABKA ${t.label}</div><div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px">${th.code}</div></div>
             <div class="p-name">TABKA ${t.label} — ${th.ep}</div>
-            <div class="p-desc">${th.dim || tabka.baseDim}</div>
+            <div class="p-desc">${th.dim||tabka.baseDim}</div>
           </div>
-          <div class="prod-card-footer">
-            <div class="p-price">${th.prix != null ? th.prix.toLocaleString('fr-TN',{minimumFractionDigits:3}) + ' DT' : 'Sur devis'}</div>
-          </div>
+          <div class="prod-card-footer"><div class="p-price">${th.prix!=null?th.prix.toLocaleString('fr-TN',{minimumFractionDigits:3})+' DT':'Sur devis'}</div></div>
         </div>`;
       });
     });
     html += `<div style="margin-bottom:36px">
-      <div class="sec-header">
-        <div><h2>${tabka.icon} ${tabka.label}</h2><p>${tabka.desc||''}</p></div>
-        <span class="item-count">${tabka.types.reduce((s,t)=>s+(t.thicknesses||[]).length,0)} articles</span>
-      </div>
-      <div class="prod-grid">${tabkaCards}</div>
+      <div class="sec-header"><div><h2>${tabka.icon} ${tabka.label}</h2><p>${tabka.desc||''}</p></div><span class="item-count">${tabka.types.reduce((s,t)=>s+(t.thicknesses||[]).length,0)} articles</span></div>
+      <div class="prod-grid">${cards}</div>
     </div>`;
   }
 
-  // Tissus — collections avec aperçu
-  const tissu = catalogue['tissu'];
-  if (tissu && tissu.collections) {
-    html += `<div style="margin-bottom:36px">
-      <div class="sec-header">
-        <div><h2>${tissu.icon} ${tissu.label}</h2><p>${tissu.desc||''}</p></div>
-        <span class="item-count">${tissu.collections.length} collections</span>
-      </div>
-      <div class="prod-grid">
-        ${tissu.collections.map(c => `<div class="prod-card" onclick="showCat('tissu',null)">
-          <div class="prod-card-img">${c.img ? `<img src="${c.img}" alt="${c.label}" style="width:100%;height:100%;object-fit:cover">` : `<span class="placeholder">🧵</span>`}</div>
-          <div class="prod-card-body">
-            <div class="p-cat">${tissu.label}</div>
-            <div class="p-name">${c.label}</div>
-            <div class="p-desc">${c.coloris ? c.coloris.length + ' coloris' : ''}</div>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>`;
-  }
-
-  // Matelas Ressort — types en aperçu
-  const ressort = catalogue['ressort'];
-  if (ressort && ressort.types) {
-    html += `<div style="margin-bottom:28px">
-      <div class="sec-header">
-        <div><h2>${ressort.icon} ${ressort.label}</h2><p>${ressort.desc||''}</p></div>
-        <a href="#" onclick="showCat('ressort',null);return false" class="btn btn-outline-navy" style="padding:7px 16px;font-size:.8rem">Voir tout →</a>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">
-        ${ressort.types.map((t,i) => `<div onclick="showCat('ressort',null)" style="cursor:pointer;border:1.5px solid ${t.color}44;border-radius:12px;overflow:hidden;background:${t.bgColor};transition:var(--transition)" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow=''">
-          ${t.img ? `<img src="${t.img}" alt="${t.label}" style="width:100%;height:90px;object-fit:cover">` : `<div style="height:90px;display:flex;align-items:center;justify-content:center;font-size:2rem">🛏️</div>`}
-          <div style="padding:8px 10px">
-            <div style="font-size:.75rem;font-weight:800;color:${t.color}">${t.label}</div>
-            <div style="font-size:.65rem;color:var(--gray-600);margin-top:2px">${t.badge}</div>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>`;
-  }
-
-  // Toutes les autres catégories standard → TOUS les produits
-  const standardCats = ['polyester','polystyrene','pietement','socle','chaise','miroirs'];
-  standardCats.forEach(cid => {
+  // Polyester, Polystyrène, Tissus
+  ['polyester','polystyrene'].forEach(cid => {
     const cat = catalogue[cid];
     if (!cat || !cat.products) return;
-    html += `<div style="margin-bottom:36px">
-      <div class="sec-header">
-        <div><h2>${cat.icon} ${cat.label}</h2><p>${cat.desc||''}</p></div>
-        <span class="item-count">${cat.products.length} articles</span>
-      </div>
-      <div class="prod-grid">
-        ${cat.products.map(p => productCard(p, cid)).join('')}
-      </div>
+    html += `<div style="margin-bottom:32px">
+      <div class="sec-header"><div><h2>${cat.icon} ${cat.label}</h2><p>${cat.desc||''}</p></div><span class="item-count">${cat.products.length} articles</span></div>
+      <div class="prod-grid">${cat.products.map(p => productCard(p, cid)).join('')}</div>
     </div>`;
   });
 
-  // Outils de Tapisserie — toutes les catégories
+  const tissu = catalogue['tissu'];
+  if (tissu && tissu.collections) {
+    html += `<div style="margin-bottom:36px">
+      <div class="sec-header"><div><h2>${tissu.icon} ${tissu.label}</h2><p>${tissu.desc||''}</p></div><span class="item-count">${tissu.collections.length} collections</span></div>
+      <div class="prod-grid">${tissu.collections.map(c=>`<div class="prod-card" onclick="showCat('tissu',null)">
+        <div class="prod-card-img">${c.img?`<img src="${c.img}" alt="${c.label}" style="width:100%;height:100%;object-fit:cover">`:`<span class="placeholder">🧵</span>`}</div>
+        <div class="prod-card-body"><div class="p-cat">${tissu.label}</div><div class="p-name">${c.label}</div><div class="p-desc">${c.coloris?c.coloris.length+' coloris':''}</div></div>
+      </div>`).join('')}</div>
+    </div>`;
+  }
+
+  /* ═══ DÉCORATION ═══ */
+  html += _sep('🪞', 'Décoration & Finition', '#C2185B');
+  const mir = catalogue['miroirs'];
+  if (mir && mir.products) {
+    html += `<div style="margin-bottom:32px">
+      <div class="sec-header"><div><h2>${mir.icon} ${mir.label}</h2><p>${mir.desc||''}</p></div><span class="item-count">${mir.products.length} articles</span></div>
+      <div class="prod-grid">${mir.products.map(p => productCard(p, 'miroirs')).join('')}</div>
+    </div>`;
+  }
+
+  /* ═══ OUTILLAGE ═══ */
+  html += _sep('🛠️', 'Outillage Professionnel', '#E65100');
   html += `<div style="margin-bottom:32px">
     <div class="sec-header"><div><h2>🛠️ Outils de Tapisserie</h2><p>Matériel professionnel complet</p></div></div>
     ${toolsPreview()}
