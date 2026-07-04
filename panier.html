@@ -50,7 +50,7 @@
     .qty-btn:hover { border-color:var(--teal); color:var(--teal); }
     .qty-val { font-size:.88rem; font-weight:700; color:var(--navy-dark); min-width:28px; text-align:center; }
 
-    .price-cell { font-size:.9rem; font-weight:700; color:#fff; }
+    .price-cell { font-size:.9rem; font-weight:700; color:var(--navy-dark); }
     .del-btn { background:rgba(229,62,62,.08); border:none; color:var(--error); width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
     .del-btn:hover { background:var(--error); color:var(--white); }
 
@@ -69,7 +69,7 @@
     .summary-row .lbl { color:var(--gray-600); }
     .summary-row .val { font-weight:600; color:var(--gray-800); }
     .summary-total { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-top:2px solid var(--gray-200); margin-top:8px; }
-    .summary-total .lbl { font-size:.95rem; font-weight:700; color:#fff; }
+    .summary-total .lbl { font-size:.95rem; font-weight:700; color:var(--navy-dark); }
     .summary-total .val { font-family:'Raleway',sans-serif; font-size:1.3rem; font-weight:800; color:var(--teal-dark); }
 
     /* --- Client Info --- */
@@ -168,7 +168,7 @@
     /* === Corrections mobile uniquement (n'affecte jamais le format bureau) === */
     @media(max-width:768px) {
       .panier-nav { flex-wrap:nowrap; height:auto; padding:10px 14px; justify-content:space-between; }
-      .panier-nav .logo img { height:42px; }
+      .panier-nav .logo img { height:42px; width:42px; object-fit:cover; object-position:top center; }
       .panier-nav .logo .brand, .panier-nav .logo .sub { display:none; }
       .panier-nav > div { width:auto; justify-content:flex-end; }
       .panier-nav .btn { font-size:.74rem !important; padding:7px 10px !important; white-space:nowrap; }
