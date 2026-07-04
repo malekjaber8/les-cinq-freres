@@ -216,14 +216,15 @@
     .p-price .p-unit { font-size:.7rem; font-weight:500; color:var(--gray-600); }
     .p-price.na { font-size:.8rem; font-weight:500; color:var(--gray-600); }
     .add-btn {
-      width:32px; height:32px;
+      padding:7px 12px;
       background:linear-gradient(135deg,var(--teal),var(--navy-light));
       border:none; border-radius:8px;
-      color:var(--white); font-size:1.1rem;
+      color:var(--white); font-size:.78rem; font-weight:700;
       cursor:pointer; transition:var(--transition);
       display:flex; align-items:center; justify-content:center;
+      gap:5px; white-space:nowrap; font-family:'Poppins',sans-serif;
     }
-    .add-btn:hover { transform:scale(1.1); }
+    .add-btn:hover { transform:scale(1.04); box-shadow:0 4px 12px rgba(43,190,200,.4); }
 
     /* List view card */
     .prod-grid.list-view .prod-card { display:flex; }
@@ -1648,18 +1649,12 @@ function productCard(p, catId) {
   const hasMultipleVariants = p.variants && p.variants.length > 1;
   const addBtn = isRouleau
     ? `<button class="add-btn" title="Commander ce rouleau"
-        onclick="event.stopPropagation();confirmRouleauOAT('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}','${firstVariant}','${icon}')">
-        🛒
-       </button>`
+        onclick="event.stopPropagation();confirmRouleauOAT('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}','${firstVariant}','${icon}')">🛒 Ajouter</button>`
     : hasMultipleVariants
     ? `<button class="add-btn" title="Choisir une variante"
-        onclick="event.stopPropagation();openModal('${p.id}','${catId}')">
-        🛒
-       </button>`
+        onclick="event.stopPropagation();openModal('${p.id}','${catId}')">🛒 Ajouter</button>`
     : `<button class="add-btn" title="Ajouter au panier"
-        onclick="event.stopPropagation();Cart.add({productId:'${p.id}',code:'${p.id}',catId:'${catId}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${firstVariant}',price:'${p.price}',priceNum:${priceNum},qty:1,icon:'${icon}'})">
-        🛒
-       </button>`;
+        onclick="event.stopPropagation();Cart.add({productId:'${p.id}',code:'${p.id}',catId:'${catId}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${firstVariant}',price:'${p.price}',priceNum:${priceNum},qty:1,icon:'${icon}'})">🛒 Ajouter</button>`;
 
   return `<div class="prod-card" onclick="openModal('${p.id}','${catId}')">
     <div class="prod-card-img"${imgBg}>
@@ -2299,7 +2294,7 @@ function renderTabkaTypeGrid(cat, typeIdx) {
       <div class="stock-wrap" data-stock-id="tabka-${typeIdx}-${th.ep.replace(/\s/g,'')}"></div>
       <div class="prod-card-footer">
         <div class="p-price">${th.prix.toFixed(3)} DT</div>
-        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix},'${th.dim || t.dim || cat.baseDim}','${th.code}')">🛒</button>
+        <button class="add-btn" onclick="event.stopPropagation();addTabkaToCart(${typeIdx},'${th.ep}',${th.prix},'${th.dim || t.dim || cat.baseDim}','${th.code}')">🛒 Ajouter</button>
       </div>
     </div>`).join('')}
   </div>`;
@@ -2653,9 +2648,7 @@ function toolItemCard(tc, item, catIdx, itemIdx) {
     <div class="prod-card-footer">
       <div class="${hasPrix ? 'p-price' : 'p-price na'}">${hasPrix ? prix : 'Sur devis'}</div>
       <button class="add-btn" title="Ajouter au panier"
-        onclick="event.stopPropagation();addToolToCart(${catIdx},${itemIdx})">
-        🛒
-      </button>
+        onclick="event.stopPropagation();addToolToCart(${catIdx},${itemIdx})">🛒 Ajouter</button>
     </div>
   </div>`;
 }
@@ -3205,7 +3198,7 @@ function globalSearchFn(q) {
       </div>
       <div class="prod-card-footer">
         <div class="${prix != null ? 'p-price' : 'p-price na'}">${prix != null ? prix.toFixed(3) + ' DT' : 'Sur devis'}</div>
-        ${addOnclick ? `<button class="add-btn" title="Ajouter au panier" onclick="event.stopPropagation();${addOnclick}">🛒</button>` : ''}
+        ${addOnclick ? `<button class="add-btn" title="Ajouter au panier" onclick="event.stopPropagation();${addOnclick}">🛒 Ajouter</button>` : ''}
       </div>
     </div>`;
   }
