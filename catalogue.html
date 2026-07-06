@@ -454,6 +454,10 @@
       .mousse-col-grid { order:2 !important; }
     }
     @media(max-width:600px){
+      /* Tissus — empiler image et contenu verticalement sur mobile */
+      .tissu-card { flex-direction:column !important; min-height:auto !important; }
+      .tissu-img-col { width:100% !important; height:180px; }
+      .tissu-img-col img { height:180px !important; }
       /* Matelas Mousse — 1 colonne sur mobile */
       #mousse-types-grid { grid-template-columns:1fr !important; gap:14px !important; }
       /* Onglets qualité — taille réduite */
@@ -1765,10 +1769,10 @@ function renderTissuPage(content, cat) {
   <!-- Liste des collections — layout gauche/droite -->
   <div style="display:flex;flex-direction:column;gap:16px">
     ${cols.map(c => `
-    <div style="background:#fff;border:1.5px solid ${c.color}22;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;min-height:200px" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow='var(--shadow-sm)'">
+    <div class="tissu-card" style="background:#fff;border:1.5px solid ${c.color}22;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;min-height:200px" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow='var(--shadow-sm)'">
 
       <!-- GAUCHE : grande photo de la gamme -->
-      <div style="width:280px;flex-shrink:0;position:relative;overflow:hidden;background:${c.bgColor}">
+      <div class="tissu-img-col" style="width:280px;flex-shrink:0;position:relative;overflow:hidden;background:${c.bgColor}">
         ${c.img
           ? `<img src="${c.img}" alt="Gamme ${c.label}" class="tissu-zoom-img" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:transform .3s" onclick="event.stopPropagation();openLightbox(this.src,'Gamme ${c.label} — ${c.coloris.length} coloris disponibles')" onerror="this.style.display='none'">`
           : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.3">🧵</div>`
