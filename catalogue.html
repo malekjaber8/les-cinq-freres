@@ -453,6 +453,16 @@
       .mousse-col-form { width:100% !important; position:static !important; order:1 !important; }
       .mousse-col-grid { order:2 !important; }
     }
+    @media(max-width:600px){
+      /* Matelas Mousse — 1 colonne sur mobile */
+      #mousse-types-grid { grid-template-columns:1fr !important; gap:14px !important; }
+      /* Onglets qualité — taille réduite */
+      #mousse-type-tabs button { padding:7px 12px !important; font-size:.75rem !important; }
+      /* Items de dimensions — plus compacts */
+      #mousse-types-grid [style*="display:flex;align-items:center;gap:7px"] {
+        flex-wrap:wrap; gap:4px !important; padding:6px 8px !important;
+      }
+    }
   </style>
 </head>
 <body>
