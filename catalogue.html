@@ -2714,7 +2714,7 @@ function openModal(pid, catId) {
         <div style="flex:1;min-width:150px">
           <label style="font-size:.76rem;font-weight:700;color:var(--gray-700);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Variante</label>
           <select id="modalVariant" onchange="updateModalVariantPrice()" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.85rem;outline:none;background:#fff">
-            ${p.variants.map(v=>`<option value="${v}">${v}</option>`).join('')}
+            ${(p.variants||[p.price]).map(v=>`<option value="${v}">${v}</option>`).join('')}
           </select>
           <div id="modalVariantPriceTag" style="margin-top:6px;font-size:.88rem;font-weight:800;color:var(--teal-dark)"></div>
         </div>
@@ -2732,7 +2732,7 @@ function openModal(pid, catId) {
       <table class="var-table" style="margin-bottom:22px">
         <thead><tr><th>Variante</th><th>Prix</th><th>Stock</th></tr></thead>
         <tbody>
-          ${p.variants.map(v => {
+          ${(p.variants||[p.price]).map(v => {
             const vPrice = extractVariantPrice(v) || (p.price !== 'À confirmer' && p.price !== 'Sur devis' ? p.price : null);
             return `
             <tr onclick="document.getElementById('modalVariant').value='${v}';updateModalVariantPrice()" style="cursor:pointer">
