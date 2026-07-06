@@ -458,10 +458,11 @@
       #mousse-types-grid { grid-template-columns:1fr !important; gap:14px !important; }
       /* Onglets qualité — taille réduite */
       #mousse-type-tabs button { padding:7px 12px !important; font-size:.75rem !important; }
-      /* Items de dimensions — plus compacts */
-      #mousse-types-grid [style*="display:flex;align-items:center;gap:7px"] {
-        flex-wrap:wrap; gap:4px !important; padding:6px 8px !important;
-      }
+      /* Formulaire dimensions : 1 colonne */
+      .mousse-dim-grid { grid-template-columns:1fr 1fr !important; }
+      .mousse-dim-grid button { grid-column:1/3; }
+      /* Formulaire Quantité + Notes : empilés */
+      .mousse-qty-grid { grid-template-columns:1fr !important; gap:14px !important; }
     }
   </style>
 </head>
@@ -1983,7 +1984,7 @@ function renderMoussePage(content, cat) {
       <!-- Ligne 2 : Dimensions -->
       <div style="margin-bottom:20px">
         <label style="display:block;font-size:.82rem;font-weight:700;color:var(--gray-800);margin-bottom:10px">2. Saisir les dimensions (cm) *</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
+        <div class="mousse-dim-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end">
           <div>
             <label style="font-size:.75rem;color:var(--gray-600);display:block;margin-bottom:5px">📏 Longueur (cm)</label>
             <input type="number" id="dim-l" placeholder="ex: 190" min="1" max="300"
@@ -2008,7 +2009,7 @@ function renderMoussePage(content, cat) {
       </div>
 
       <!-- Ligne 3 : Quantité + Notes -->
-      <div style="display:grid;grid-template-columns:1fr 2fr;gap:20px;margin-bottom:20px">
+      <div class="mousse-qty-grid" style="display:grid;grid-template-columns:1fr 2fr;gap:20px;margin-bottom:20px">
         <div>
           <label style="display:block;font-size:.82rem;font-weight:700;color:var(--gray-800);margin-bottom:8px">3. Quantité *</label>
           <div style="display:flex;align-items:center;border:1.5px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;background:var(--white)">
