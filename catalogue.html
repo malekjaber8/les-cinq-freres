@@ -1483,31 +1483,30 @@ function renderAll(content) {
   /* ═══ ARTICLES ESSENTIELS — mis en avant ═══ */
   html += _sep('⭐', 'Articles Essentiels', '#E65100');
 
-  // Items outils mis en avant : Agrafes, Sangle, Film Étirable, Fermeture, Curseur
-  const essentialCodes = ['OUT001','OUT002','OUT003','OUT004','OUT005','OUT022','OUT021','OUT020','OUT018'];
+  // Catégories outils à mettre en avant (index dans toolCategories)
+  // 0=Agrafes, 5=Curseur, 6=Fermeture+Film+Sangle, 7=Cordons
+  const essentialCatIdx = [0, 5, 6, 7];
   let essentialCards = '';
   if (typeof toolCategories !== 'undefined') {
-    toolCategories.forEach((tc, catIdx) => {
-      tc.items.forEach((item, itemIdx) => {
-        if (!item.code || !essentialCodes.includes(item.code)) return;
-        const prix = item.price || '';
-        const priceNum = parseFloat(prix.replace(/[^\d.,]/g,'').replace(',','.')) || 0;
-        essentialCards += `<div class="prod-card" onclick="showToolCat(${catIdx})">
-          <div class="prod-card-img">${item.img ? `<img src="${item.img}" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;padding:8px">` : `<span class="placeholder">📌</span>`}</div>
-          <div class="prod-card-body">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
-              <div class="p-cat">${tc.name}</div>
-              <div style="font-size:.65rem;font-weight:700;color:#94a3b8;background:#f1f5f9;border-radius:4px;padding:1px 6px">${item.code}</div>
-            </div>
-            <div class="p-name">${item.name}</div>
-            <div class="p-desc">${item.ref||''}</div>
-          </div>
-          <div class="prod-card-footer">
-            <div class="p-price">${prix}</div>
-            <button class="add-btn" onclick="event.stopPropagation();addToolToCart(${catIdx},${itemIdx})">🛒 Ajouter</button>
-          </div>
-        </div>`;
-      });
+    essentialCatIdx.forEach(i => {
+      const tc = toolCategories[i];
+      if (!tc) return;
+      const firstItem = tc.items && tc.items[0];
+      const imgHtml = firstItem && firstItem.img
+        ? `<img src="${firstItem.img}" alt="${tc.name}" style="width:100%;height:100%;object-fit:contain;padding:10px">`
+        : `<span class="placeholder">${tc.icon}</span>`;
+      essentialCards += `<div class="prod-card" onclick="showToolCat(${i})" style="cursor:pointer">
+        <div class="prod-card-img">${imgHtml}</div>
+        <div class="prod-card-body">
+          <div class="p-cat">Outils de Tapisserie</div>
+          <div class="p-name">${tc.name}</div>
+          <div class="p-desc">${tc.desc}</div>
+        </div>
+        <div class="prod-card-footer">
+          <div style="font-size:.78rem;color:var(--teal-dark);font-weight:600">${tc.items ? tc.items.length + ' article' + (tc.items.length>1?'s':'') : ''}</div>
+          <button class="add-btn" onclick="event.stopPropagation();showToolCat(${i})">Voir →</button>
+        </div>
+      </div>`;
     });
   }
   html += `<div style="margin-bottom:36px"><div class="prod-grid">${essentialCards}</div></div>`;
