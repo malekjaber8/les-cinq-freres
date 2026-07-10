@@ -29,12 +29,19 @@ const Stock = {
       const label = qty === 0 ? 'Rupture de stock' : `${qty} unité${qty > 1 ? 's' : ''}`;
       showToast('success', 'Stock mis à jour', label);
     }
-    // Sync Firebase en arrière-plan (sans bloquer)
+    // Sync Firebase — avec message d'erreur visible si échec
     if (typeof db !== 'undefined') {
       db.collection('stock').doc(String(productId)).set({
         qty: parseInt(qty),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(() => {});
+      }).then(() => {
+        console.log('Stock synchronisé Firebase :', productId, qty);
+      }).catch(e => {
+        console.error('Stock Firebase ECHEC :', e.message);
+        if (typeof showToast === 'function') {
+          showToast('error', 'Erreur synchronisation', 'Stock sauvegardé localement seulement — reconnectez-vous en admin pour synchroniser.');
+        }
+      });
     }
   },
 

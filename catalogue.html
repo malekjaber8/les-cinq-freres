@@ -2812,7 +2812,11 @@ function openModal(pid, catId) {
     : detailHTML) + reviewsHTML + similarHTML;
   document.getElementById('modalOverlay').classList.add('open');
   updateModalVariantPrice();
-  if (window.Stock) Stock.refreshAll();
+  // Recharger le stock depuis Firebase pour avoir les dernières données
+  if (window.Stock) {
+    Stock.refreshAll(); // affichage immédiat avec données locales
+    Stock.loadAll();    // puis rechargement depuis Firebase → refreshAll() appelé automatiquement après
+  }
   loadProductReviews(p.id, p.name);
 }
 
