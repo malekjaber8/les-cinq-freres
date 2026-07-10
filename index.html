@@ -249,6 +249,115 @@
 @media(max-width:640px){ #trustBadges { grid-template-columns:repeat(2,1fr) !important; } }
 </style>
 
+<!-- ===================== NOUVEAUTÉS ===================== -->
+<section style="padding:70px 0;background:linear-gradient(135deg,var(--navy-dark) 0%,#1a3a5c 60%,var(--teal-dark) 100%);position:relative;overflow:hidden">
+  <div style="position:absolute;top:-80px;right:-80px;width:350px;height:350px;border:2px solid rgba(255,255,255,.05);border-radius:50%"></div>
+  <div style="position:absolute;bottom:-60px;left:-40px;width:250px;height:250px;border:2px solid rgba(43,190,200,.1);border-radius:50%"></div>
+
+  <div class="container" style="position:relative;z-index:1">
+    <!-- Titre -->
+    <div style="text-align:center;margin-bottom:44px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(43,190,200,.2);border:1px solid rgba(43,190,200,.4);border-radius:50px;padding:6px 18px;font-size:.75rem;font-weight:700;color:var(--teal-light);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">
+        ✨ Dernières Arrivées
+      </div>
+      <h2 style="font-family:'Raleway',sans-serif;font-size:clamp(1.6rem,3.5vw,2.3rem);font-weight:900;color:#fff;margin-bottom:8px">Nos <span style="color:var(--teal-light)">Nouveautés</span></h2>
+      <p style="font-size:.9rem;color:rgba(255,255,255,.7);max-width:480px;margin:0 auto">Découvrez nos derniers articles ajoutés au catalogue</p>
+    </div>
+
+    <!-- Slider -->
+    <div style="position:relative">
+      <div id="nv-track" style="display:flex;gap:20px;overflow:hidden;scroll-behavior:smooth">
+        <!-- Les cartes seront générées par JS -->
+      </div>
+      <!-- Navigation dots -->
+      <div id="nv-dots" style="display:flex;justify-content:center;gap:8px;margin-top:28px"></div>
+      <!-- Flèches -->
+      <button onclick="nvSlide(-1)" style="position:absolute;top:50%;left:-20px;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:1.2rem;cursor:pointer;backdrop-filter:blur(8px);transition:.2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='rgba(43,190,200,.4)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">‹</button>
+      <button onclick="nvSlide(1)"  style="position:absolute;top:50%;right:-20px;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:1.2rem;cursor:pointer;backdrop-filter:blur(8px);transition:.2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='rgba(43,190,200,.4)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">›</button>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <a href="catalogue.html" class="btn btn-primary" style="padding:13px 32px;font-size:.95rem">🛍️ Voir tout le catalogue</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.nv-card { flex:0 0 calc(33.333% - 14px); background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.1); border-radius:16px; overflow:hidden; cursor:pointer; transition:transform .3s,box-shadow .3s,border-color .3s; backdrop-filter:blur(4px); }
+.nv-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(0,0,0,.3); border-color:rgba(43,190,200,.5); }
+.nv-card-img { height:200px; overflow:hidden; position:relative; background:rgba(255,255,255,.05); }
+.nv-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+.nv-card:hover .nv-card-img img { transform:scale(1.06); }
+.nv-badge { position:absolute; top:12px; left:12px; background:var(--teal); color:#fff; font-size:.62rem; font-weight:800; padding:3px 10px; border-radius:50px; text-transform:uppercase; letter-spacing:.06em; }
+.nv-card-body { padding:16px; }
+.nv-card-cat { font-size:.68rem; font-weight:700; color:var(--teal-light); text-transform:uppercase; letter-spacing:.08em; margin-bottom:5px; }
+.nv-card-name { font-family:'Raleway',sans-serif; font-size:.95rem; font-weight:800; color:#fff; margin-bottom:4px; line-height:1.3; }
+.nv-card-price { font-family:'Raleway',sans-serif; font-size:1.1rem; font-weight:900; color:var(--teal-light); }
+@media(max-width:900px){ .nv-card { flex:0 0 calc(50% - 10px); } }
+@media(max-width:600px){ .nv-card { flex:0 0 calc(100%); } }
+</style>
+
+<script>
+(function(){
+  const nouveautes = [
+    { cat:'Socles & Tables', name:'Socle de Table Inox SMI 01', price:'150 DT', img:'images/socle%20table/scole%20table%20inoxe%20smi%2001%20.jpg',   link:'catalogue.html?cat=socle' },
+    { cat:'Socles & Tables', name:'Socle de Table Inox SMI 04', price:'280 DT', img:'images/socle%20table/socle%20de%20table%20inoxe%20smi%2004.jpg',   link:'catalogue.html?cat=socle' },
+    { cat:'Socles & Tables', name:'Socle de Table Inox SMI 05', price:'280 DT', img:'images/socle%20table/socle%20de%20table%20inoxe%20smi%2005.jpg',   link:'catalogue.html?cat=socle' },
+    { cat:'Socles & Tables', name:'Socle de Table Bas Inox SMI 06', price:'180 DT', img:'images/socle%20table/socle%20table%20bas%20inox%20smi%2006.jpg', link:'catalogue.html?cat=socle' },
+    { cat:'Socles & Tables', name:'Socle de Table Inox SMI 02', price:'150 DT', img:'images/socle%20table/socle%20table%20inox%20smi%2002%20.jpg',      link:'catalogue.html?cat=socle' },
+    { cat:'Socles & Tables', name:'Socle de Table Inox SMI 03', price:'300 DT', img:'images/socle%20table/socle%20table%20inox%20smi%2003%20.jpg',      link:'catalogue.html?cat=socle' },
+    { cat:'Colles & Adhésifs', name:'Colle 4.5 L',              price:'80 DT',  img:'images/colle/colle%204.5L.jpg',                                     link:'catalogue.html?cat=colle' },
+    { cat:'Colles & Adhésifs', name:'Colle Vinylique 5 kg',     price:'48 DT',  img:'images/colle/colle%205kg.jpg',                                      link:'catalogue.html?cat=colle' },
+    { cat:'Colles & Adhésifs', name:'Colle Contact Néoprène 1 kg', price:'15 DT', img:'images/colle/colle%20de%20contact%20liquide%201kg%20n%C3%A9opr%C3%A8ne.jpg', link:'catalogue.html?cat=colle' },
+  ];
+
+  const track = document.getElementById('nv-track');
+  const dotsEl = document.getElementById('nv-dots');
+  let current = 0;
+  const visibleCount = () => window.innerWidth <= 600 ? 1 : window.innerWidth <= 900 ? 2 : 3;
+
+  // Générer les cartes
+  nouveautes.forEach((p,i) => {
+    const card = document.createElement('div');
+    card.className = 'nv-card';
+    card.onclick = () => window.location.href = p.link;
+    card.innerHTML = `<div class="nv-card-img"><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem;opacity:.3\\'>📦</div>'"><span class="nv-badge">Nouveau</span></div>
+    <div class="nv-card-body"><div class="nv-card-cat">${p.cat}</div><div class="nv-card-name">${p.name}</div><div class="nv-card-price" style="margin-top:10px">${p.price}</div></div>`;
+    track.appendChild(card);
+  });
+
+  // Dots
+  const totalSlides = () => Math.max(0, nouveautes.length - visibleCount() + 1);
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for(let i=0;i<totalSlides();i++){
+      const d=document.createElement('button');
+      d.style.cssText=`width:${i===current?'22px':'8px'};height:8px;border-radius:50px;border:none;background:${i===current?'var(--teal)':'rgba(255,255,255,.3)'};cursor:pointer;transition:.3s`;
+      d.onclick=()=>goTo(i);
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function goTo(idx) {
+    const n = totalSlides();
+    current = Math.max(0, Math.min(idx, n-1));
+    const cardW = track.children[0]?.offsetWidth + 20 || 0;
+    track.scrollLeft = current * cardW;
+    buildDots();
+  }
+
+  window.nvSlide = (dir) => goTo(current + dir);
+
+  buildDots();
+
+  // Auto-slide toutes les 3.5s
+  let timer = setInterval(() => goTo(current + 1 < totalSlides() ? current + 1 : 0), 3500);
+  track.addEventListener('mouseenter', () => clearInterval(timer));
+  track.addEventListener('mouseleave', () => { timer = setInterval(() => goTo(current + 1 < totalSlides() ? current + 1 : 0), 3500); });
+  window.addEventListener('resize', buildDots);
+})();
+</script>
+
 <!-- ===================== VITRINE ANIMÉE ===================== -->
 <section class="vitrine-section" id="vitrine">
   <div class="vitrine-header">
