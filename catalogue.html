@@ -2779,13 +2779,14 @@ function openModal(pid, catId) {
       <table class="var-table" style="margin-bottom:22px">
         <thead><tr><th>Variante</th><th>Prix</th><th>Stock</th></tr></thead>
         <tbody>
-          ${(p.variants||[p.price]).map(v => {
+          ${(p.variants||[p.price]).map((v, vIdx) => {
             const vPrice = extractVariantPrice(v) || (p.price !== 'À confirmer' && p.price !== 'Sur devis' ? p.price : null);
+            const varStockId = `${p.id}-v${vIdx}`;
             return `
             <tr onclick="document.getElementById('modalVariant').value='${v}';updateModalVariantPrice()" style="cursor:pointer">
               <td style="font-weight:500">${v}</td>
               <td class="price-cell">${vPrice ? vPrice : '<span style="color:var(--gray-400);font-style:italic">Sur devis</span>'}</td>
-              <td><span class="stock-dot in-stock"></span>En stock</td>
+              <td><div class="stock-wrap" data-stock-id="${varStockId}" style="display:inline-flex;align-items:center;gap:4px"></div></td>
             </tr>`;
           }).join('')}
         </tbody>
@@ -2806,6 +2807,7 @@ function openModal(pid, catId) {
     : detailHTML) + reviewsHTML + similarHTML;
   document.getElementById('modalOverlay').classList.add('open');
   updateModalVariantPrice();
+  if (window.Stock) Stock.refreshAll();
   loadProductReviews(p.id, p.name);
 }
 
