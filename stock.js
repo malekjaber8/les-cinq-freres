@@ -68,10 +68,10 @@ const Stock = {
       return '<span class="stock-badge stock-none">—</span>';
     }
     if (qty === 0) {
-      return '<span class="stock-badge stock-out">Rupture de stock</span>';
+      return '<span class="stock-badge stock-out">✕ Rupture</span>';
     }
     if (qty <= 5) {
-      return `<span class="stock-badge stock-low">⚠ Stock faible (${qty})</span>`;
+      return `<span class="stock-badge stock-low">⚠ Limité</span>`;
     }
     return `<span class="stock-badge stock-ok">✓ En stock</span>`;
   },
