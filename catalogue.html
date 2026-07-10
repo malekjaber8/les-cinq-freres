@@ -1414,10 +1414,20 @@ const catalogue = {
   const flat = [];
   Object.entries(catalogue).forEach(([catId, cat]) => {
     const icon = cat.icon || '📦';
-    // Produits standard
+    // Produits standard — un entry par variante pour permettre le choix couleur dans dashboard
     if (Array.isArray(cat.products) && cat.products.length) {
       cat.products.forEach(p => {
-        flat.push({ code:p.id, name:p.name, price:p.price||'', priceNum:parsePrice(p.price), icon, variant:(p.variants||[''])[0]||'' });
+        const variants = p.variants && p.variants.length ? p.variants : [''];
+        if (variants.length <= 1) {
+          flat.push({ code:p.id, name:p.name, price:p.price||'', priceNum:parsePrice(p.price), icon, variant:variants[0]||'' });
+        } else {
+          // Plusieurs variantes : une entrée par couleur/variante
+          variants.forEach((v, vi) => {
+            const vPrice = parsePrice(v) || parsePrice(p.price);
+            const vPriceStr = vPrice > 0 ? vPrice.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : p.price||'';
+            flat.push({ code:p.id + (vi > 0 ? '-v'+vi : ''), name:p.name, price:vPriceStr, priceNum:vPrice, icon, variant:v });
+          });
+        }
       });
     }
     // Tissus
