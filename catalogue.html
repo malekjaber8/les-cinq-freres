@@ -324,9 +324,14 @@
     }
 
     /* Variants table */
-    .var-table { width:100%; border-collapse:collapse; margin-top:12px; }
-    .var-table th { text-align:left; font-size:.75rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.06em; padding:10px 12px; background:var(--gray-50); }
-    .var-table td { padding:10px 12px; font-size:.85rem; border-top:1px solid var(--gray-100); }
+    .var-table { width:100%; border-collapse:collapse; margin-top:12px; table-layout:fixed; }
+    .var-table th { text-align:left; font-size:.72rem; font-weight:700; color:var(--gray-600); text-transform:uppercase; letter-spacing:.06em; padding:8px 10px; background:var(--gray-50); white-space:nowrap; overflow:hidden; }
+    .var-table th:nth-child(1) { width:50%; }
+    .var-table th:nth-child(2) { width:22%; }
+    .var-table th:nth-child(3) { width:28%; }
+    .var-table td { padding:8px 10px; font-size:.82rem; border-top:1px solid var(--gray-100); overflow:hidden; }
+    .var-table td:nth-child(1) { font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .var-table td:nth-child(2) { white-space:nowrap; }
     .var-table tr:hover td { background:rgba(43,190,200,.04); }
     .price-cell { font-weight:700; color:var(--navy-dark); }
     .stock-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
