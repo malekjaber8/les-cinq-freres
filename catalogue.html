@@ -698,6 +698,46 @@
   <div id="lb-caption"></div>
 </div>
 
+<!-- ===== JERSEY CHOICE MODAL ===== -->
+<div id="jerseyOverlay" style="display:none;position:fixed;inset:0;background:rgba(18,47,75,.6);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(6px)" onclick="if(event.target===this)closeJerseyModal()">
+  <div style="background:#fff;border-radius:20px;padding:0;max-width:460px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark));padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(43,190,200,.9);margin-bottom:3px">Matelas Mousse</div>
+        <div id="jerseyModalTitle" style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:900;color:#fff"></div>
+      </div>
+      <button onclick="closeJerseyModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Body -->
+    <div style="padding:24px">
+      <div style="font-size:.9rem;font-weight:700;color:var(--navy-dark);margin-bottom:16px;text-align:center">Souhaitez-vous ajouter un habillage Jersey ?</div>
+
+      <!-- Option Sans Jersey -->
+      <div id="jerseyOpt0" onclick="selectJerseyOpt(false)" style="border:2.5px solid var(--gray-200);border-radius:14px;padding:16px 18px;cursor:pointer;margin-bottom:12px;transition:.2s;display:flex;align-items:center;gap:14px" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="if(!this.classList.contains('jersey-selected'))this.style.borderColor='var(--gray-200)'">
+        <span style="font-size:1.8rem">🛏️</span>
+        <div>
+          <div style="font-weight:700;color:var(--navy-dark);font-size:.92rem">Sans Jersey</div>
+          <div style="font-size:.78rem;color:var(--gray-600);margin-top:2px">Matelas brut, sans habillage</div>
+        </div>
+        <div id="jerseyPrice0" style="margin-left:auto;font-family:'Raleway',sans-serif;font-weight:900;color:var(--navy-dark);font-size:.95rem"></div>
+      </div>
+
+      <!-- Option Avec Jersey -->
+      <div id="jerseyOpt1" onclick="selectJerseyOpt(true)" style="border:2.5px solid var(--gray-200);border-radius:14px;padding:16px 18px;cursor:pointer;margin-bottom:20px;transition:.2s;display:flex;align-items:center;gap:14px" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="if(!this.classList.contains('jersey-selected'))this.style.borderColor='var(--gray-200)'">
+        <span style="font-size:1.8rem">🧵</span>
+        <div style="flex:1">
+          <div style="font-weight:700;color:var(--navy-dark);font-size:.92rem">Avec Jersey <span style="background:var(--teal);color:#fff;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:50px;margin-left:6px">+15,000 DT</span></div>
+          <div style="font-size:.78rem;color:var(--gray-600);margin-top:2px;line-height:1.4">Tissu maille extensible qui recouvre le matelas — confort et protection</div>
+        </div>
+        <div id="jerseyPrice1" style="margin-left:auto;font-family:'Raleway',sans-serif;font-weight:900;color:var(--teal-dark);font-size:.95rem"></div>
+      </div>
+
+      <button id="jerseyConfirmBtn" onclick="confirmJerseyCart()" style="width:100%;padding:15px;background:linear-gradient(135deg,var(--teal),var(--navy-light));border:none;border-radius:12px;color:#fff;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(43,190,200,.3)" disabled>Choisir une option ↑</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== PRODUCT DETAIL MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
@@ -2209,23 +2249,65 @@ function fillDim(typeId, dim) {
   showToast('info', 'Dimension sélectionnée', dim + ' — ajustez la quantité et ajoutez au panier.');
 }
 
+/* ── Données en attente pour la fenêtre jersey ── */
+let _jerseyPending = null;
+let _jerseySelected = null;
+
 function addMousseToCart(typeId, dim, prix, code) {
   const cat = catalogue['mousse-matelas'];
   const t   = cat.types.find(x => x.id === typeId);
-  const withJersey = document.getElementById('mousse-jersey-opt')?.checked;
-  const jerseyPrice = withJersey ? 15 : 0;
-  const finalPrix = prix + jerseyPrice;
+  // Ouvrir la fenêtre de choix jersey
+  _jerseyPending = { typeId, dim, prix, code, label: t ? t.label : typeId };
+  _jerseySelected = null;
+  document.getElementById('jerseyModalTitle').textContent = (t ? t.label : typeId) + ' — ' + dim + ' cm';
+  document.getElementById('jerseyPrice0').textContent = prix.toFixed(3) + ' DT';
+  document.getElementById('jerseyPrice1').textContent = (prix + 15).toFixed(3) + ' DT';
+  document.getElementById('jerseyOpt0').style.borderColor = 'var(--gray-200)';
+  document.getElementById('jerseyOpt1').style.borderColor = 'var(--gray-200)';
+  document.getElementById('jerseyOpt0').classList.remove('jersey-selected');
+  document.getElementById('jerseyOpt1').classList.remove('jersey-selected');
+  document.getElementById('jerseyConfirmBtn').disabled = true;
+  document.getElementById('jerseyConfirmBtn').textContent = 'Choisir une option ↑';
+  document.getElementById('jerseyOverlay').style.display = 'flex';
+}
+
+function selectJerseyOpt(withJersey) {
+  _jerseySelected = withJersey;
+  const opt0 = document.getElementById('jerseyOpt0');
+  const opt1 = document.getElementById('jerseyOpt1');
+  opt0.classList.remove('jersey-selected'); opt0.style.borderColor = 'var(--gray-200)'; opt0.style.background = '#fff';
+  opt1.classList.remove('jersey-selected'); opt1.style.borderColor = 'var(--gray-200)'; opt1.style.background = '#fff';
+  const sel = withJersey ? opt1 : opt0;
+  sel.classList.add('jersey-selected');
+  sel.style.borderColor = 'var(--teal)';
+  sel.style.background = 'rgba(43,190,200,.05)';
+  const btn = document.getElementById('jerseyConfirmBtn');
+  btn.disabled = false;
+  btn.textContent = '🛒 Ajouter au Panier — ' + (_jerseyPending.prix + (withJersey ? 15 : 0)).toFixed(3) + ' DT';
+}
+
+function confirmJerseyCart() {
+  if (!_jerseyPending || _jerseySelected === null) return;
+  const { typeId, dim, prix, code, label } = _jerseyPending;
+  const withJersey = _jerseySelected;
+  const finalPrix = prix + (withJersey ? 15 : 0);
   Cart.add({
     productId: 'matelas-' + typeId + '-' + dim.replace(/×/g,'x') + (withJersey?'-jersey':''),
     code:      code || '',
     catId:     'mousse-matelas',
-    name:      'Matelas Mousse ' + (t ? t.label : typeId),
-    variant:   dim + ' cm' + (withJersey ? ' — Avec Jersey' : ''),
+    name:      'Matelas Mousse ' + label,
+    variant:   dim + ' cm' + (withJersey ? ' — Avec Jersey' : ' — Sans Jersey'),
     price:     finalPrix.toFixed(3) + ' DT',
     priceNum:  finalPrix,
     qty:       1,
     icon:      '🛏️'
   });
+  closeJerseyModal();
+}
+
+function closeJerseyModal() {
+  document.getElementById('jerseyOverlay').style.display = 'none';
+  _jerseyPending = null; _jerseySelected = null;
 }
 
 function clearDims() {
