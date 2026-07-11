@@ -2070,6 +2070,8 @@
     const livree    = orders.filter(o => (o.status||o.statut||'') === 'Livrée').length;
 
     const totalDT = orders.reduce((sum, o) => {
+      const statut = (o.status||o.statut||'').toLowerCase();
+      if (statut === 'annulée' || statut === 'annulee' || statut === 'annulé') return sum;
       const t = parseFloat(String(o.totalDT||o.total||'0').replace(/[^\d.]/g,'')) || 0;
       return sum + t;
     }, 0);
