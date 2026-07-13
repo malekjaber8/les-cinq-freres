@@ -200,10 +200,12 @@ const Cart = {
       </div>`;
     }).join('');
 
-    const LIVRAISON = parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
+    const GROS_CATS = ['mousse-matelas', 'mousse-tabka', 'ressort'];
+    const grosArticle = items.some(i => GROS_CATS.includes(i.catId));
+    const LIVRAISON = grosArticle ? 0 : parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
     const subTotal  = items.reduce((s, i) => s + (i.priceNum * i.qty), 0);
-    const total     = subTotal > 0 ? subTotal + LIVRAISON : 0;
-    const livraisonStr = LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    const total     = (!grosArticle && subTotal > 0) ? subTotal + LIVRAISON : 0;
+    const livraisonStr = grosArticle ? 'Sur devis' : (LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT');
     footer.innerHTML = `
       <div style="background:var(--gray-50);border-radius:var(--radius);padding:10px 14px;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:.83rem;margin-bottom:6px">
@@ -216,7 +218,7 @@ const Cart = {
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--gray-200);padding-top:8px">
           <span style="font-size:.88rem;font-weight:700;color:var(--navy-dark)">Total TTC</span>
-          <span style="font-family:'Raleway',sans-serif;font-size:1.15rem;font-weight:800;color:var(--navy-dark)">${total > 0 ? total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis'}</span>
+          <span style="font-family:'Raleway',sans-serif;font-size:1.15rem;font-weight:800;color:var(--navy-dark)">${(!grosArticle && total > 0) ? total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis'}</span>
         </div>
       </div>
       <a href="panier.html" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:linear-gradient(135deg,var(--teal),var(--navy-light));color:var(--white);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;text-decoration:none;margin-bottom:8px;box-shadow:0 4px 16px rgba(43,190,200,.3)">
