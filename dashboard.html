@@ -1868,7 +1868,7 @@
       const status = o.status || 'En attente';
       const sc     = statusStyle[status] || statusStyle['En attente'];
       const items  = Array.isArray(o.items) ? o.items : [];
-      const total  = o.total ? (typeof o.total === 'number' ? o.total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) : o.total) : '—';
+      const total  = o.livraisonSurDevis ? 'Sur devis' : (o.total ? (typeof o.total === 'number' ? o.total.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) : o.total) : '—');
 
       return `
       <div style="background:#fff;border:1px solid var(--gray-100);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)">
@@ -1898,7 +1898,7 @@
         <!-- Pied -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div style="font-size:.78rem;color:var(--gray-500)">${items.length} article${items.length!==1?'s':''} • Livraison à ${o.city||'—'}</div>
-          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total} DT</div>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total === 'Sur devis' ? total : total + ' DT'}</div>
         </div>
       </div>`;
     }).join('');
@@ -1996,7 +1996,7 @@
   function showNewOrderNotification(order) {
     const clientName = order.clientName || order.nom || order.name || 'Nouveau client';
     const city       = order.city || order.ville || '';
-    const total      = order.totalDT || order.total || '—';
+    const total      = order.livraisonSurDevis ? 'Sur devis' : (order.totalDT || order.total || '—');
     const items      = Array.isArray(order.items) ? order.items : [];
     const itemsText  = items.slice(0,3).map(i => `• ${i.name||'Article'}${i.qty>1?' ×'+i.qty:''}`).join('\n');
 
@@ -2033,7 +2033,7 @@
           <div style="font-weight:800;font-size:.92rem;color:#1B4E7A;margin-bottom:2px">Nouvelle commande !</div>
           <div style="font-size:.82rem;font-weight:700;color:#0d9488">${clientName}${city?' — '+city:''}</div>
           ${itemsText ? `<div style="font-size:.75rem;color:#64748b;margin-top:5px;white-space:pre-line">${itemsText}${items.length>3?`\n• +${items.length-3} autre(s)`:''}</div>` : ''}
-          <div style="font-size:.85rem;font-weight:800;color:#1B4E7A;margin-top:6px">${typeof total === 'number' ? total.toLocaleString('fr-TN',{minimumFractionDigits:3}) : total} DT</div>
+          <div style="font-size:.85rem;font-weight:800;color:#1B4E7A;margin-top:6px">${total === 'Sur devis' ? total : (typeof total === 'number' ? total.toLocaleString('fr-TN',{minimumFractionDigits:3}) : total) + ' DT'}</div>
         </div>
         <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:#94a3b8;padding:0;line-height:1;flex-shrink:0">✕</button>
       </div>
@@ -2053,7 +2053,7 @@
     // 3. Notification navigateur (fonctionne même si l'onglet est en arrière-plan)
     if ('Notification' in window && Notification.permission === 'granted') {
       const notif = new Notification('🛒 Nouvelle commande — Les Cinq Frères', {
-        body: `Client : ${clientName}${city?' ('+city+')':''}\nMontant : ${total} DT${itemsText?'\n'+itemsText:''}`,
+        body: `Client : ${clientName}${city?' ('+city+')':''}\nMontant : ${total === 'Sur devis' ? total : total + ' DT'}${itemsText?'\n'+itemsText:''}`,
         icon: 'logo.png',
         badge: 'logo.png',
         tag: 'new-order-' + (order._id || order.id || Date.now()),
@@ -2146,7 +2146,7 @@
     const clientName = o.clientName || o.nom || o.name || '—';
     const phone      = o.phone      || o.tel  || '—';
     const city       = o.city       || o.ville|| '—';
-    const total      = o.totalDT    || o.total|| '—';
+    const total      = o.livraisonSurDevis ? 'Sur devis' : (o.totalDT || o.total || '—');
     const orderId    = o._id        || o.id   || '—';
     const dateStr    = o.date || (o.dateTs ? new Date(o.dateTs.toMillis ? o.dateTs.toMillis() : o.dateTs).toLocaleDateString('fr-FR') : '—');
 
@@ -2203,7 +2203,7 @@
           <button onclick="requestDeleteOrder('${safeId}')" style="padding:7px 14px;background:#e53e3e;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer">
             🗑️ Supprimer
           </button>
-          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total} DT</div>
+          <div style="font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy-dark)">${total === 'Sur devis' ? total : total + ' DT'}</div>
         </div>
       </div>
     </div>`;

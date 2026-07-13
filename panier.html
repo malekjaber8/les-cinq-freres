@@ -306,6 +306,7 @@
           <span class="lbl" style="display:flex;align-items:center;gap:5px">🚚 Frais de livraison</span>
           <span class="val" style="color:var(--teal-dark);font-weight:700" id="sum-livraison">9,000 DT</span>
         </div>
+        <div id="livraison-note" style="display:none;font-size:.72rem;color:var(--gray-500);margin:2px 0 8px;line-height:1.4">📐 Article volumineux — frais de livraison calculés sur devis, notre équipe vous contactera.</div>
         <div class="summary-total">
           <span class="lbl">Total TTC</span>
           <span class="val" id="sum-total">—</span>
@@ -680,8 +681,14 @@
     });
   }
 
+  const GROS_CATS = ['mousse-matelas', 'mousse-tabka', 'ressort'];
+
   function getLivraisonFee() {
     return parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
+  }
+
+  function cartHasGrosArticle(items) {
+    return (items || Cart.get()).some(i => GROS_CATS.includes(i.catId));
   }
 
   function renderCartPage(user) {
@@ -775,16 +782,18 @@
     </table>`;
 
     // Summary
-    const LIVRAISON = getLivraisonFee();
+    const grosArticle = cartHasGrosArticle(items);
+    const LIVRAISON = grosArticle ? 0 : getLivraisonFee();
     const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
     const discount  = computeDiscount(subTotal);
-    const totalNum  = subTotal > 0 ? Math.max(0, subTotal - discount) + LIVRAISON : 0;
+    const totalNum  = (!grosArticle && subTotal > 0) ? Math.max(0, subTotal - discount) + LIVRAISON : 0;
     const totalQty  = items.reduce((s,i) => s + i.qty, 0);
     document.getElementById('sum-count').textContent    = items.length;
     document.getElementById('sum-qty').textContent      = totalQty;
     document.getElementById('sum-subtotal').textContent = subTotal > 0 ? subTotal.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
-    document.getElementById('sum-livraison').textContent = LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    document.getElementById('sum-livraison').textContent = grosArticle ? 'Sur devis' : (LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT');
     document.getElementById('sum-total').textContent    = totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+    document.getElementById('livraison-note').style.display = grosArticle ? '' : 'none';
 
     const discRow = document.getElementById('sum-discount-row');
     if (_appliedPromo && discount > 0) {
@@ -870,7 +879,8 @@
       const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
       const orderId = 'ORD-5F-' + Date.now().toString().slice(-6);
 
-      const LIVRAISON = getLivraisonFee();
+      const grosArticle = cartHasGrosArticle(items);
+      const LIVRAISON = grosArticle ? 0 : getLivraisonFee();
       const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
       const discount  = computeDiscount(subTotal);
       const order = {
@@ -882,7 +892,8 @@
         discount:   discount,
         promoCode:  _appliedPromo ? _appliedPromo.code : null,
         livraison:  LIVRAISON,
-        total:      subTotal > 0 ? Math.max(0, subTotal - discount) + LIVRAISON : 0,
+        livraisonSurDevis: grosArticle,
+        total:      (!grosArticle && subTotal > 0) ? Math.max(0, subTotal - discount) + LIVRAISON : 0,
         status:     'En attente',
         date:       new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'}),
         dateTs:     Date.now(),
@@ -907,13 +918,14 @@
       // Notification Telegram admin
       (function sendTelegramNotif(o) {
         const lignes = (o.items||[]).map(i => `• ${i.icon||'📦'} ${i.name}${i.variant?' — '+i.variant:''}${i.qty>1?' ×'+i.qty:''} — ${i.price}`).join('\n');
-        const total  = ((o.subTotal||0) + (o.livraison||0)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3}) + ' DT';
+        const total  = o.livraisonSurDevis ? 'Sur devis' : (((o.subTotal||0) + (o.livraison||0)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3}) + ' DT');
+        const livraisonStr = o.livraisonSurDevis ? 'Sur devis' : ((o.livraison||0).toLocaleString('fr-TN',{minimumFractionDigits:3}) + ' DT');
         const msg = `🛒 <b>Nouvelle commande !</b>\n\n` +
           `👤 <b>${o.name||'—'}</b>\n` +
           `📞 ${o.phone||'—'}\n` +
           `📍 ${o.city||'—'}${o.address?' — '+o.address:''}\n\n` +
           `<b>Articles :</b>\n${lignes||'—'}\n\n` +
-          `🚚 Livraison : ${(o.livraison||0).toLocaleString('fr-TN',{minimumFractionDigits:3})} DT\n` +
+          `🚚 Livraison : ${livraisonStr}\n` +
           `💰 <b>Total : ${total}</b>\n\n` +
           `🔖 Ref : ${o.id}`;
         fetch('https://api.telegram.org/bot8811759366:AAHW7CKl1SAHiuhOwzZ9bkKVPjDC2xjQ-Lw/sendMessage', {
@@ -1126,12 +1138,13 @@
       </div>`;
     }).join('');
 
+    const livraisonSurDevis = !!o.livraisonSurDevis;
     const livraisonDT = o.livraison || getLivraisonFee();
     const subTotal    = typeof o.subTotal === 'number' ? o.subTotal : Math.max(0, (o.total||0) - livraisonDT);
     const totalNum    = subTotal > 0 ? subTotal + livraisonDT : 0;
     document.getElementById('receiptSubtotal').textContent  = subTotal > 0 ? fmtDT(subTotal) : 'Sur devis';
-    document.getElementById('receiptLivraison').textContent = fmtDT(livraisonDT);
-    document.getElementById('receiptTotal').textContent     = totalNum > 0 ? fmtDT(totalNum) : 'Sur devis';
+    document.getElementById('receiptLivraison').textContent = livraisonSurDevis ? 'Sur devis' : fmtDT(livraisonDT);
+    document.getElementById('receiptTotal').textContent     = livraisonSurDevis ? 'Sur devis' : (totalNum > 0 ? fmtDT(totalNum) : 'Sur devis');
   }
 
   /* ── Bon de Livraison ── */
@@ -1160,8 +1173,9 @@
 
     // Articles
     const items = Array.isArray(o.items) ? o.items : [];
+    const livraisonSurDevis = !!o.livraisonSurDevis;
     const livraisonDT = o.livraison || getLivraisonFee();
-    const livraisonStr = livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    const livraisonStr = livraisonSurDevis ? 'Sur devis' : (livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT');
     document.getElementById('bl-items').innerHTML = items.map((it) => {
       const pu    = it.priceNum > 0 ? it.priceNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : it.price || '—';
       const total = it.priceNum > 0 ? (it.priceNum * (it.qty||1)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : '—';
@@ -1187,7 +1201,7 @@
     const subTotal = typeof o.subTotal === 'number' ? o.subTotal : (typeof o.total === 'number' ? Math.max(0, o.total - livraisonDT) : 0);
     const totalNum = subTotal > 0 ? subTotal + livraisonDT : 0;
     document.getElementById('bl-total').textContent =
-      totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+      livraisonSurDevis ? 'Sur devis' : (totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis');
 
     document.getElementById('bonOverlay').classList.add('show');
   }
@@ -1226,8 +1240,9 @@
 
     // Articles
     const items = Array.isArray(o.items) ? o.items : [];
+    const livraisonSurDevis = !!o.livraisonSurDevis;
     const livraisonDT = o.livraison || getLivraisonFee();
-    const livraisonStr = livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    const livraisonStr = livraisonSurDevis ? 'Sur devis' : (livraisonDT.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT');
     document.getElementById('fac-items').innerHTML = items.map((it) => {
       const pu    = it.priceNum > 0 ? it.priceNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : it.price || '—';
       const total = it.priceNum > 0 ? (it.priceNum * (it.qty||1)).toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : '—';
@@ -1252,7 +1267,7 @@
     const subTotal = typeof o.subTotal === 'number' ? o.subTotal : (typeof o.total === 'number' ? Math.max(0, o.total - livraisonDT) : 0);
     const totalNum = subTotal > 0 ? subTotal + livraisonDT : 0;
     document.getElementById('fac-total').textContent =
-      totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+      livraisonSurDevis ? 'Sur devis' : (totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis');
 
     document.getElementById('facOverlay').classList.add('show');
   }
