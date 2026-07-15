@@ -432,11 +432,11 @@
       .prod-grid .prod-card {
         display:grid !important;
         grid-template-columns:100px 1fr !important;
-        grid-template-rows:1fr auto !important;
+        grid-template-rows:1fr auto auto !important;
         min-height:110px;
       }
       .prod-grid .prod-card-img {
-        grid-column:1; grid-row:1/3;
+        grid-column:1; grid-row:1/4;
         width:100px !important; height:100% !important; min-height:110px;
         flex-shrink:0; border-radius:0;
       }
@@ -444,9 +444,12 @@
         grid-column:2; grid-row:1;
         padding:10px 12px 6px; min-width:0;
       }
-      .prod-grid .stock-wrap { display:none !important; }
-      .prod-grid .prod-card-footer {
+      .prod-grid .stock-wrap {
         grid-column:2; grid-row:2;
+        padding:0 12px 4px !important;
+      }
+      .prod-grid .prod-card-footer {
+        grid-column:2; grid-row:3;
         border-top:1px solid var(--gray-100); border-left:none;
         flex-direction:row; align-items:center; justify-content:space-between;
         padding:8px 12px; gap:8px;
