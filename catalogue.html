@@ -2784,7 +2784,7 @@ const toolCategories = [
     {code:'OUT024', name:'Cordon Moyen',         ref:'', price:'22,000 DT', img:'images/outil%20de%20tapissserie/cordon%20moyen%20.jpg'},
   ]},
   { icon:'🧻', name:'TNT (Toile Non Tissée)', desc:'Toile non tissée pour doublure et renfort — vendue au rouleau ou au mètre', items:[
-    {code:'OUT027', name:'TNT — Toile Non Tissée', ref:'Largeur 1m', price:'3,200 DT', img:'images/outil%20de%20tapissserie/tnt.jpg',
+    {code:'OUT027', name:'TNT — Toile Non Tissée', ref:'Largeur 1m — Disponible en Noir et Blanc', price:'3,200 DT', img:'images/outil%20de%20tapissserie/tnt.jpg',
       tnt:true, tntMeterPrice:3.200, tntRollPrice:300.000, tntRollLength:100},
   ]},
 ];
@@ -3153,7 +3153,21 @@ function openTntChoice(catIdx, itemIdx) {
   popup.innerHTML = `
     <div style="background:#fff;border-radius:16px;padding:24px;max-width:380px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);font-family:Poppins,Arial,sans-serif">
       <div style="font-size:2rem;text-align:center;margin-bottom:8px">🧻</div>
-      <div style="font-weight:800;font-size:1rem;color:#1B4E7A;text-align:center;margin-bottom:18px">${item.name}</div>
+      <div style="font-weight:800;font-size:1rem;color:#1B4E7A;text-align:center;margin-bottom:16px">${item.name}</div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:8px">🎨 Couleur</div>
+        <div style="display:flex;gap:10px">
+          <div id="tnt-color-noir" onclick="selectTntColor('Noir')" style="flex:1;display:flex;align-items:center;gap:8px;border:2px solid var(--teal);background:rgba(43,190,200,.06);border-radius:10px;padding:10px 12px;cursor:pointer">
+            <span style="width:18px;height:18px;border-radius:50%;background:#1a1a1a;border:1px solid #ccc;flex-shrink:0"></span>
+            <span style="font-size:.85rem;font-weight:600;color:var(--navy-dark)">Noir</span>
+          </div>
+          <div id="tnt-color-blanc" onclick="selectTntColor('Blanc')" style="flex:1;display:flex;align-items:center;gap:8px;border:2px solid var(--gray-200);border-radius:10px;padding:10px 12px;cursor:pointer">
+            <span style="width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #ccc;flex-shrink:0"></span>
+            <span style="font-size:.85rem;font-weight:600;color:var(--navy-dark)">Blanc</span>
+          </div>
+        </div>
+      </div>
 
       <div id="tnt-opt-metre" onclick="selectTntOpt('metre')" style="border:2px solid var(--teal);background:rgba(43,190,200,.06);border-radius:12px;padding:14px 16px;margin-bottom:12px;cursor:pointer">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -3188,8 +3202,21 @@ function openTntChoice(catIdx, itemIdx) {
   document.body.appendChild(popup);
   popup.addEventListener('click', e => { if (e.target === popup) popup.remove(); });
   popup.dataset.selected = 'metre';
+  popup.dataset.color = 'Noir';
   popup.dataset.meterPrice = item.tntMeterPrice;
   updateTntTotal();
+}
+
+function selectTntColor(color) {
+  const popup = document.getElementById('tnt-choice-popup');
+  if (!popup) return;
+  popup.dataset.color = color;
+  const noirBox  = document.getElementById('tnt-color-noir');
+  const blancBox = document.getElementById('tnt-color-blanc');
+  noirBox.style.borderColor  = color === 'Noir'  ? 'var(--teal)' : 'var(--gray-200)';
+  noirBox.style.background   = color === 'Noir'  ? 'rgba(43,190,200,.06)' : 'transparent';
+  blancBox.style.borderColor = color === 'Blanc' ? 'var(--teal)' : 'var(--gray-200)';
+  blancBox.style.background  = color === 'Blanc' ? 'rgba(43,190,200,.06)' : 'transparent';
 }
 
 function selectTntOpt(opt) {
@@ -3220,6 +3247,7 @@ function confirmTntCart(catIdx, itemIdx) {
   const item   = tc.items[itemIdx];
   const popup  = document.getElementById('tnt-choice-popup');
   const opt    = popup ? popup.dataset.selected : 'metre';
+  const color  = popup ? popup.dataset.color : 'Noir';
 
   if (opt === 'rouleau') {
     Cart.add({
@@ -3227,7 +3255,7 @@ function confirmTntCart(catIdx, itemIdx) {
       code:      item.code,
       catId:     'outils',
       name:      item.name,
-      variant:   `Rouleau complet ${item.tntRollLength}m`,
+      variant:   `${color} — Rouleau complet ${item.tntRollLength}m`,
       price:     item.tntRollPrice.toLocaleString('fr-TN',{minimumFractionDigits:3,useGrouping:false}) + ' DT',
       priceNum:  item.tntRollPrice,
       qty:       1,
@@ -3240,7 +3268,7 @@ function confirmTntCart(catIdx, itemIdx) {
       code:      item.code,
       catId:     'outils',
       name:      item.name,
-      variant:   'Au mètre',
+      variant:   `${color} — Au mètre`,
       price:     item.tntMeterPrice.toLocaleString('fr-TN',{minimumFractionDigits:3,useGrouping:false}) + ' DT/m',
       priceNum:  item.tntMeterPrice,
       qty:       qty,
