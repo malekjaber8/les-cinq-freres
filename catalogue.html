@@ -3086,8 +3086,8 @@ function similarProductsHTML(p, cat, catId) {
 
 /* ── Extrait le prix propre à une variante, ex: "Gold — 12cm — 7,500 DT" -> "7,500 DT" ── */
 function extractVariantPrice(v) {
-  const m = String(v||'').match(/([\d]+(?:[.,]\d+)?)\s*DT/);
-  return m ? (m[1] + ' DT') : null;
+  const m = String(v||'').match(/([\d]+(?:[.,]\d+)?)\s*(DT|TND)/i);
+  return m ? (m[1] + ' ' + m[2].toUpperCase()) : null;
 }
 
 /* ── Met à jour le prix affiché selon la variante choisie dans la modale ── */
