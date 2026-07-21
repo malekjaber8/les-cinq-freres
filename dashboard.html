@@ -782,8 +782,8 @@
           return;
         }
         currentUser = user;
-        renderUI();
         initPresenceListener();
+        renderUI();
       });
     }
 
@@ -903,7 +903,7 @@
     if (id === 'home')          document.querySelectorAll('.s-link')[0].classList.add('active');
     if (id === 'fiche')         document.querySelectorAll('.s-link')[1].classList.add('active');
     if (id === 'mes-commandes') document.querySelectorAll('.s-link')[3].classList.add('active');
-    if (id === 'admin-orders')  document.getElementById('adminOrdersLink').classList.add('active');
+    if (id === 'admin-orders')  document.getElementById('navAdminOrders').classList.add('active');
 
     if (id === 'admin-orders') {
       document.getElementById('adminOrdersBadge').style.display = 'none';
