@@ -455,6 +455,13 @@
           </div>
         </div>
 
+        <!-- Visiteurs en ligne (temps réel) -->
+        <div style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#0f766e,#0d9488);border-radius:50px;padding:10px 20px;margin-bottom:16px">
+          <span style="width:10px;height:10px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+          <span id="liveVisitorCount" style="font-size:1.2rem;font-weight:800;color:#fff">—</span>
+          <span style="font-size:.8rem;color:rgba(255,255,255,.85)">visiteur(s) en ligne maintenant</span>
+        </div>
+
         <!-- Stats rapides -->
         <div id="ordersStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px"></div>
 
@@ -776,6 +783,7 @@
         }
         currentUser = user;
         renderUI();
+        initPresenceListener();
       });
     }
 
@@ -2061,6 +2069,32 @@
       });
       notif.onclick = () => { window.focus(); showSection('admin-orders'); notif.close(); };
     }
+  }
+
+  /* ── Visiteurs en ligne (temps réel) ── */
+  let _presenceDocs = [];
+
+  function renderLiveVisitors() {
+    const el = document.getElementById('liveVisitorCount');
+    if (!el) return;
+    const now = Date.now();
+    const active = _presenceDocs.filter(d => d.lastSeen && (now - d.lastSeen.toMillis()) < 45000).length;
+    el.textContent = active;
+  }
+
+  function initPresenceListener() {
+    if (typeof db === 'undefined') return;
+    db.collection('presence').onSnapshot(snap => {
+      _presenceDocs = snap.docs.map(d => d.data());
+      renderLiveVisitors();
+      // Nettoyage opportuniste : supprime les sessions vieilles de +24h
+      const dayAgo = Date.now() - 24*60*60*1000;
+      snap.docs.forEach(d => {
+        const data = d.data();
+        if (data.lastSeen && data.lastSeen.toMillis() < dayAgo) d.ref.delete().catch(() => {});
+      });
+    }, err => console.warn('Presence listener:', err.message));
+    setInterval(renderLiveVisitors, 5000);
   }
 
   function updateOrdersStats(orders) {
