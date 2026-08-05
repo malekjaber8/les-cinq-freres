@@ -1709,25 +1709,31 @@
     order.subTotal  = subTotal;
     order.total     = subTotal + livraison;
 
-    // Mise à jour localStorage
+    // Mise à jour localStorage (sauvegarde optimiste locale)
     const allOrders = JSON.parse(localStorage.getItem('5f_orders') || '[]');
     const idx = allOrders.findIndex(o => (o._id || o.id) === orderId);
     if (idx > -1) allOrders[idx] = order;
     localStorage.setItem('5f_orders', JSON.stringify(allOrders));
 
-    // Mise à jour Firestore
+    closeEditOrderModal();
+    renderAdminOrders(_allOrders);
+
+    // Mise à jour Firestore — source de vérité, le toast reflete le vrai resultat
     if (typeof db !== 'undefined') {
       db.collection('orders').doc(orderId).update({
         items:     order.items,
         livraison: order.livraison,
         subTotal:  order.subTotal,
         total:     order.total,
-      }).catch(e => console.warn('saveOrderEdit:', e.message));
+      }).then(() => {
+        if (typeof showToast === 'function') showToast('success','Modifications enregistrées','La commande a été mise à jour.');
+      }).catch(e => {
+        console.error('saveOrderEdit ECHEC Firestore:', e.message);
+        if (typeof showToast === 'function') showToast('error','Erreur de sauvegarde', 'La modification n\'a pas été enregistrée sur le serveur (' + e.message + '). Reconnectez-vous en admin et réessayez.', 8000);
+      });
+    } else {
+      if (typeof showToast === 'function') showToast('success','Modifications enregistrées (local)','La commande a été mise à jour localement.');
     }
-
-    closeEditOrderModal();
-    if (typeof showToast === 'function') showToast('success','Modifications enregistrées','La commande a été mise à jour.');
-    renderAdminOrders(_allOrders);
   }
 
   function searchOrders(q) {
