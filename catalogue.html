@@ -1761,6 +1761,18 @@ function renderProductList(content, cat) {
   content.innerHTML = html;
 }
 
+/* ── Bloque l'ajout au panier si l'article est marqué "Rupture" (qty 0) ── */
+function isOutOfStock(stockId) {
+  return typeof Stock !== 'undefined' && Stock.get(stockId) === 0;
+}
+function blockIfOutOfStock(stockId) {
+  if (isOutOfStock(stockId)) {
+    showToast('error', '✕ Rupture de stock', 'Cet article est actuellement indisponible. Il redeviendra "En stock" dès que nous serons réapprovisionnés.');
+    return true;
+  }
+  return false;
+}
+
 function productCard(p, catId) {
   const cat = catalogue[catId] || {};
   const icon = cat.icon || '📦';
@@ -1788,7 +1800,7 @@ function productCard(p, catId) {
     ? `<button class="add-btn" title="Choisir une variante"
         onclick="event.stopPropagation();openModal('${p.id}','${catId}')">🛒 Ajouter</button>`
     : `<button class="add-btn" title="Ajouter au panier"
-        onclick="event.stopPropagation();Cart.add({productId:'${p.id}',code:'${p.id}',catId:'${catId}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${firstVariant}',price:'${p.price}',priceNum:${priceNum},qty:1,icon:'${icon}'})">🛒 Ajouter</button>`;
+        onclick="event.stopPropagation();if(!blockIfOutOfStock('${p.id}'))Cart.add({productId:'${p.id}',code:'${p.id}',catId:'${catId}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${firstVariant}',price:'${p.price}',priceNum:${priceNum},qty:1,icon:'${icon}'})">🛒 Ajouter</button>`;
 
   return `<div class="prod-card" onclick="openModal('${p.id}','${catId}')">
     <div class="prod-card-img"${imgBg}>
@@ -1818,6 +1830,7 @@ function productCard(p, catId) {
 }
 
 function confirmRouleauOAT(id, catId, name, price, variant, icon) {
+  if (blockIfOutOfStock(id)) return;
   const existing = document.getElementById('rouleau-oat-popup');
   if (existing) existing.remove();
   const popup = document.createElement('div');
@@ -2014,6 +2027,7 @@ function addTissuToCart() {
   const code = window._currentTissuColoris;
   if (!col) return;
   if (!code) { showToast('warning','⚠️ Coloris requis','Veuillez choisir un coloris avant d\'ajouter au panier.'); return; }
+  if (blockIfOutOfStock('tissu-' + col.id)) return;
   const qty = parseInt(document.getElementById('tissu-qty').value) || 1;
   Cart.add({
     productId: 'tissu-' + col.id + '-' + code,
@@ -2282,6 +2296,7 @@ let _jerseyPending = null;
 let _jerseySelected = null;
 
 function addMousseToCart(typeId, dim, prix, code) {
+  if (blockIfOutOfStock('mousse-' + typeId)) return;
   const cat = catalogue['mousse-matelas'];
   const t   = cat.types.find(x => x.id === typeId);
   // Ouvrir la fenêtre de choix jersey
@@ -2397,6 +2412,7 @@ function submitMousseOrder() {
 
   if (!selectedMousseLabel) { showToast('error','Qualité requise','Veuillez sélectionner un type de mousse.'); return; }
   if (!l || !w || !h)        { showToast('error','Dimensions requises','Veuillez remplir les trois dimensions.'); return; }
+  if (blockIfOutOfStock('mousse-' + selectedMousseType)) return;
 
   const dims = `${l}×${w}×${h} cm`;
   const withJersey = document.getElementById('mousse-jersey-opt')?.checked;
@@ -2532,6 +2548,7 @@ function switchTabkaTab(typeIdx, btn) {
 }
 
 function addTabkaToCart(typeIdx, ep, prix, dim, code) {
+  if (blockIfOutOfStock('tabka-' + typeIdx + '-' + ep.replace(/\s/g,''))) return;
   const cat = catalogue['mousse-tabka'];
   const typeLabel = cat.types[typeIdx].label;
   Cart.add({
@@ -2726,6 +2743,7 @@ function switchRessortView(typeIdx, btn) {
 }
 
 function addRessortToCart(dim, typeIdx, prix, code) {
+  if (blockIfOutOfStock('ressort-' + typeIdx + '-' + dim)) return;
   const typeLabel = catalogue.ressort.types[typeIdx].label;
   Cart.add({
     productId: 'ressort-' + typeIdx + '-' + dim,
@@ -2899,6 +2917,7 @@ function openModal(pid, catId) {
   if (!p) return;
   const icon     = cat.icon || '📦';
   const priceNum = parseFloat((p.price||'').replace(/[^\d.]/g,'')) || 0;
+  const hasMultipleVariants = p.variants && p.variants.length > 1;
 
   document.getElementById('modalTitle').textContent = p.name;
   document.getElementById('modalSub').textContent   = cat.label;
@@ -2951,7 +2970,7 @@ function openModal(pid, catId) {
         <tbody>
           ${(p.variants||[p.price]).map((v, vIdx) => {
             const vPrice = extractVariantPrice(v) || (p.price !== 'À confirmer' && p.price !== 'Sur devis' ? p.price : null);
-            const varStockId = `${p.id}-v${vIdx}`;
+            const varStockId = hasMultipleVariants ? `${p.id}-v${vIdx}` : p.id;
             return `
             <tr onclick="document.getElementById('modalVariant').value='${v}';updateModalVariantPrice()" style="cursor:pointer">
               <td style="font-weight:500">${v}</td>
@@ -3105,12 +3124,22 @@ function addToCartFromModal(pid, catId, name, price, priceNum, icon) {
   const vPrice  = extractVariantPrice(variant);
   const finalPrice    = vPrice || price;
   const finalPriceNum = vPrice ? parseFloat(vPrice.replace(/[^\d.,]/g,'').replace(',','.')) : priceNum;
+
+  let cat = catalogue[catId];
+  if (cat && !cat.products && cat.parent) cat = catalogue[cat.parent];
+  const p = cat && cat.products ? cat.products.find(x => x.id === pid) : null;
+  const hasMultipleVariants = p && p.variants && p.variants.length > 1;
+  const vIdx = hasMultipleVariants ? p.variants.indexOf(variant) : -1;
+  const stockId = hasMultipleVariants && vIdx > -1 ? `${pid}-v${vIdx}` : pid;
+  if (blockIfOutOfStock(stockId)) return;
+
   Cart.add({ productId:pid, catId, name, variant, price:finalPrice, priceNum:finalPriceNum, qty, icon });
   closeModalBtn();
 }
 
 
 function addToolToCart(catIdx, itemIdx) {
+  if (blockIfOutOfStock('tool-' + catIdx + '-' + itemIdx)) return;
   const tc   = toolCategories[catIdx];
   const item = tc.items[itemIdx];
   let nom, ref, prix, code;
@@ -3142,6 +3171,7 @@ function addToolToCart(catIdx, itemIdx) {
 
 /* ===== TNT — choix rouleau / au mètre ===== */
 function openTntChoice(catIdx, itemIdx) {
+  if (blockIfOutOfStock('tool-' + catIdx + '-' + itemIdx)) return;
   const tc   = toolCategories[catIdx];
   const item = tc.items[itemIdx];
   const existing = document.getElementById('tnt-choice-popup');
@@ -3243,6 +3273,7 @@ function updateTntTotal() {
 }
 
 function confirmTntCart(catIdx, itemIdx) {
+  if (blockIfOutOfStock('tool-' + catIdx + '-' + itemIdx)) return;
   const tc     = toolCategories[catIdx];
   const item   = tc.items[itemIdx];
   const popup  = document.getElementById('tnt-choice-popup');
