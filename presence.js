@@ -19,7 +19,7 @@
   }
 
   heartbeat();
-  setInterval(heartbeat, 20000);
+  setInterval(heartbeat, 60000);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') heartbeat();
   });

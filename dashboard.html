@@ -2077,30 +2077,27 @@
     }
   }
 
-  /* ── Visiteurs en ligne (temps réel) ── */
-  let _presenceDocs = [];
-
-  function renderLiveVisitors() {
+  /* ── Visiteurs en ligne (sondage périodique — évite d'épuiser le quota Firestore) ── */
+  function pollLiveVisitors() {
+    if (typeof db === 'undefined') return;
     const el = document.getElementById('liveVisitorCount');
     if (!el) return;
-    const now = Date.now();
-    const active = _presenceDocs.filter(d => d.lastSeen && (now - d.lastSeen.toMillis()) < 45000).length;
-    el.textContent = active;
+    const cutoff = firebase.firestore.Timestamp.fromMillis(Date.now() - 90000);
+    db.collection('presence').where('lastSeen', '>', cutoff).get()
+      .then(snap => { el.textContent = snap.size; })
+      .catch(err => console.warn('Presence poll:', err.message));
   }
 
   function initPresenceListener() {
     if (typeof db === 'undefined') return;
-    db.collection('presence').onSnapshot(snap => {
-      _presenceDocs = snap.docs.map(d => d.data());
-      renderLiveVisitors();
-      // Nettoyage opportuniste : supprime les sessions vieilles de +24h
-      const dayAgo = Date.now() - 24*60*60*1000;
-      snap.docs.forEach(d => {
-        const data = d.data();
-        if (data.lastSeen && data.lastSeen.toMillis() < dayAgo) d.ref.delete().catch(() => {});
-      });
-    }, err => console.warn('Presence listener:', err.message));
-    setInterval(renderLiveVisitors, 5000);
+    pollLiveVisitors();
+    setInterval(pollLiveVisitors, 30000);
+
+    // Nettoyage ponctuel (une fois par session admin) des sessions vieilles de +24h
+    const dayAgo = firebase.firestore.Timestamp.fromMillis(Date.now() - 24*60*60*1000);
+    db.collection('presence').where('lastSeen', '<', dayAgo).limit(200).get()
+      .then(snap => snap.forEach(d => d.ref.delete().catch(() => {})))
+      .catch(() => {});
   }
 
   function updateOrdersStats(orders) {
