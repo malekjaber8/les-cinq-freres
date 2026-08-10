@@ -2997,7 +2997,7 @@ function openModal(pid, catId) {
             const vLabel = v.split(' — ')[0].trim();
             const vOldPrice = isPromo && p.oldPrices ? p.oldPrices[vLabel] : null;
             const priceCell = vOldPrice
-              ? `<span style="color:#94a3b8;text-decoration:line-through;font-size:.78rem;margin-right:5px">${vOldPrice}</span><span style="color:#e53e3e;font-weight:800">${vPrice}</span>`
+              ? `<div style="display:flex;flex-direction:column;line-height:1.3"><span style="color:#94a3b8;text-decoration:line-through;font-size:.68rem">${vOldPrice}</span><span style="color:#e53e3e;font-weight:800">${vPrice}</span></div>`
               : (vPrice ? vPrice : '<span style="color:var(--gray-400);font-style:italic">Sur devis</span>');
             return `
             <tr onclick="document.getElementById('modalVariant').value='${v}';updateModalVariantPrice()" style="cursor:pointer">
