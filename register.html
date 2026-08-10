@@ -176,7 +176,7 @@
             <label>Activité Principale *</label>
             <div class="input-wrap">
               <span class="input-icon">⚙️</span>
-              <select id="activity">
+              <select id="activity" onchange="document.getElementById('activityOtherGroup').style.display=(this.value==='Autre')?'':'none';">
                 <option value="">-- Sélectionnez votre activité --</option>
                 <option value="Tapissier / Rembourrage">Tapissier / Rembourrage</option>
                 <option value="Fabricant de Meubles">Fabricant de Meubles</option>
@@ -187,6 +187,15 @@
               </select>
             </div>
             <div class="field-error" id="activityError">Activité requise.</div>
+          </div>
+
+          <div class="form-group" id="activityOtherGroup" style="display:none">
+            <label>Précisez votre activité *</label>
+            <div class="input-wrap">
+              <span class="input-icon">✏️</span>
+              <input type="text" id="activityOther" placeholder="Ex : Décorateur d'intérieur">
+            </div>
+            <div class="field-error" id="activityOtherError">Merci de préciser votre activité.</div>
           </div>
 
           <div class="form-group" id="adminCodeGroup" style="display:none">
@@ -331,6 +340,7 @@
     const email = document.getElementById('email').value.trim().toLowerCase();
     const phone = document.getElementById('phone').value.trim();
     const act   = document.getElementById('activity').value;
+    const actOther = document.getElementById('activityOther').value.trim();
     const code  = document.getElementById('adminCode').value;
     let valid = true;
 
@@ -342,6 +352,7 @@
 
     if (currentRole === 'client') {
       setErr('activity', !act); if (!act) valid = false;
+      if (act === 'Autre') { setErr('activityOther', !actOther); if (!actOther) valid = false; }
     } else {
       const ok = code === 'ADMIN5F2024';
       setErr('adminCode', !ok); if (!ok) valid = false;
@@ -445,7 +456,9 @@
       password:   btoa(document.getElementById('password').value),
       phone:      document.getElementById('phone').value.trim(),
       company:    document.getElementById('company').value.trim(),
-      activity:   document.getElementById('activity').value,
+      activity:   document.getElementById('activity').value === 'Autre'
+                    ? 'Autre : ' + document.getElementById('activityOther').value.trim()
+                    : document.getElementById('activity').value,
       city:       document.getElementById('city').value,
       address:    document.getElementById('address').value.trim(),
       createdAt:  new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }),
