@@ -202,7 +202,14 @@
 </head>
 <body>
 
-<div class="dash-layout">
+<div id="authCheckOverlay" style="position:fixed;inset:0;background:var(--navy-dark,#0f2540);z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Poppins',Arial,sans-serif">
+  <div style="text-align:center">
+    <div style="font-size:2rem;margin-bottom:10px">🔒</div>
+    <div style="font-size:.85rem;opacity:.8">Vérification de l'accès…</div>
+  </div>
+</div>
+
+<div class="dash-layout" style="display:none" id="dashLayout">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -793,6 +800,11 @@
   })();
 
   function renderUI() {
+    const overlay = document.getElementById('authCheckOverlay');
+    if (overlay) overlay.remove();
+    const layout = document.getElementById('dashLayout');
+    if (layout) layout.style.display = '';
+
     const u = currentUser;
     const initials = (u.firstName[0] || '') + (u.lastName[0] || '');
     const fullName = u.firstName + ' ' + u.lastName;
