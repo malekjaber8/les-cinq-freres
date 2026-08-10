@@ -188,6 +188,16 @@
     }
     .prod-card:hover .prod-card-img img { transform:scale(1.07); }
     .prod-card-img .placeholder { font-size:3.5rem; }
+    .promo-ribbon {
+      position:absolute; top:14px; left:-42px; width:160px; z-index:3;
+      transform:rotate(-45deg);
+      background:linear-gradient(135deg,#ff5252,#c1121f);
+      color:#fff; text-align:center;
+      font-family:'Poppins',sans-serif; font-size:.72rem; font-weight:800;
+      letter-spacing:.1em; text-transform:uppercase;
+      padding:5px 0; box-shadow:0 3px 10px rgba(0,0,0,.35);
+      border-top:1px dashed rgba(255,255,255,.6); border-bottom:1px dashed rgba(255,255,255,.6);
+    }
     .prod-badge {
       position:absolute; top:10px; left:10px;
       background:var(--teal); color:var(--white);
@@ -1787,9 +1797,7 @@ function productCard(p, catId) {
     : '';
   const isPromo = !!p.promo;
   const hasFlatOldPrice = isPromo && p.oldPrice;
-  const promoBadge = isPromo
-    ? `<div style="position:absolute;top:8px;left:8px;background:#e53e3e;color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:50px;letter-spacing:.04em;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.25)">🔥 PROMO</div>`
-    : '';
+  const promoBadge = isPromo ? `<div class="promo-ribbon">Promo</div>` : '';
   const priceDisplay = isRouleau
     ? `<div style="display:flex;flex-direction:column;line-height:1.2">
         <span class="p-price">${p.price} DT</span>
@@ -2939,7 +2947,7 @@ function openModal(pid, catId) {
   const galleryHTML = p.img ? `
     <div class="modal-img-col">
       <div style="flex:1;background:#fff;border-radius:var(--radius);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:280px;max-height:420px;border:1px solid var(--gray-100);position:relative">
-        ${isPromo ? `<div style="position:absolute;top:10px;left:10px;background:#e53e3e;color:#fff;font-size:.7rem;font-weight:800;padding:4px 12px;border-radius:50px;letter-spacing:.04em;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.25)">🔥 PROMO</div>` : ''}
+        ${isPromo ? `<div class="promo-ribbon">Promo</div>` : ''}
         <img id="modal-main-img" src="${p.img}" alt="${p.name}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="max-width:100%;max-height:420px;object-fit:contain;display:block">
       </div>
       ${p.gallery && p.gallery.length > 1 ? `
