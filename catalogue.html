@@ -1785,10 +1785,19 @@ function productCard(p, catId) {
   const rouleauBadge = isRouleau
     ? `<div style="display:inline-flex;align-items:center;gap:4px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:50px;font-size:.65rem;font-weight:700;padding:2px 8px;margin-bottom:5px">🎞️ Vendu en rouleau complet</div>`
     : '';
+  const isPromo = !!p.promo && p.oldPrice;
+  const promoBadge = isPromo
+    ? `<div style="position:absolute;top:8px;left:8px;background:#e53e3e;color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:50px;letter-spacing:.04em;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.25)">🔥 PROMO</div>`
+    : '';
   const priceDisplay = isRouleau
     ? `<div style="display:flex;flex-direction:column;line-height:1.2">
         <span class="p-price">${p.price} DT</span>
         <span style="font-size:.65rem;color:#94a3b8;font-weight:500">${p.priceNote||'/ rouleau · prix confirmé par tél.'}</span>
+       </div>`
+    : isPromo
+    ? `<div style="display:flex;flex-direction:column;line-height:1.25">
+        <span style="font-size:.72rem;color:#94a3b8;text-decoration:line-through">${p.oldPrice}</span>
+        <span class="p-price" style="color:#e53e3e">${p.price}</span>
        </div>`
     : `<div class="${p.price==='À confirmer'||p.price==='Sur devis'?'p-price na':'p-price'}">${p.price}</div>`;
 
@@ -1804,6 +1813,7 @@ function productCard(p, catId) {
 
   return `<div class="prod-card" onclick="openModal('${p.id}','${catId}')">
     <div class="prod-card-img"${imgBg}>
+      ${promoBadge}
       ${p.img ? `<img src="${p.img}" alt="${p.name}"${imgMix} class="zoomable" onclick="openModal('${p.id}','${catId}')">` : `<span class="placeholder">${icon}</span>`}
     </div>
     <div class="prod-card-body">
@@ -2921,9 +2931,11 @@ function openModal(pid, catId) {
 
   document.getElementById('modalTitle').textContent = p.name;
   document.getElementById('modalSub').textContent   = cat.label;
+  const isPromo = !!p.promo && p.oldPrice;
   const galleryHTML = p.img ? `
     <div class="modal-img-col">
-      <div style="flex:1;background:#fff;border-radius:var(--radius);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:280px;max-height:420px;border:1px solid var(--gray-100)">
+      <div style="flex:1;background:#fff;border-radius:var(--radius);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:280px;max-height:420px;border:1px solid var(--gray-100);position:relative">
+        ${isPromo ? `<div style="position:absolute;top:10px;left:10px;background:#e53e3e;color:#fff;font-size:.7rem;font-weight:800;padding:4px 12px;border-radius:50px;letter-spacing:.04em;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.25)">🔥 PROMO</div>` : ''}
         <img id="modal-main-img" src="${p.img}" alt="${p.name}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="max-width:100%;max-height:420px;object-fit:contain;display:block">
       </div>
       ${p.gallery && p.gallery.length > 1 ? `
@@ -2943,6 +2955,11 @@ function openModal(pid, catId) {
           <div style="font-size:.74rem;color:var(--teal-dark);text-transform:uppercase;letter-spacing:.08em;font-weight:700">${cat.label}</div>
           <div style="font-size:1.1rem;font-weight:800;color:var(--navy-dark);line-height:1.2">${p.name}</div>
           <div style="font-size:.83rem;color:var(--gray-600);margin-top:3px">${p.desc}</div>
+          ${isPromo ? `<div style="margin-top:6px;display:flex;align-items:center;gap:8px">
+            <span style="font-size:.8rem;color:#94a3b8;text-decoration:line-through">${p.oldPrice}</span>
+            <span style="font-size:.95rem;font-weight:800;color:#e53e3e">${p.price}</span>
+            <span style="background:#e53e3e;color:#fff;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:50px">PROMO</span>
+          </div>` : ''}
         </div>
       </div>
 
