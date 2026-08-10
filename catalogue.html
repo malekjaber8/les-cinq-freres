@@ -3559,13 +3559,7 @@ function filterSub(btn, sub) {
 function handleSearch(q) {
   const clearBtn = document.getElementById('searchClearBtn');
   if (clearBtn) clearBtn.style.display = q ? '' : 'none';
-  if (q.length >= 2) {
-    globalSearchFn(q);
-  } else if (!q) {
-    render(currentCat);
-  } else {
-    filterProducts(q);
-  }
+  globalSearchFn(q);
 }
 
 function clearSearch() {
@@ -3574,16 +3568,6 @@ function clearSearch() {
   const clearBtn = document.getElementById('searchClearBtn');
   if (clearBtn) clearBtn.style.display = 'none';
   render(currentCat);
-}
-
-function filterProducts(q) {
-  const cat = catalogue[currentCat];
-  if (!cat || !cat.products) return;
-  const grid = document.getElementById('prodGrid');
-  if (!grid) return;
-  const filtered = q ? cat.products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.desc||'').toLowerCase().includes(q.toLowerCase())) : cat.products;
-  grid.innerHTML = filtered.length ? filtered.map(p => productCard(p, currentCat)).join('') : '<div class="empty-state"><div class="e-icon">🔍</div><h3>Aucun résultat pour "'+q+'"</h3></div>';
-  if (window.Stock) Stock.refreshAll();
 }
 
 function globalSearchFn(q) {
