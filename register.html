@@ -159,7 +159,7 @@
             <label>Numéro de Téléphone *</label>
             <div class="input-wrap">
               <span class="input-icon">📞</span>
-              <input type="tel" id="phone" placeholder="+216 XX XXX XXX" autocomplete="tel">
+              <input type="tel" id="phone" placeholder="12345678" autocomplete="tel" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')">
             </div>
             <div class="field-error" id="phoneError">Numéro requis.</div>
           </div>
