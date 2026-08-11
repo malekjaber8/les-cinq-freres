@@ -212,6 +212,98 @@
   </div>
 </section>
 
+<!-- ===================== PROMOTIONS EN COURS ===================== -->
+<section id="homePromoSection" style="display:none;padding:56px 0;background:var(--white);border-bottom:1px solid var(--gray-100)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:36px">
+      <span style="display:inline-block;background:linear-gradient(135deg,#ff5252,#c1121f);color:#fff;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;padding:5px 18px;border-radius:50px;margin-bottom:14px">🔥 En ce moment</span>
+      <h2 style="font-family:'Raleway',sans-serif;font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;color:var(--navy-dark);margin-bottom:10px">Promotions en cours</h2>
+      <p style="font-size:.9rem;color:var(--gray-600);max-width:480px;margin:0 auto">Profitez de nos meilleurs prix sur une sélection d'articles — pour une durée limitée.</p>
+    </div>
+    <div id="homePromoGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px"></div>
+    <div style="text-align:center;margin-top:36px">
+      <a href="catalogue.html" class="btn btn-primary">🛍️ Voir Tout le Catalogue</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.home-promo-ribbon {
+  position:absolute; top:14px; left:-42px; width:160px; z-index:3;
+  transform:rotate(-45deg);
+  background:linear-gradient(135deg,#ff5252,#c1121f);
+  color:#fff; text-align:center;
+  font-family:'Poppins',sans-serif; font-size:.66rem; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:4px 0; box-shadow:0 3px 10px rgba(0,0,0,.35);
+  border-top:1px dashed rgba(255,255,255,.6); border-bottom:1px dashed rgba(255,255,255,.6);
+}
+.home-promo-card { text-decoration:none; background:#fff; border:1px solid var(--gray-100); border-radius:var(--radius-lg); overflow:hidden; transition:var(--transition); display:block; }
+.home-promo-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
+</style>
+
+<script>
+(function() {
+  fetch('catalogue.html').then(r => r.text()).then(html => {
+    function extractLiteral(src, marker, endPattern) {
+      const startIdx = src.indexOf(marker);
+      if (startIdx === -1) return null;
+      const afterMarker = startIdx + marker.length;
+      const endIdx = src.indexOf(endPattern, afterMarker);
+      if (endIdx === -1) return null;
+      return src.slice(afterMarker, endIdx + endPattern.length);
+    }
+    const catSrc = extractLiteral(html, 'const catalogue = ', '\n};');
+    const toolsSrc = extractLiteral(html, 'const toolCategories = ', '\n];');
+    if (!catSrc) return;
+
+    let catalogueData, toolCategoriesData;
+    try {
+      catalogueData = new Function('return ' + catSrc)();
+      toolCategoriesData = toolsSrc ? new Function('return ' + toolsSrc)() : [];
+    } catch (e) { console.warn('Promo home: parse error', e.message); return; }
+
+    const promoItems = [];
+    Object.keys(catalogueData).forEach(catId => {
+      const cat = catalogueData[catId];
+      (cat.products || []).forEach(p => { if (p.promo) promoItems.push(Object.assign({}, p, { catId })); });
+    });
+    (toolCategoriesData || []).forEach(tc => {
+      (tc.items || []).forEach(p => { if (p.promo) promoItems.push(Object.assign({}, p, { catId: 'outils' })); });
+    });
+
+    if (!promoItems.length) return;
+
+    function toNum(str) {
+      if (!str) return NaN;
+      return parseFloat(String(str).replace(/[^\d,.-]/g, '').replace(',', '.'));
+    }
+
+    const grid = document.getElementById('homePromoGrid');
+    grid.innerHTML = promoItems.slice(0, 12).map(p => {
+      const oldP = toNum(p.oldPrice);
+      const newP = toNum(p.price);
+      const pct = (oldP && newP && oldP > newP) ? Math.round((oldP - newP) / oldP * 100) : null;
+      return `
+      <a href="catalogue.html?cat=${p.catId}" class="home-promo-card">
+        <div style="height:150px;background:var(--gray-50);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
+          <div class="home-promo-ribbon">Promo</div>
+          <img src="${p.img || ''}" alt="${p.name}" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;padding:12px" onerror="this.style.display='none'">
+          ${pct ? `<span style="position:absolute;bottom:8px;right:8px;background:#c1121f;color:#fff;font-size:.68rem;font-weight:800;padding:3px 9px;border-radius:50px">-${pct}%</span>` : ''}
+        </div>
+        <div style="padding:14px 16px">
+          <div style="font-size:.88rem;font-weight:700;color:var(--navy-dark);margin-bottom:8px;min-height:2.3em">${p.name}</div>
+          ${p.oldPrice ? `<div style="font-size:.72rem;color:var(--gray-400);text-decoration:line-through">${p.oldPrice}</div>` : ''}
+          <div style="font-size:.95rem;font-weight:800;color:#c1121f">${p.price}</div>
+        </div>
+      </a>`;
+    }).join('');
+
+    document.getElementById('homePromoSection').style.display = '';
+  }).catch(e => console.warn('Promo home: fetch error', e.message));
+})();
+</script>
+
 <!-- ===================== BADGES DE CONFIANCE ===================== -->
 <div style="background:var(--white);border-bottom:1px solid var(--gray-100);padding:18px 24px">
   <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px" id="trustBadges">
