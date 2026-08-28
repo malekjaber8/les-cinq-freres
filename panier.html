@@ -296,6 +296,7 @@
           <button onclick="applyPromoCode()" type="button" style="padding:9px 16px;background:var(--navy-dark);color:#fff;border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap">Appliquer</button>
         </div>
         <div id="promoFeedback" style="display:none;font-size:.76rem;font-weight:600;margin-bottom:8px"></div>
+        <div id="promoExcludedNote" style="display:none;font-size:.72rem;color:var(--gray-500);background:var(--gray-50);border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.4">ℹ️ Le code promo ne s'applique pas aux articles Mousse, TABKA, Fibre/OAT et Polystyrène de ce panier.</div>
 
         <div class="summary-row" id="sum-discount-row" style="display:none;color:#166534">
           <span class="lbl">🏷️ Réduction <span id="sum-discount-code"></span></span>
@@ -683,6 +684,17 @@
 
   const GROS_CATS = ['mousse-matelas', 'mousse-tabka', 'ressort'];
 
+  /* Catégories exclues des codes promo : mousse, TABKA, fibre/OAT (polyester), polystyrène */
+  const PROMO_EXCLUDED_CATS = ['mousse-matelas', 'mousse-tabka', 'polyester', 'polystyrene'];
+
+  function promoEligibleSubtotal(items) {
+    return (items || Cart.get()).reduce((s, i) => PROMO_EXCLUDED_CATS.includes(i.catId) ? s : s + (i.priceNum * i.qty), 0);
+  }
+
+  function cartHasPromoExcludedArticle(items) {
+    return (items || Cart.get()).some(i => PROMO_EXCLUDED_CATS.includes(i.catId));
+  }
+
   function getLivraisonFee() {
     return parseFloat(localStorage.getItem('5f_livraison_fee') || '9');
   }
@@ -785,7 +797,7 @@
     const grosArticle = cartHasGrosArticle(items);
     const LIVRAISON = grosArticle ? 0 : getLivraisonFee();
     const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
-    const discount  = computeDiscount(subTotal);
+    const discount  = computeDiscount(items);
     const totalNum  = (!grosArticle && subTotal > 0) ? Math.max(0, subTotal - discount) + LIVRAISON : 0;
     const totalQty  = items.reduce((s,i) => s + i.qty, 0);
     document.getElementById('sum-count').textContent    = items.length;
@@ -804,16 +816,21 @@
       discRow.style.display = 'none';
     }
 
+    const excludedNote = document.getElementById('promoExcludedNote');
+    excludedNote.style.display = (_appliedPromo && cartHasPromoExcludedArticle(items)) ? '' : 'none';
+
     document.getElementById('orderBtn').disabled = false;
   }
 
   /* ── Code Promo ── */
   let _appliedPromo = null;
 
-  function computeDiscount(subTotal) {
-    if (!_appliedPromo || subTotal <= 0) return 0;
-    const d = _appliedPromo.type === 'percent' ? subTotal * (_appliedPromo.value/100) : _appliedPromo.value;
-    return Math.min(d, subTotal);
+  function computeDiscount(items) {
+    if (!_appliedPromo) return 0;
+    const eligible = promoEligibleSubtotal(items);
+    if (eligible <= 0) return 0;
+    const d = _appliedPromo.type === 'percent' ? eligible * (_appliedPromo.value/100) : _appliedPromo.value;
+    return Math.min(d, eligible);
   }
 
   function showPromoFeedback(type, text) {
@@ -882,7 +899,7 @@
       const grosArticle = cartHasGrosArticle(items);
       const LIVRAISON = grosArticle ? 0 : getLivraisonFee();
       const subTotal  = items.reduce((s,i) => s + (i.priceNum * i.qty), 0);
-      const discount  = computeDiscount(subTotal);
+      const discount  = computeDiscount(items);
       const order = {
         id: orderId,
         clientId:   session ? session.id : null,
