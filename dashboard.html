@@ -2341,9 +2341,24 @@
     }).join('');
     const blLivHT   = livraisonDT / (1 + TVA_RATE_BL);
     blTotalHT      += blLivHT;
+    const blDiscTTC = typeof order.discount === 'number' ? order.discount : 0;
+    const blDiscHT  = blDiscTTC / (1 + TVA_RATE_BL);
+    blTotalHT      -= blDiscHT;
     const blTVA     = blTotalHT * TVA_RATE_BL;
     const blTTC     = blTotalHT + blTVA;
     const B0 = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+    const blDiscRow = blDiscTTC > 0 ? `
+          <tr style="background:#f2f2f2">
+            <td style="${B0}font-weight:700">—</td>
+            <td style="${B0}"></td>
+            <td style="${B0}font-weight:600">Remise${order.promoCode ? ' (code '+order.promoCode+')' : ''}</td>
+            <td style="${B0}text-align:center">1</td>
+            <td style="${B0}text-align:center">1</td>
+            <td style="${B0}text-align:right;white-space:nowrap">-${fmtInv(blDiscHT)}</td>
+            <td style="${B0}text-align:right;font-weight:700;white-space:nowrap">-${fmtInv(blDiscHT)}</td>
+            <td style="${B0}text-align:center">19.00</td>
+            <td style="${B0}text-align:right;white-space:nowrap">-${fmtInv(blDiscTTC)}</td>
+          </tr>` : '';
 
     let overlay = document.getElementById('admin-bon-overlay');
     if (!overlay) { overlay = document.createElement('div'); overlay.id = 'admin-bon-overlay'; document.body.appendChild(overlay); }
@@ -2446,6 +2461,7 @@
             <td style="${B0}text-align:center">19.00</td>
             <td style="${B0}text-align:right;white-space:nowrap">${fmtInv(livraisonDT)}</td>
           </tr>
+          ${blDiscRow}
         </tbody>
       </table>
 
@@ -2557,9 +2573,24 @@
 
     const livHT    = livraisonDT / (1 + TVA_RATE);
     totalHT       += livHT;
+    const discTTC  = typeof order.discount === 'number' ? order.discount : 0;
+    const discHT   = discTTC / (1 + TVA_RATE);
+    totalHT       -= discHT;
     const tvaTotal = totalHT * TVA_RATE;
     const totalTTC = totalHT + tvaTotal + TIMBRE;
     const F0 = 'padding:6px 9px;border:1px solid #ddd;font-size:.78rem;';
+    const discRowHtml = discTTC > 0 ? `
+          <tr style="background:#f2f2f2">
+            <td style="${F0}font-weight:700">—</td>
+            <td style="${F0}"></td>
+            <td style="${F0}font-weight:600">Remise${order.promoCode ? ' (code '+order.promoCode+')' : ''}</td>
+            <td style="${F0}text-align:center">1</td>
+            <td style="${F0}text-align:center">1</td>
+            <td style="${F0}text-align:right;white-space:nowrap">-${fmtInv(discHT)}</td>
+            <td style="${F0}text-align:right;font-weight:700;white-space:nowrap">-${fmtInv(discHT)}</td>
+            <td style="${F0}text-align:center">19.00</td>
+            <td style="${F0}text-align:right;white-space:nowrap">-${fmtInv(discTTC)}</td>
+          </tr>` : '';
 
     let overlay = document.getElementById('admin-bon-overlay');
     if (!overlay) { overlay = document.createElement('div'); overlay.id = 'admin-bon-overlay'; document.body.appendChild(overlay); }
@@ -2662,6 +2693,7 @@
             <td style="${F0}text-align:center">19.00</td>
             <td style="${F0}text-align:right;white-space:nowrap">${fmtInv(livraisonDT)}</td>
           </tr>
+          ${discRowHtml}
         </tbody>
       </table>
 

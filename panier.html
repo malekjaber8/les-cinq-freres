@@ -299,7 +299,7 @@
         <div id="promoExcludedNote" style="display:none;font-size:.72rem;color:var(--gray-500);background:var(--gray-50);border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.4">ℹ️ Le code promo ne s'applique pas aux articles Mousse, TABKA, Fibre/OAT et Polystyrène de ce panier.</div>
 
         <div class="summary-row" id="sum-discount-row" style="display:none;color:#166534">
-          <span class="lbl">🏷️ Réduction <span id="sum-discount-code"></span></span>
+          <span class="lbl">🏷️ Réduction <span id="sum-discount-code"></span> <a href="#" onclick="removePromoCode();return false;" style="color:#c62828;font-weight:600;text-decoration:underline;font-size:.72rem">retirer</a></span>
           <span class="val" id="sum-discount" style="font-weight:700">—</span>
         </div>
 
@@ -824,6 +824,7 @@
 
   /* ── Code Promo ── */
   let _appliedPromo = null;
+  const PROMO_STORAGE_KEY = '5f_promo_code';
 
   function computeDiscount(items) {
     if (!_appliedPromo) return 0;
@@ -843,19 +844,33 @@
   function applyPromoCode() {
     const raw = document.getElementById('promoInput').value.trim().toUpperCase();
     if (!raw) { showPromoFeedback('error', 'Entrez un code.'); return; }
+    checkPromoCode(raw);
+  }
+
+  function checkPromoCode(raw) {
     if (typeof db === 'undefined') { showPromoFeedback('error', 'Service indisponible pour le moment.'); return; }
 
     db.collection('promo_codes').where('code','==',raw).limit(1).get().then(snap => {
-      if (snap.empty) { showPromoFeedback('error', '❌ Code invalide.'); _appliedPromo = null; renderCartPage(); return; }
+      if (snap.empty) { showPromoFeedback('error', '❌ Code invalide.'); _appliedPromo = null; sessionStorage.removeItem(PROMO_STORAGE_KEY); renderCartPage(); return; }
       const data = snap.docs[0].data();
-      if (!data.active) { showPromoFeedback('error', '❌ Ce code n\'est plus actif.'); _appliedPromo = null; renderCartPage(); return; }
+      if (!data.active) { showPromoFeedback('error', '❌ Ce code n\'est plus actif.'); _appliedPromo = null; sessionStorage.removeItem(PROMO_STORAGE_KEY); renderCartPage(); return; }
       const today = new Date().toISOString().slice(0,10);
-      if (data.expiresAt && data.expiresAt < today) { showPromoFeedback('error', '❌ Ce code a expiré.'); _appliedPromo = null; renderCartPage(); return; }
+      if (data.expiresAt && data.expiresAt < today) { showPromoFeedback('error', '❌ Ce code a expiré.'); _appliedPromo = null; sessionStorage.removeItem(PROMO_STORAGE_KEY); renderCartPage(); return; }
       _appliedPromo = { code: data.code, type: data.type, value: data.value };
+      sessionStorage.setItem(PROMO_STORAGE_KEY, data.code);
+      document.getElementById('promoInput').value = data.code;
       const label = data.type === 'percent' ? data.value + '%' : data.value + ' DT';
       showPromoFeedback('success', '✅ Code appliqué : -' + label + ' de réduction.');
       renderCartPage();
     }).catch(() => showPromoFeedback('error', '❌ Erreur de vérification du code.'));
+  }
+
+  function removePromoCode() {
+    _appliedPromo = null;
+    sessionStorage.removeItem(PROMO_STORAGE_KEY);
+    document.getElementById('promoInput').value = '';
+    document.getElementById('promoFeedback').style.display = 'none';
+    renderCartPage();
   }
 
   function pageUpdateQty(cartId, qty) {
@@ -975,6 +990,7 @@
       sendOrderConfirmationEmail(order);
       Cart.clear();
       _appliedPromo = null;
+      sessionStorage.removeItem(PROMO_STORAGE_KEY);
       _lastOrder = order;
       // Réinitialiser le modal : montrer étape 1 (choix)
       document.getElementById('stepChoice').style.display  = '';
@@ -1295,6 +1311,12 @@
 
   // Init — essaie Firestore d'abord pour charger le profil utilisateur
   (function initCart() {
+    const storedPromo = sessionStorage.getItem(PROMO_STORAGE_KEY);
+    if (storedPromo) {
+      document.getElementById('promoInput').value = storedPromo;
+      checkPromoCode(storedPromo);
+    }
+
     const session = JSON.parse(localStorage.getItem('5f_session') || 'null');
     if (session && typeof db !== 'undefined') {
       db.collection('clients').doc(session.id).get()
