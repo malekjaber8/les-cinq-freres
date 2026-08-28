@@ -199,6 +199,71 @@
       .order-summary, .summary-body, .summary-row, .panier-layout, .panier-layout > div { max-width:100%; min-width:0; }
       .summary-row .lbl, .summary-row .val { min-width:0; word-break:break-word; }
     }
+
+    /* ── Bloc Code Promo animé ── */
+    .promo-box {
+      position: relative;
+      border: 1.5px dashed #c1121f;
+      background: linear-gradient(135deg, rgba(255,82,82,.07), rgba(193,18,31,.03));
+      border-radius: 12px;
+      padding: 14px 14px 12px;
+      margin: 12px 0;
+      overflow: hidden;
+      animation: promoPulse 2.4s ease-in-out infinite;
+    }
+    .promo-box::before {
+      content: '';
+      position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.55), transparent);
+      animation: promoShine 3.4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes promoPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(193,18,31,.16); }
+      50%      { box-shadow: 0 0 0 7px rgba(193,18,31,0); }
+    }
+    @keyframes promoShine {
+      0%   { left: -60%; }
+      45%  { left: 130%; }
+      100% { left: 130%; }
+    }
+    .promo-box-ribbon {
+      position: absolute; top: -1px; right: -1px;
+      background: linear-gradient(135deg, #ff5252, #c1121f);
+      color: #fff; font-size: .64rem; font-weight: 800;
+      padding: 4px 12px 4px 16px;
+      border-bottom-left-radius: 12px;
+      letter-spacing: .05em; text-transform: uppercase;
+      animation: promoWiggle 1.8s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes promoWiggle {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
+    .promo-box-label {
+      font-size: .78rem; font-weight: 700; color: var(--navy-dark);
+      margin-bottom: 9px; padding-right: 70px;
+    }
+    .promo-box-row { display: flex; gap: 8px; position: relative; z-index: 1; }
+    .promo-box-input {
+      flex: 1; min-width: 0; padding: 9px 12px;
+      border: 1.5px solid rgba(193,18,31,.3); border-radius: var(--radius);
+      font-family: 'Poppins', sans-serif; font-size: .85rem; font-weight: 700;
+      outline: none; text-transform: uppercase; letter-spacing: .03em; background: #fff;
+      transition: .2s;
+    }
+    .promo-box-input:focus { border-color: #c1121f; box-shadow: 0 0 0 3px rgba(193,18,31,.12); }
+    .promo-box-btn {
+      padding: 9px 18px; background: linear-gradient(135deg, #ff5252, #c1121f); color: #fff;
+      border: none; border-radius: var(--radius); font-family: 'Poppins', sans-serif;
+      font-size: .82rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(193,18,31,.3); transition: .2s;
+    }
+    .promo-box-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    @media (prefers-reduced-motion: reduce) {
+      .promo-box, .promo-box::before, .promo-box-ribbon { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -291,9 +356,13 @@
         <div class="summary-row"><span class="lbl">Sous-total articles</span><span class="val" id="sum-subtotal">—</span></div>
 
         <!-- Code promo -->
-        <div style="display:flex;gap:8px;margin:10px 0">
-          <input id="promoInput" placeholder="Code promo" style="flex:1;padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.83rem;outline:none;text-transform:uppercase" onkeydown="if(event.key==='Enter'){event.preventDefault();applyPromoCode();}">
-          <button onclick="applyPromoCode()" type="button" style="padding:9px 16px;background:var(--navy-dark);color:#fff;border:none;border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap">Appliquer</button>
+        <div class="promo-box">
+          <div class="promo-box-ribbon">🎁 Promo</div>
+          <div class="promo-box-label">Vous avez un code promo ?</div>
+          <div class="promo-box-row">
+            <input id="promoInput" placeholder="CODE PROMO" class="promo-box-input" onkeydown="if(event.key==='Enter'){event.preventDefault();applyPromoCode();}">
+            <button onclick="applyPromoCode()" type="button" class="promo-box-btn">Appliquer</button>
+          </div>
         </div>
         <div id="promoFeedback" style="display:none;font-size:.76rem;font-weight:600;margin-bottom:8px"></div>
         <div id="promoExcludedNote" style="display:none;font-size:.72rem;color:var(--gray-500);background:var(--gray-50);border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.4">ℹ️ Le code promo ne s'applique pas aux articles Mousse, TABKA, Fibre/OAT et Polystyrène de ce panier.</div>
