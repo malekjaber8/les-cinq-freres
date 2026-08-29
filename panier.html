@@ -873,7 +873,17 @@
     document.getElementById('sum-qty').textContent      = totalQty;
     document.getElementById('sum-subtotal').textContent = subTotal > 0 ? subTotal.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
     document.getElementById('sum-livraison').textContent = grosArticle ? 'Sur devis' : (LIVRAISON.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT');
-    document.getElementById('sum-total').textContent    = totalNum > 0 ? totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT' : 'Sur devis';
+
+    const articleTotal = Math.max(0, subTotal - discount);
+    const sumTotalEl = document.getElementById('sum-total');
+    if (subTotal <= 0) {
+      sumTotalEl.textContent = 'Sur devis';
+    } else if (grosArticle) {
+      sumTotalEl.innerHTML = articleTotal.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT'
+        + '<div style="font-size:.68rem;font-weight:700;color:var(--gray-500);margin-top:2px">+ Livraison sur devis</div>';
+    } else {
+      sumTotalEl.textContent = totalNum.toLocaleString('fr-TN',{minimumFractionDigits:3,maximumFractionDigits:3,useGrouping:false}) + ' DT';
+    }
     document.getElementById('livraison-note').style.display = grosArticle ? '' : 'none';
 
     const discRow = document.getElementById('sum-discount-row');
