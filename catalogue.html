@@ -669,6 +669,7 @@
       <div class="cat-sub-item" onclick="showToolCat(6,event)">📦 Fermeture, Film &amp; Sangle</div>
       <div class="cat-sub-item" onclick="showToolCat(7,event)">🪢 Cordons &amp; Attaches</div>
       <div class="cat-sub-item" onclick="showToolCat(8,event)">🧻 TNT (Toile Non Tissée)</div>
+      <div class="cat-sub-item" onclick="showToolCat(9,event)">💨 Soufflette d'Air</div>
     </div>
   </aside>
 
@@ -1073,6 +1074,8 @@ const catalogue = {
       { id:'PB018', name:'Pied en Bois 75cm',      desc:'Pied en bois massif — 75cm.',                          variants:['75cm — 15,000 DT / pièce'], price:'15,000 DT', img:'images/pietement-bois/pied%20en%20bois%2075cm.jpg', sub:'bois' },
       { id:'PB020', name:'Sabot en Bois 42cm avec Boulon', desc:'Sabot en bois avec boulon de fixation — 42cm.', variants:['42cm — 8,000 DT / pièce'], price:'8,000 DT', img:'images/pietement-bois/sabot%20en%20bois%2042%20cm%20avec%20boulon%20.jpg', sub:'bois' },
       { id:'PB019', name:'Pied en Bois 85cm',      desc:'Pied en bois massif — 85cm.',                          variants:['85cm — 20,000 DT / pièce'], price:'20,000 DT', img:'images/pietement-bois/pied%20en%20bois%2075cm.jpg', sub:'bois' },
+      { id:'PB021', name:'Sabot en Bois 10cm',      desc:'Sabot en bois naturel d\'angle — 10cm.',              variants:['10cm — 3,500 DT / pièce'], price:'3,500 DT', img:'images/pietement-bois/sabot%20en%20bois%2010cm.jpg', sub:'bois' },
+      { id:'PB022', name:'Sabot en Bois Rond 13cm', desc:'Sabot en bois naturel rond d\'angle — 13cm.',         variants:['13cm — 4,500 DT / pièce'], price:'4,500 DT', img:'images/pietement-bois/sabot%20en%20bois%20rond%2013cm.jpg', sub:'bois' },
       { id:'PM001', name:'Sabot EM 32', desc:'Piètement métallique angulaire 3 branches — 12cm.', variants:['Gold — 12cm — 7,500 DT','Fumé — 12cm — 7,500 DT','Noir — 12cm — 6,500 DT'], price:'6,500 DT', img:'images/pietement-metal/em32.png', gallery:['images/pietement-metal/em32.png','images/pietement-metal/em32-exemple.png'], sub:'metal' },
       { id:'PM002', name:'Sabot Gl 99', desc:'Sabot plat horizontal, design contemporain — 5cm.', variants:['Gold — 5cm — 13,500 DT','Fumé — 5cm — 11,500 DT','Noir — 5cm — 10,500 DT','Chrome — 5cm — 10,500 DT'], price:'10,500 DT', img:'images/pietement-metal/gl99.png', gallery:['images/pietement-metal/gl99.png','images/pietement-metal/gl99-exemple.png'], sub:'metal' },
       { id:'PM003', name:'Sabot Gl 19', desc:'Pied métal géométrique épuré — 13cm.', variants:['Gold — 13cm — 7,000 DT','Chrome — 13cm — 5,000 DT'], price:'5,000 DT', img:'images/pietement-metal/gl19.png', sub:'metal' },
@@ -1141,6 +1144,11 @@ const catalogue = {
       { id:'PP014', name:'Sabot 10/10',        desc:'Sabot plastique carré compact, 7 coloris — 4,5cm.', variants:['Marron — 4,5cm — 0,500 DT','Noir — 4,5cm — 0,500 DT','Blanc — 4,5cm — 0,600 DT','Créme — 4,5cm — 0,600 DT','Gris — 4,5cm — 0,600 DT','Argent — 4,5cm — 2,000 DT','Gold — 4,5cm — 2,000 DT'], price:'0,500 DT', img:'images/pietement-plastique/10x10.png', sub:'plastique' },
       { id:'PP015', name:'Sabot Sabrine Carré',desc:'Sabot cube plastique, 6 coloris — 5,5cm.', variants:['Argent — 5,5cm — 1,500 DT','Gold — 5,5cm — 1,500 DT','Marron — 5,5cm — 0,500 DT','Noir — 5,5cm — 0,500 DT','Gris — 5,5cm — 0,600 DT','Créme — 5,5cm — 0,600 DT'], price:'0,500 DT', img:'images/pietement-plastique/sabrine.png', sub:'plastique' },
       { id:'PP016', name:'Sabot Mado',         desc:'Pied décoratif brillant triangulaire, 3 coloris — 12,5cm.', variants:['Argent — 12,5cm — 5,500 DT','Gold — 12,5cm — 5,500 DT','Fumé — 12,5cm — 5,500 DT'], price:'5,500 DT', img:'images/pietement-plastique/mado.png', gallery:['images/pietement-plastique/mado.png','images/pietement-plastique/mado-exemple.png'], sub:'plastique' },
+      { id:'PP017', name:'Sabot Giraffe',      desc:'Pied plastique triangulaire d\'angle, 3 coloris.', variants:['Blanc — 1,000 DT','Grège — 1,000 DT','Noire — 1,000 DT'], price:'1,000 DT', img:'images/pietement-plastique/sabot%20giraffe%20blanc%20.jpg', sub:'plastique' },
+      { id:'PP018', name:'Sabot Marwa',        desc:'Pied plastique pyramidal à encoche, 4 coloris.', variants:['Blanc — 1,600 DT','Marron Foncé — 1,600 DT','Taupe — 1,600 DT','Beige — 1,600 DT'], price:'1,600 DT', img:'images/pietement-plastique/sabot%20marwa.jpg', sub:'plastique' },
+      { id:'PP019', name:'Sabot Italia',       desc:'Pied plastique rond bulbeux, 2 coloris.', variants:['Champagne — 1,500 DT','Cuivre — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20italia.jpg', sub:'plastique' },
+      { id:'PP020', name:'Sabot Italia 2',     desc:'Pied plastique forme cloche, finition chromée.', variants:['Chromé — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20iatlia2.jpg', sub:'plastique' },
+      { id:'PP021', name:'Sabot Italia 3',     desc:'Support rectangulaire chromé avec embase plastique.', variants:['Chromé/Marron — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20italia3.jpg', sub:'plastique' },
     ]
   },
 
@@ -2799,6 +2807,8 @@ const toolCategories = [
   { icon:'🔫', name:'Pistolets', desc:'Pistolets pour capitonnage professionnel — pneumatique et manuel', items:[
     {code:'OUT012', name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
     {code:'OUT013', name:'Pistolet de capitonnage pneumatique professionnel', ref:'', price:'450,000 DT', img:'images/outils/pisto-cap.png'},
+    {code:'OUT028', name:'Pistolet de Peinture — Réservoir Bas',    ref:'', price:'48,000 DT', img:'images/outil%20de%20tapissserie/pistolet%20de%20colle.jpg'},
+    {code:'OUT029', name:'Pistolet de Peinture — Réservoir Gravité (Haut)', ref:'', price:'48,000 DT', img:'images/outil%20de%20tapissserie/pistolet%20de%20peinture.jpg'},
   ]},
   { icon:'✂️', name:'Ciseaux & Coupe-Fil', desc:'Ciseaux de tapisserie et coupe-fil professionnel', items:[
     {code:'OUT014', name:'Ciseaux',    ref:'', price:'15,000 DT', img:'images/outil%20de%20tapissserie/ciseaux.jpg'},
@@ -2825,6 +2835,10 @@ const toolCategories = [
   { icon:'🧻', name:'TNT (Toile Non Tissée)', desc:'Toile non tissée pour doublure et renfort — vendue au rouleau ou au mètre', items:[
     {code:'OUT027', name:'TNT — Toile Non Tissée', ref:'Largeur 1m — Disponible en Noir et Blanc', price:'3,200 DT', img:'images/outil%20de%20tapissserie/tnt.jpg',
       tnt:true, tntMeterPrice:3.200, tntRollPrice:300.000, tntRollLength:100},
+  ]},
+  { icon:'💨', name:"Soufflette d'Air", desc:"Soufflettes pneumatiques ANI — Made in Italy", items:[
+    {code:'OUT030', name:"Soufflette d'Air ANI 25/B2 (buse longue)", ref:'Cod. AH050301', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%201.jpg"},
+    {code:'OUT031', name:"Soufflette d'Air ANI 25/B1", ref:'Cod. AH050101', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%202.jpg"},
   ]},
 ];
 
