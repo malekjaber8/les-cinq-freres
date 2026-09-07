@@ -280,6 +280,36 @@
       padding:5px 18px; border-radius:50px;
       max-width:80vw; text-align:center; pointer-events:none;
     }
+    #video-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,.9); z-index:4000;
+      align-items:center; justify-content:center;
+      padding:20px;
+    }
+    #video-overlay.open { display:flex; }
+    #video-player {
+      width:90vw; max-width:900px; max-height:85vh;
+      border-radius:10px; box-shadow:0 12px 60px rgba(0,0,0,.6);
+      animation:lb-in .18s ease; background:#000;
+    }
+    #video-close {
+      position:fixed; top:14px; right:18px;
+      background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.25);
+      color:#fff; font-size:1.2rem; width:38px; height:38px;
+      border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:.2s;
+    }
+    #video-close:hover { background:rgba(255,255,255,.35); }
+    .video-play-btn {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.15); cursor:pointer; transition:.2s;
+    }
+    .video-play-btn:hover { background:rgba(0,0,0,.3); }
+    .video-play-btn .vp-circle {
+      width:44px; height:44px; border-radius:50%;
+      background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; box-shadow:0 3px 12px rgba(0,0,0,.35); color:#122F4B;
+    }
     .zoomable { cursor:zoom-in !important; }
 
     /* ===== MODAL ===== */
@@ -712,6 +742,12 @@
   <img id="lb-img" src="" alt="" onclick="event.stopPropagation()">
   <button id="lb-close" onclick="closeLightbox()">✕</button>
   <div id="lb-caption"></div>
+</div>
+
+<!-- ===== VIDEO OVERLAY ===== -->
+<div id="video-overlay" onclick="closeVideoModal()">
+  <video id="video-player" controls autoplay onclick="event.stopPropagation()"></video>
+  <button id="video-close" onclick="closeVideoModal()">✕</button>
 </div>
 
 <!-- ===== JERSEY CHOICE MODAL ===== -->
@@ -1358,7 +1394,7 @@ const catalogue = {
       { id:'MC015', name:'Mécanisme Table Extensible', desc:'Mécanisme à coulisses pour table extensible.', variants:['190,000 DT / unité'], price:'190,000 DT', img:'images/mecanismes/mécanisme%20table%20extensible.jpg', gallery:['images/mecanismes/mécanisme%20table%20extensible.jpg','images/mecanismes/mécanisme%20table%20extensible%28exemple%29.jpg'] },
       { id:'MC017', name:'Mécanisme Canapé-Lit (modèle 2)', desc:'Mécanisme de transformation canapé en lit — nouveau modèle.', variants:['160,000 DT / unité'], price:'160,000 DT', img:'images/mecanismes/mecanisme%20canapé%20lit%20.png', gallery:['images/mecanismes/mecanisme%20canapé%20lit%20.png','images/mecanismes/mecanisme%20canapé%20lit%20-exemple.png'] },
       { id:'MC016', name:'Rouleau Attache Sofa', desc:'Rouleau attache pour canapé et meubles tapissés.', variants:['25,000 DT / rouleau'], price:'25,000 DT', img:'images/outil%20de%20tapissserie/rouleau%20attach%20sofa%20.jpg' },
-      { id:'MC018', name:'Mécanisme Chaise Basculant', desc:'Mécanisme pivotant et basculant pour fauteuil, avec base et roulettes.', variants:['250,000 DT / unité'], price:'250,000 DT', img:'images/mecanismes/mecanisme%20chaise%20basculant.png' },
+      { id:'MC018', name:'Mécanisme Chaise Basculant', desc:'Mécanisme pivotant et basculant pour fauteuil, avec base et roulettes.', variants:['250,000 DT / unité'], price:'250,000 DT', img:'images/mecanismes/mecanisme%20chaise%20basculant.png', video:'images/mecanismes/mecanisme%20chaise%20basculant%20video.mp4' },
     ]
   },
 
@@ -2847,7 +2883,8 @@ const toolCategories = [
       gallery:['images/outil%20de%20tapissserie/lampe%20mural.png','images/outil%20de%20tapissserie/lampe%20mural%202.png','images/outil%20de%20tapissserie/lampe%20mural%203.png']},
     {code:'OUT033', name:'Lampe Murale avec Chargeur Sans Fil', ref:'Liseuse LED + tablette de recharge sans fil', price:'120,000 DT', img:'images/outil%20de%20tapissserie/lampe%20avec%20rechrage%20sans%20fil.png'},
     {code:'OUT034', name:'Support Goblet pour Salon', ref:'Porte-gobelet encastrable pour accoudoir', price:'20,000 DT', img:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png',
-      gallery:['images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png','images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%202.png']},
+      gallery:['images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png','images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%202.png'],
+      video:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%20video.mp4'},
   ]},
 ];
 
@@ -2931,9 +2968,14 @@ function toolItemCard(tc, item, catIdx, itemIdx) {
     ? `<button class="add-btn" title="Choisir votre quantité" onclick="event.stopPropagation();openTntChoice(${catIdx},${itemIdx})">🛒 Choisir</button>`
     : `<button class="add-btn" title="Ajouter au panier" onclick="event.stopPropagation();addToolToCart(${catIdx},${itemIdx})">🛒 Ajouter</button>`;
 
+  const videoBtn = (typeof item === 'object' && item.video)
+    ? `<button onclick="event.stopPropagation();openVideoModal('${item.video}')" title="Voir la vidéo" style="position:absolute;bottom:6px;right:6px;display:flex;align-items:center;gap:4px;background:rgba(18,47,75,.85);color:#fff;border:none;border-radius:50px;padding:4px 10px;font-family:'Poppins',sans-serif;font-size:.66rem;font-weight:700;cursor:pointer;z-index:2">▶️ Vidéo</button>`
+    : '';
+
   return `<div class="prod-card">
-    <div class="prod-card-img">
+    <div class="prod-card-img" style="position:relative">
       ${img ? `<img src="${img}" alt="${nom}">` : `<span class="placeholder">${tc.icon}</span>`}
+      ${videoBtn}
     </div>
     <div class="prod-card-body">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
@@ -2972,6 +3014,7 @@ function openModal(pid, catId) {
       <div style="flex:1;background:#fff;border-radius:var(--radius);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:280px;max-height:420px;border:1px solid var(--gray-100);position:relative">
         ${isPromo ? `<div class="promo-ribbon">Promo</div>` : ''}
         <img id="modal-main-img" src="${p.img}" alt="${p.name}" class="zoomable" onclick="openLightbox(this.src,this.alt)" style="max-width:100%;max-height:420px;object-fit:contain;display:block">
+        ${p.video ? `<button onclick="event.stopPropagation();openVideoModal('${p.video}')" style="position:absolute;bottom:10px;right:10px;display:flex;align-items:center;gap:6px;background:rgba(18,47,75,.85);color:#fff;border:none;border-radius:50px;padding:7px 14px;font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;z-index:2">▶️ Voir la vidéo</button>` : ''}
       </div>
       ${p.gallery && p.gallery.length > 1 ? `
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -3396,6 +3439,23 @@ function closeLightbox() {
   document.removeEventListener('keydown', _lbKey);
 }
 function _lbKey(e) { if (e.key === 'Escape') closeLightbox(); }
+
+/* ===== VIDEO MODAL ===== */
+function openVideoModal(src) {
+  if (!src) return;
+  const player = document.getElementById('video-player');
+  player.src = src;
+  document.getElementById('video-overlay').classList.add('open');
+  document.addEventListener('keydown', _videoKey);
+}
+function closeVideoModal() {
+  const player = document.getElementById('video-player');
+  player.pause();
+  player.src = '';
+  document.getElementById('video-overlay').classList.remove('open');
+  document.removeEventListener('keydown', _videoKey);
+}
+function _videoKey(e) { if (e.key === 'Escape') closeVideoModal(); }
 
 function addToCart(e, id, name) {
   e.stopPropagation();
