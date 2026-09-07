@@ -465,8 +465,8 @@
 <style>
 .nv-card { flex:0 0 calc(33.333% - 14px); background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.1); border-radius:16px; overflow:hidden; cursor:pointer; transition:transform .3s,box-shadow .3s,border-color .3s; backdrop-filter:blur(4px); }
 .nv-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(0,0,0,.3); border-color:rgba(43,190,200,.5); }
-.nv-card-img { height:200px; overflow:hidden; position:relative; background:rgba(255,255,255,.05); }
-.nv-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+.nv-card-img { height:200px; overflow:hidden; position:relative; background:rgba(255,255,255,.05); display:flex; align-items:center; justify-content:center; }
+.nv-card-img img { max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; padding:14px; box-sizing:border-box; transition:transform .4s; }
 .nv-card:hover .nv-card-img img { transform:scale(1.06); }
 .nv-badge { position:absolute; top:12px; left:12px; background:var(--teal); color:#fff; font-size:.62rem; font-weight:800; padding:3px 10px; border-radius:50px; text-transform:uppercase; letter-spacing:.06em; }
 .nv-card-body { padding:16px; }
