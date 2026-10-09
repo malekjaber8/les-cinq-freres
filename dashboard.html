@@ -780,6 +780,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 <script src="firebase-init.js"></script>
 <!-- Données catalogue + logique de prix partagées — alimente la section "Gestion des Prix" -->
 <script src="catalogue-data.js"></script>
@@ -1066,6 +1067,15 @@
     const fS = "width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none";
     const lS = "display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px";
     const gS = "margin-bottom:16px";
+    const photoField = (num, extra) => `
+      <div style="${gS}">
+        <label style="${lS}">${num}. Photo${extra||''} (optionnel)</label>
+        <input type="file" accept="image/*" id="artPhotoFile" onchange="previewArticlePhoto(this)" style="${fS};padding:8px 10px;cursor:pointer">
+        <div id="artPhotoPreviewWrap" style="display:none;align-items:center;gap:10px;margin-top:8px">
+          <img id="artPhotoPreviewImg" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200)">
+          <button type="button" onclick="clearArticlePhoto()" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.72rem;padding:5px 10px;border-radius:7px;cursor:pointer">✕ Retirer</button>
+        </div>
+      </div>`;
 
     if (cat === 'outils') {
       box.innerHTML = `
@@ -1081,7 +1091,7 @@
         <div style="${gS}"><label style="${lS}">4. Nom de l'article *</label><input id="artName" placeholder="Ex: Pince à dégrafer" style="${fS}"></div>
         <div style="${gS}"><label style="${lS}">5. Référence fournisseur (optionnel)</label><input id="artRef" placeholder="Ex: Réf. QNR0500" style="${fS}"></div>
         <div style="${gS}"><label style="${lS}">6. Prix *</label><input id="artPrice" placeholder="Ex: 12,500 DT" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">7. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        ${photoField(7)}
       `;
     } else if (ART_STANDARD_LABELS[cat]) {
       box.innerHTML = `
@@ -1089,7 +1099,7 @@
         <div style="${gS}"><label style="${lS}">3. Nom de l'article *</label><input id="artName" placeholder="Ex: Sabot Gl 250" style="${fS}"></div>
         <div style="${gS}"><label style="${lS}">4. Désignation / Description</label><textarea id="artDesc" rows="2" style="${fS};resize:none" placeholder="Ex: Pied métal incliné, 15cm"></textarea></div>
         <div style="${gS}"><label style="${lS}">5. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">6. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        ${photoField(6)}
       `;
     } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
       const types = cat === 'mousse-matelas' ? ART_MOUSSE_TYPES : ART_TABKA_TYPES;
@@ -1111,7 +1121,7 @@
         <div style="${gS}"><label style="${lS}">4. Dimension (L×l×H cm) *</label><input id="artDim" placeholder="Ex: 190×70×15" style="${fS}"></div>
         ${isTabka ? `<div style="${gS}"><label style="${lS}">5. Épaisseur (ex: 2 cm) *</label><input id="artEp" placeholder="Ex: 2 cm" style="${fS}"></div>` : ''}
         <div style="${gS}"><label style="${lS}">${isTabka?'6':'5'}. Prix (DT) *</label><input id="artPrice" type="number" step="0.001" placeholder="Ex: 95.000" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">${isTabka?'7':'6'}. Chemin de l'image (qualité)</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        ${photoField(isTabka?7:6, ' (qualité — uniquement si nouvelle qualité)')}
       `;
     } else if (cat === 'ressort') {
       box.innerHTML = `
@@ -1120,7 +1130,7 @@
           <div style="${gS}"><label style="${lS}">3. Badge</label><input id="artNewTypeBadge" placeholder="Ex: Très haut de gamme" style="${fS}"></div>
           <div><label style="${lS}">4. Couleur</label><input type="color" id="artNewTypeColor" value="#2BBEC8" style="width:60px;height:36px;border:1.5px solid var(--gray-200);border-radius:8px;cursor:pointer"></div>
         </div>
-        <div style="${gS}"><label style="${lS}">5. Chemin de l'image (qualité)</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        ${photoField(5, ' (qualité)')}
         <div style="${gS}">
           <label style="${lS}">6. Prix par dimension (DT) — laissez vide = "Sur devis"</label>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -1143,9 +1153,35 @@
     el.textContent = text;
   }
 
-  function getArticlePhotoPath() {
-    const el = document.getElementById('artPhotoPath');
-    return el && el.value.trim() ? el.value.trim() : null;
+  function previewArticlePhoto(input) {
+    const file = input.files && input.files[0];
+    const wrap = document.getElementById('artPhotoPreviewWrap');
+    const img  = document.getElementById('artPhotoPreviewImg');
+    if (!file) { wrap.style.display = 'none'; return; }
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; wrap.style.display = 'flex'; };
+    reader.readAsDataURL(file);
+  }
+
+  function clearArticlePhoto() {
+    const input = document.getElementById('artPhotoFile');
+    if (input) input.value = '';
+    const wrap = document.getElementById('artPhotoPreviewWrap');
+    if (wrap) wrap.style.display = 'none';
+  }
+
+  /* Envoie la photo choisie vers Firebase Storage et renvoie son URL publique (ou null si aucune photo). */
+  async function uploadArticlePhotoIfAny() {
+    const input = document.getElementById('artPhotoFile');
+    const file = input && input.files && input.files[0];
+    if (!file) return null;
+    if (typeof firebase === 'undefined' || !firebase.storage) throw new Error('Firebase Storage indisponible.');
+    const btn = document.getElementById('artSubmitBtn');
+    if (btn) btn.textContent = '⏳ Envoi de la photo…';
+    const safeName = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+    const ref = firebase.storage().ref().child('catalogue/' + safeName);
+    const snap = await ref.put(file);
+    return await snap.ref.getDownloadURL();
   }
 
   function resetArticleBtn() {
@@ -1170,7 +1206,7 @@
         let subcat  = document.getElementById('artToolSubcat').value;
         if (subcat === '__new__') subcat = document.getElementById('artToolSubcatNew').value.trim();
         if (!code || !name || !price || !subcat) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
-        const img = getArticlePhotoPath();
+        const img = await uploadArticlePhotoIfAny();
         await db.collection('admin_products').add({
           kind:'tool', catId:'outils', toolSubcat: subcat, code, name, ref, price, img: img || null, createdAt: Date.now()
         });
@@ -1182,7 +1218,7 @@
         const desc  = document.getElementById('artDesc').value.trim();
         const price = document.getElementById('artPrice').value.trim();
         if (!code || !name || !price) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
-        const img = getArticlePhotoPath();
+        const img = await uploadArticlePhotoIfAny();
         await db.collection('admin_products').add({
           kind:'standard', catId: cat, code, name, desc, price, img: img || null, createdAt: Date.now()
         });
@@ -1204,7 +1240,7 @@
           typeColor = document.getElementById('artNewTypeColor').value;
           if (!typeLabel) { showArtMsg('error','Veuillez nommer la nouvelle qualité.'); resetArticleBtn(); return; }
           typeId = 'adm-' + typeLabel.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-          img = getArticlePhotoPath();
+          img = await uploadArticlePhotoIfAny();
         }
         await db.collection('admin_special_entries').add({
           targetCat: cat, typeId, isNewType, typeLabel, typeBadge, typeColor, typeImg: img,
@@ -1218,7 +1254,7 @@
         const typeColor = document.getElementById('artNewTypeColor').value;
         if (!typeLabel) { showArtMsg('error','Veuillez nommer la nouvelle qualité.'); resetArticleBtn(); return; }
         const typeId = 'adm-' + typeLabel.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-        const img = getArticlePhotoPath();
+        const img = await uploadArticlePhotoIfAny();
         const prices = ART_RESSORT_SIZES.map((d,i) => {
           const v = document.getElementById('artRessortPrice'+i).value;
           return v ? parseFloat(v) : null;
