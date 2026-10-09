@@ -599,7 +599,7 @@
 
         <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
           <input id="priceSearchInput" type="text" placeholder="🔍 Rechercher un article (nom, dimension, code...)"
-            oninput="renderPriceList()"
+            oninput="onPriceSearchInput()"
             style="flex:1;min-width:220px;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.86rem;outline:none">
           <select id="priceCatSelect" onchange="renderPriceList()"
             style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.86rem;outline:none;background:#fff">
@@ -1350,6 +1350,19 @@
 
   function priceForItem(it) {
     return _priceOverrides[it.key] !== undefined ? _priceOverrides[it.key] : it.price;
+  }
+
+  // Quand une nouvelle recherche commence (champ vide -> texte tape), on repart sur "Toutes les
+  // categories" : sinon un filtre categorie laisse par une recherche precedente masque silencieusement
+  // les resultats d'un article d'une autre categorie, et la recherche a l'air "cassee".
+  let _priceSearchHadText = false;
+  function onPriceSearchInput() {
+    const hasText = !!document.getElementById('priceSearchInput').value.trim();
+    if (hasText && !_priceSearchHadText) {
+      document.getElementById('priceCatSelect').value = '';
+    }
+    _priceSearchHadText = hasText;
+    renderPriceList();
   }
 
   function renderPriceList() {
