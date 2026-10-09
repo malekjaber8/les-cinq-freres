@@ -1330,7 +1330,7 @@
     }
     if (!_priceMgmtInited) {
       _priceMgmtInited = true;
-      _priceItems = PricingShared.flattenPriceableItems(catalogue);
+      _priceItems = PricingShared.flattenPriceableItems(catalogue, typeof toolCategories !== 'undefined' ? toolCategories : []);
       const cats = [...new Map(_priceItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
       const sel = document.getElementById('priceCatSelect');
       cats.forEach(([id, label]) => {

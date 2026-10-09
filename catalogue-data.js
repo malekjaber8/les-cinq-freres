@@ -651,3 +651,59 @@ const catalogue = {
   },
 
 };
+
+const toolCategories = [
+  { icon:'📌', name:'Agrafes Tapisserie', desc:'Agrafes standard — Réf. QNR — boîte 10 000 unités', items:[
+    {code:'OUT001', name:'Agraphe 8',     ref:'Réf. QNR 004', price:'7,800 DT',  img:'images/outils/agr.png'},
+    {code:'OUT002', name:'Agraphe 10',    ref:'Réf. QNR 001', price:'8,800 DT',  img:'images/outils/agr.png'},
+    {code:'OUT003', name:'Agraphe 12',    ref:'Réf. QNR 002', price:'10,300 DT', img:'images/outils/agr.png'},
+    {code:'OUT004', name:'Agraphe 14',    ref:'Réf. QNR 003', price:'11,800 DT', img:'images/outils/agr.png'},
+    {code:'OUT005', name:'Agraphe 90/40', ref:'Réf. QNR 005', price:'25,000 DT', img:'images/outils/agr.png'},
+  ]},
+  { icon:'🔩', name:'Pointes Têtes & Clous', desc:'Pointes H14 + Clou F10 — boîte de 12 barettes', items:[
+    {code:'OUT006', name:'Pointe Tête H14/T20 (boîte 12)', ref:'Réf. QNR0409', price:'8,500 DT', img:'images/outils/t20.png'},
+    {code:'OUT007', name:'Pointe Tête H14/T25 (boîte 12)', ref:'Réf. QNR0410', price:'9,900 DT', img:'images/outils/t25.png'},
+    {code:'OUT008', name:'Pointe Tête H14/T30 (boîte 12)', ref:'Réf. QNR0411', price:'11,900 DT', img:'images/outils/t30.png'},
+    {code:'OUT009', name:'Pointe Tête H14/T40 (boîte 12)', ref:'Réf. QNR0412', price:'14,000 DT', img:'images/outils/t40.png'},
+    {code:'OUT010', name:'Pointe Tête H14/T50 (boîte 12)', ref:'Réf. QNR0413', price:'17,000 DT', img:'images/outils/t50.png'},
+    {code:'OUT011', name:'Clou F10', ref:'Réf. QNR0290', price:'4,200 DT', img:'images/outils/f10.png'},
+  ]},
+  { icon:'🔫', name:'Pistolets', desc:'Pistolets pour capitonnage professionnel — pneumatique et manuel', items:[
+    {code:'OUT012', name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
+    {code:'OUT013', name:'Pistolet de capitonnage pneumatique professionnel', ref:'', price:'450,000 DT', img:'images/outils/pisto-cap.png'},
+    {code:'OUT028', name:'Pistolet de Peinture — Réservoir Bas',    ref:'', price:'48,000 DT', img:'images/outil%20de%20tapissserie/pistolet%20de%20colle.jpg'},
+    {code:'OUT029', name:'Pistolet de Peinture — Réservoir Gravité (Haut)', ref:'', price:'48,000 DT', img:'images/outil%20de%20tapissserie/pistolet%20de%20peinture.jpg'},
+    {code:'OUT032', name:'Pistolet de Colle 1 (H-827)', ref:'Modèle H-827 — réservoir haut', price:'50,000 DT', img:'images/colle/pistolet%20de%20colle1.jpg'},
+    {code:'OUT033', name:'Pistolet de Colle 2 (S-990)', ref:'Modèle S-990 — réservoir bas', price:'40,000 DT', img:'images/colle/pistolet%20de%20colle2.jpg'},
+  ]},
+  { icon:'✂️', name:'Ciseaux & Coupe-Fil', desc:'Ciseaux de tapisserie et coupe-fil professionnel', items:[
+    {code:'OUT014', name:'Ciseaux',    ref:'', price:'15,000 DT', img:'images/outil%20de%20tapissserie/ciseaux.jpg'},
+    {code:'OUT015', name:'Coupe-Fil',  ref:'', price:'3,000 DT',  img:'images/outil%20de%20tapissserie/coupe%20fil.jpg'},
+  ]},
+  { icon:'🔩', name:'Vis de Tapisserie', desc:'Vis N°5 et N°7 — prix à l\'unité', items:[
+    {code:'OUT016', name:'Vis N°5', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%205.jpg'},
+    {code:'OUT017', name:'Vis N°7', ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/vis%207.jpg'},
+  ]},
+  { icon:'🛝', name:'Curseur & Patin-Glisseur', desc:'Accessoires de glissement pour pieds de meubles', items:[
+    {code:'OUT018', name:'Curseur',        ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Curseur.jpg'},
+    {code:'OUT019', name:'Patin-Glisseur', ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Patin-glisseur.jpg'},
+  ]},
+  { icon:'📦', name:'Fermeture, Film & Sangle', desc:'Fermeture éclair au rouleau, film étirable et sangle de protection', items:[
+    {code:'OUT020', name:'Fermeture Éclair (rouleau)', ref:'', price:'38,000 DT', img:'images/outil%20de%20tapissserie/fermeture.jpg'},
+    {code:'OUT021', name:'Film Étirable',              ref:'', price:'25,000 DT', img:'images/outil%20de%20tapissserie/film%20étirable.jpg', gallery:['images/outil%20de%20tapissserie/film%20étirable.jpg','images/outil%20de%20tapissserie/film étirable-exemple.jpg']},
+    {code:'OUT022', name:'Sangle',                     ref:'', price:'50,000 DT', img:'images/outil%20de%20tapissserie/sangle.jpg', gallery:['images/outil%20de%20tapissserie/sangle.jpg','images/outil%20de%20tapissserie/sangle-exemple.jpg']},
+    {code:'OUT026', name:'Sangle Noire Jaune',         ref:'', price:'70,000 DT', img:'images/outil%20de%20tapissserie/sangle%20noire%20jaune.jpg'},
+  ]},
+  { icon:'🪢', name:'Cordons & Attaches', desc:'Cordons décoratifs pour canapé', items:[
+    {code:'OUT023', name:'Cordon Petit',         ref:'', price:'11,000 DT', img:'images/outil%20de%20tapissserie/cordon%20petit.jpg'},
+    {code:'OUT024', name:'Cordon Moyen',         ref:'', price:'22,000 DT', img:'images/outil%20de%20tapissserie/cordon%20moyen%20.jpg'},
+  ]},
+  { icon:'🧻', name:'TNT (Toile Non Tissée)', desc:'Toile non tissée pour doublure et renfort — vendue au rouleau ou au mètre', items:[
+    {code:'OUT027', name:'TNT — Toile Non Tissée', ref:'Largeur 1m — Disponible en Noir et Blanc', price:'3,200 DT', img:'images/outil%20de%20tapissserie/tnt.jpg',
+      tnt:true, tntMeterPrice:3.200, tntRollPrice:300.000, tntRollLength:100},
+  ]},
+  { icon:'💨', name:"Soufflette d'Air", desc:"Soufflettes pneumatiques ANI — Made in Italy", items:[
+    {code:'OUT030', name:"Soufflette d'Air ANI 25/B2 (buse longue)", ref:'Cod. AH050301', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%201.jpg"},
+    {code:'OUT031', name:"Soufflette d'Air ANI 25/B1", ref:'Cod. AH050101', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%202.jpg"},
+  ]},
+];

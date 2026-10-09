@@ -28,9 +28,15 @@ function replaceVariantPrice(variantStr, newPrice) {
 }
 
 /* Parcourt tout le catalogue et retourne une liste à plat de chaque unité de prix modifiable.
-   Chaque entrée a une `key` stable utilisée comme id de document Firestore pour l'override. */
-function flattenPriceableItems(cat) {
+   Chaque entrée a une `key` stable utilisée comme id de document Firestore pour l'override.
+   `tools` est le tableau séparé `toolCategories` (Outils de Tapisserie, hors de l'objet catalogue). */
+function flattenPriceableItems(cat, tools) {
   const out = [];
+  (tools || []).forEach(tc => {
+    (tc.items || []).forEach(it => {
+      out.push({ key: it.code, catId: 'outils', catLabel: 'Outils de Tapisserie', group: tc.name, label: it.name, price: parsePriceStr(it.price), kind: 'tool' });
+    });
+  });
   Object.entries(cat).forEach(([catId, c]) => {
     if (Array.isArray(c.products)) {
       c.products.forEach(p => {
@@ -77,9 +83,15 @@ function flattenPriceableItems(cat) {
   return out;
 }
 
-/* Applique une table d'overrides {key: nouveauPrix(number)} directement sur l'objet catalogue (mutation en place). */
-function applyPriceOverrides(cat, overrides) {
+/* Applique une table d'overrides {key: nouveauPrix(number)} directement sur l'objet catalogue
+   (et sur `tools` = toolCategories s'il est fourni) — mutation en place. */
+function applyPriceOverrides(cat, overrides, tools) {
   if (!overrides || !Object.keys(overrides).length) return;
+  (tools || []).forEach(tc => {
+    (tc.items || []).forEach(it => {
+      if (overrides[it.code] !== undefined) it.price = formatDT(overrides[it.code]);
+    });
+  });
   Object.values(cat).forEach(c => {
     if (Array.isArray(c.products)) {
       c.products.forEach(p => {
