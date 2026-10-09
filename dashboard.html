@@ -1365,8 +1365,15 @@
     renderPriceList();
   }
 
+  // Normalise pour la recherche : minuscule + accents retires + espaces/ponctuation retires,
+  // pour que "gl43" trouve "Sabot Gl 43 (15cm)" ou "GL-43" peu importe la mise en forme exacte.
+  function normSearch(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+  }
+
   function renderPriceList() {
-    const q = (document.getElementById('priceSearchInput').value || '').trim().toLowerCase();
+    const qRaw = (document.getElementById('priceSearchInput').value || '').trim();
+    const q = normSearch(qRaw);
     const catFilter = document.getElementById('priceCatSelect').value;
     const modifiedOnly = document.getElementById('priceModifiedOnly').checked;
     const wrap = document.getElementById('priceList');
@@ -1375,7 +1382,7 @@
     let items = _priceItems;
     if (catFilter) items = items.filter(i => i.catId === catFilter);
     if (modifiedOnly) items = items.filter(i => _priceOverrides[i.key] !== undefined);
-    if (q) items = items.filter(i => (i.group + ' ' + i.label + ' ' + i.key).toLowerCase().includes(q));
+    if (q) items = items.filter(i => normSearch(i.group + ' ' + i.label + ' ' + i.key).includes(q));
 
     if (!q && !catFilter && !modifiedOnly) {
       wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Recherchez un article ou choisissez une catégorie pour afficher ses prix (${_priceItems.length} articles au total dans le catalogue).</div>`;
