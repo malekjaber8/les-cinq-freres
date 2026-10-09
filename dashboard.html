@@ -224,6 +224,7 @@
         <div class="s-link" id="navAdminOrders" onclick="showSection('admin-orders')"><span class="ico">📋</span> Commandes reçues <span class="bdg" id="adminOrdersBadge" style="background:#e53e3e;display:none">0</span></div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">🛍️</span> Catalogue</div>
         <div class="s-link" id="navArticleMgmt" onclick="showSection('articles')"><span class="ico">➕</span> Gestion des Articles</div>
+        <div class="s-link" id="navPriceMgmt" onclick="showSection('prices')"><span class="ico">💲</span> Gestion des Prix</div>
         <div class="s-link" onclick="window.location.href='catalogue.html'"><span class="ico">📊</span> Gérer le Stock</div>
         <div class="s-link" id="navPromo" onclick="showSection('promo')"><span class="ico">🏷️</span> Codes Promo</div>
         <div class="s-link" id="navReviews" onclick="showSection('reviews')"><span class="ico">⭐</span> Avis Clients <span class="bdg" id="reviewsBadge" style="background:#e53e3e;display:none">0</span></div>
@@ -589,6 +590,30 @@
 
       </div><!-- end sec-articles -->
 
+      <!-- ════════════ SECTION GESTION DES PRIX ════════════ -->
+      <div id="sec-prices" style="display:none">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:'Raleway',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:4px">💲 Gestion des Prix</h2>
+          <p style="font-size:.82rem;color:var(--gray-600)">Modifiez le prix de n'importe quel article du catalogue — le changement est visible immédiatement sur le site.</p>
+        </div>
+
+        <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <input id="priceSearchInput" type="text" placeholder="🔍 Rechercher un article (nom, dimension, code...)"
+            oninput="renderPriceList()"
+            style="flex:1;min-width:220px;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.86rem;outline:none">
+          <select id="priceCatSelect" onchange="renderPriceList()"
+            style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:'Poppins',sans-serif;font-size:.86rem;outline:none;background:#fff">
+            <option value="">Toutes les catégories</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--gray-600);white-space:nowrap">
+            <input type="checkbox" id="priceModifiedOnly" onchange="renderPriceList()"> Prix modifiés seulement
+          </label>
+        </div>
+
+        <div id="priceListMeta" style="font-size:.82rem;color:var(--gray-500);margin-bottom:10px"></div>
+        <div id="priceList"></div>
+      </div><!-- end sec-prices -->
+
       <!-- ════════════ SECTION CODES PROMO ════════════ -->
       <div id="sec-promo" style="display:none">
         <div style="margin-bottom:24px">
@@ -756,6 +781,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="firebase-init.js"></script>
+<!-- Données catalogue + logique de prix partagées — alimente la section "Gestion des Prix" -->
+<script src="catalogue-data.js"></script>
+<script src="pricing.js"></script>
 <script>
   let currentUser = null;
   let editMode = false;
@@ -879,6 +907,7 @@
     document.getElementById('sec-admin-orders').style.display    = id === 'admin-orders'  ? '' : 'none';
     document.getElementById('sec-parametres').style.display      = id === 'parametres'    ? '' : 'none';
     document.getElementById('sec-articles').style.display        = id === 'articles'      ? '' : 'none';
+    document.getElementById('sec-prices').style.display          = id === 'prices'        ? '' : 'none';
     document.getElementById('sec-promo').style.display           = id === 'promo'         ? '' : 'none';
     document.getElementById('sec-reviews').style.display         = id === 'reviews'        ? '' : 'none';
 
@@ -892,6 +921,10 @@
       initArticleMgmt();
     }
 
+    if (id === 'prices') {
+      initPriceMgmt();
+    }
+
     if (id === 'promo') {
       loadPromoList();
     }
@@ -900,7 +933,7 @@
       loadReviewsList();
     }
 
-    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres', articles:'Gestion des Articles', promo:'Codes Promo', reviews:'Avis Clients' };
+    const titles = { home:'Tableau de Bord', fiche:'Ma Fiche Client', 'mes-commandes':'Mes Commandes', 'admin-orders':'Commandes Admin', parametres:'Paramètres', articles:'Gestion des Articles', prices:'Gestion des Prix', promo:'Codes Promo', reviews:'Avis Clients' };
     document.getElementById('pageTitle').textContent = titles[id] || 'Tableau de Bord';
 
     document.querySelectorAll('.s-link').forEach(l => l.classList.remove('active'));
@@ -1275,6 +1308,136 @@
       .then(() => { showToast('success','Article supprimé',''); loadArticleList(); })
       .catch(e => showToast('error','Erreur', e.message));
   }
+
+  /* ══════════════════════════════════════════
+     GESTION DES PRIX (admin)
+     S'appuie sur catalogue-data.js + pricing.js (partagés avec catalogue.html).
+     Les overrides sont stockés dans Firestore `price_overrides/{key}` et
+     appliqués en direct sur catalogue.html à l'affichage.
+  ══════════════════════════════════════════ */
+  let _priceItems = [];      // flattenPriceableItems(catalogue) — prix d'origine
+  let _priceOverrides = {};  // {key: prixOverride(number)} chargé depuis Firestore
+  let _priceMgmtInited = false;
+
+  function cssEscapeKey(s) {
+    return String(s).replace(/[^a-zA-Z0-9_-]/g, c => '_' + c.charCodeAt(0) + '_');
+  }
+
+  function initPriceMgmt() {
+    if (typeof catalogue === 'undefined' || typeof PricingShared === 'undefined') {
+      document.getElementById('priceList').innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Données catalogue indisponibles — rechargez la page.</div>`;
+      return;
+    }
+    if (!_priceMgmtInited) {
+      _priceMgmtInited = true;
+      _priceItems = PricingShared.flattenPriceableItems(catalogue);
+      const cats = [...new Map(_priceItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
+      const sel = document.getElementById('priceCatSelect');
+      cats.forEach(([id, label]) => {
+        const opt = document.createElement('option'); opt.value = id; opt.textContent = label; sel.appendChild(opt);
+      });
+    }
+    loadPriceOverridesList();
+  }
+
+  function loadPriceOverridesList() {
+    document.getElementById('priceList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray-400)">⏳ Chargement des prix…</div>`;
+    PricingShared.loadPriceOverrides(db).then(map => {
+      _priceOverrides = map;
+      renderPriceList();
+    });
+  }
+
+  function priceForItem(it) {
+    return _priceOverrides[it.key] !== undefined ? _priceOverrides[it.key] : it.price;
+  }
+
+  function renderPriceList() {
+    const q = (document.getElementById('priceSearchInput').value || '').trim().toLowerCase();
+    const catFilter = document.getElementById('priceCatSelect').value;
+    const modifiedOnly = document.getElementById('priceModifiedOnly').checked;
+    const wrap = document.getElementById('priceList');
+    const meta = document.getElementById('priceListMeta');
+
+    let items = _priceItems;
+    if (catFilter) items = items.filter(i => i.catId === catFilter);
+    if (modifiedOnly) items = items.filter(i => _priceOverrides[i.key] !== undefined);
+    if (q) items = items.filter(i => (i.group + ' ' + i.label + ' ' + i.key).toLowerCase().includes(q));
+
+    if (!q && !catFilter && !modifiedOnly) {
+      wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Recherchez un article ou choisissez une catégorie pour afficher ses prix (${_priceItems.length} articles au total dans le catalogue).</div>`;
+      meta.textContent = '';
+      return;
+    }
+
+    const LIMIT = 300;
+    const shown = items.slice(0, LIMIT);
+    meta.textContent = items.length > LIMIT
+      ? `${shown.length} affichés sur ${items.length} résultats — affinez la recherche pour voir le reste.`
+      : `${items.length} résultat${items.length > 1 ? 's' : ''}`;
+
+    if (!items.length) {
+      wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Aucun article trouvé.</div>`;
+      return;
+    }
+
+    // Grouper par (catégorie, article / type)
+    const groups = new Map();
+    shown.forEach(it => {
+      const gk = it.catLabel + '::' + it.group;
+      if (!groups.has(gk)) groups.set(gk, { catLabel: it.catLabel, group: it.group, items: [] });
+      groups.get(gk).items.push(it);
+    });
+
+    wrap.innerHTML = [...groups.values()].map(g => `
+      <div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:14px 18px;margin-bottom:10px">
+        <div style="font-size:.85rem;font-weight:800;color:var(--navy-dark);margin-bottom:2px">${g.group}</div>
+        <div style="font-size:.72rem;color:var(--gray-400);margin-bottom:10px">${g.catLabel}</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${g.items.map(it => {
+            const eff = priceForItem(it);
+            const isOverridden = _priceOverrides[it.key] !== undefined;
+            const safeKey = it.key.replace(/'/g, "\\'");
+            return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--gray-50);border-radius:10px;flex-wrap:wrap">
+              <div style="flex:1;min-width:120px;font-size:.8rem;color:var(--gray-700)">
+                ${it.label}
+                ${isOverridden ? `<span style="margin-left:6px;background:#fef3c7;color:#b45309;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:50px">Modifié</span>` : ''}
+              </div>
+              ${isOverridden ? `<div style="font-size:.76rem;color:var(--gray-400);text-decoration:line-through;white-space:nowrap">${PricingShared.formatDT(it.price)}</div>` : ''}
+              <input type="number" step="0.001" min="0" value="${eff.toFixed(3)}" id="pinput-${cssEscapeKey(it.key)}"
+                style="width:100px;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;outline:none">
+              <span style="font-size:.74rem;color:var(--gray-400)">DT</span>
+              <button onclick="savePriceItem('${safeKey}')" style="background:rgba(43,190,200,.12);border:none;color:var(--teal-dark);font-size:.78rem;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">💾 Enregistrer</button>
+              ${isOverridden ? `<button onclick="resetPriceItem('${safeKey}')" style="background:rgba(100,116,139,.1);border:none;color:#475569;font-size:.78rem;padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">↺ Réinitialiser</button>` : ''}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function savePriceItem(key) {
+    const it = _priceItems.find(i => i.key === key);
+    if (!it) return;
+    const inputEl = document.getElementById('pinput-' + cssEscapeKey(key));
+    const val = parseFloat((inputEl.value || '').replace(',', '.'));
+    if (isNaN(val) || val < 0) { showToast('error', 'Prix invalide', 'Saisissez un nombre positif.'); return; }
+    PricingShared.savePriceOverride(db, key, val, { catId: it.catId, group: it.group, label: it.label }).then(() => {
+      _priceOverrides[key] = val;
+      showToast('success', 'Prix mis à jour', g_label(it) + ' — ' + PricingShared.formatDT(val));
+      renderPriceList();
+    }).catch(e => showToast('error', 'Erreur', e.message));
+  }
+
+  function resetPriceItem(key) {
+    PricingShared.deletePriceOverride(db, key).then(() => {
+      delete _priceOverrides[key];
+      showToast('success', 'Prix réinitialisé', '');
+      renderPriceList();
+    }).catch(e => showToast('error', 'Erreur', e.message));
+  }
+
+  function g_label(it) { return it.group + (it.label && it.label !== 'Prix' ? ' (' + it.label + ')' : ''); }
 
   /* ══════════════════════════════════════════
      CODES PROMO (admin)

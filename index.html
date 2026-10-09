@@ -306,7 +306,10 @@
 
 <script>
 (function() {
-  fetch('catalogue.html').then(r => r.text()).then(html => {
+  Promise.all([
+    fetch('catalogue-data.js').then(r => r.text()),
+    fetch('catalogue.html').then(r => r.text()),
+  ]).then(([catalogueDataSrc, html]) => {
     function extractLiteral(src, marker, endPattern) {
       const startIdx = src.indexOf(marker);
       if (startIdx === -1) return null;
@@ -315,7 +318,7 @@
       if (endIdx === -1) return null;
       return src.slice(afterMarker, endIdx + endPattern.length);
     }
-    const catSrc = extractLiteral(html, 'const catalogue = ', '\n};');
+    const catSrc = extractLiteral(catalogueDataSrc, 'const catalogue = ', '\n};');
     const toolsSrc = extractLiteral(html, 'const toolCategories = ', '\n];');
     if (!catSrc) return;
 
