@@ -1054,6 +1054,12 @@
     poignees:'Poignées', colle:'Colle &amp; Adhésifs'
   };
   const ART_TOOL_SUBCATS = ['Agrafes Tapisserie','Pointes Têtes & Clous','Pistolets','Ciseaux & Coupe-Fil','Vis de Tapisserie','Curseur & Patin-Glisseur','Fermeture, Film & Sangle','Cordons & Attaches'];
+  // Sous-categories (filtre "bois/metal/plastique..." affiche sur le site) pour les categories qui en ont.
+  const ART_SUBCATS = {
+    pietement: [{id:'bois',label:'Bois'},{id:'metal',label:'Métal'},{id:'plastique',label:'Plastique'}],
+    socle:     [{id:'metal',label:'Métal'},{id:'bois',label:'Bois'}],
+    chaise:    [{id:'tapissee',label:'Tapissée'},{id:'bois',label:'Bois'},{id:'inox',label:'Inox'}],
+  };
   const ART_MOUSSE_TYPES  = [{id:'15-17',label:'15/17'},{id:'extra20-24',label:'Extra 20/24'},{id:'souple',label:'20/22 SOUPLE'},{id:'22-24-souple',label:'22/24 Souple'},{id:'standard',label:'28/30'},{id:'magic30',label:'Magic 30'},{id:'hr',label:'HR'}];
   const ART_TABKA_TYPES   = [{id:'12-14',label:'12/14'},{id:'13-15',label:'13/15'},{id:'15-17',label:'15/17'},{id:'20-22',label:'20/22 Souple'},{id:'22-24',label:'22/24'},{id:'28-30',label:'28/30'},{id:'hr',label:'HR'},{id:'magic30',label:'Magic 30'}];
   const ART_RESSORT_SIZES = ['120×60','190×70','190×80','190×90','190×100','190×110','190×120','190×140','190×150','190×160','200×90','200×100','200×120','200×160','200×180'];
@@ -1084,12 +1090,23 @@
         <div style="${gS}"><label style="${lS}">7. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
       `;
     } else if (ART_STANDARD_LABELS[cat]) {
+      const subcats = ART_SUBCATS[cat];
+      const subcatField = subcats ? `
+        <div style="${gS}">
+          <label style="${lS}">2. Sous-catégorie *</label>
+          <select id="artSubcat" style="${fS}">
+            <option value="">-- Choisir --</option>
+            ${subcats.map(s=>`<option value="${s.id}">${s.label}</option>`).join('')}
+          </select>
+        </div>` : '';
+      const n = subcats ? { code:3, name:4, desc:5, price:6, photo:7 } : { code:2, name:3, desc:4, price:5, photo:6 };
       box.innerHTML = `
-        <div style="${gS}"><label style="${lS}">2. Code article *</label><input id="artCode" placeholder="Ex: PM056" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">3. Nom de l'article *</label><input id="artName" placeholder="Ex: Sabot Gl 250" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">4. Désignation / Description</label><textarea id="artDesc" rows="2" style="${fS};resize:none" placeholder="Ex: Pied métal incliné, 15cm"></textarea></div>
-        <div style="${gS}"><label style="${lS}">5. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
-        <div style="${gS}"><label style="${lS}">6. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
+        ${subcatField}
+        <div style="${gS}"><label style="${lS}">${n.code}. Code article *</label><input id="artCode" placeholder="Ex: PM056" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">${n.name}. Nom de l'article *</label><input id="artName" placeholder="Ex: Sabot Gl 250" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">${n.desc}. Désignation / Description</label><textarea id="artDesc" rows="2" style="${fS};resize:none" placeholder="Ex: Pied métal incliné, 15cm"></textarea></div>
+        <div style="${gS}"><label style="${lS}">${n.price}. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
+        <div style="${gS}"><label style="${lS}">${n.photo}. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
       `;
     } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
       const types = cat === 'mousse-matelas' ? ART_MOUSSE_TYPES : ART_TABKA_TYPES;
@@ -1181,10 +1198,13 @@
         const name  = document.getElementById('artName').value.trim();
         const desc  = document.getElementById('artDesc').value.trim();
         const price = document.getElementById('artPrice').value.trim();
+        const subcatEl = document.getElementById('artSubcat');
+        const sub = subcatEl ? subcatEl.value : '';
         if (!code || !name || !price) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
+        if (subcatEl && !sub) { showArtMsg('error','Veuillez choisir une sous-catégorie.'); resetArticleBtn(); return; }
         const img = getArticlePhotoPath();
         await db.collection('admin_products').add({
-          kind:'standard', catId: cat, code, name, desc, price, img: img || null, createdAt: Date.now()
+          kind:'standard', catId: cat, code, name, desc, price, sub: sub || null, img: img || null, createdAt: Date.now()
         });
         showArtMsg('success', '✅ Article "' + name + '" ajouté avec succès au catalogue !');
 

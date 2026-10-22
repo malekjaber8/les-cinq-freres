@@ -3130,7 +3130,7 @@ function mergeAdminProducts(docs) {
       if (!cat) return;
       if (!Array.isArray(cat.products)) cat.products = [];
       cat.products.push({
-        id: p.code, name: p.name, desc: p.desc || '', variants: [p.price], price: p.price, img: p.img || null
+        id: p.code, name: p.name, desc: p.desc || '', variants: [p.price], price: p.price, img: p.img || null, sub: p.sub || undefined
       });
     }
   });
