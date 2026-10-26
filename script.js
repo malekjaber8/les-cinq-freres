@@ -14,6 +14,7 @@ if (!_isHome) return;
     #fab360-inner::before{content:'';position:absolute;inset:-3px;border-radius:50px;background:linear-gradient(135deg,#2BBEC8,#fff,#1A99A3);z-index:-1;animation:borderSpin 3s linear infinite;opacity:.6}
     #fab360-badge{background:#fff;color:#1A99A3;font-size:.7rem;font-weight:900;padding:2px 7px;border-radius:50px;letter-spacing:.04em}
     #fab360:hover #fab360-inner{transform:scale(1.06)}
+    #fab360.fab360-hidden{opacity:0 !important;pointer-events:none !important;transform:translateX(-50%) translateY(20px) !important;animation:none !important;transition:opacity .25s ease,transform .25s ease;}
     @keyframes float360{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
     @keyframes borderSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
   `;
@@ -29,6 +30,25 @@ if (!_isHome) return;
   btn.title = 'Visite Virtuelle 360°';
   btn.innerHTML = '<div id="fab360-inner"><span style="font-size:1.3rem">🔭</span><span>Visite <strong>360°</strong></span><span id="fab360-badge">LIVE</span></div>';
   document.body.appendChild(btn);
+
+  // Masque le bouton flottant quand la banniere promo (ou une autre zone
+  // sensible) est a l'ecran, pour eviter qu'il ne chevauche son contenu.
+  const avoidSelectors = ['#homePromoSection', '#homeNouveautesSection'];
+  function updateFabVisibility() {
+    const vh = window.innerHeight;
+    const fabTop = vh - 170; // zone occupee par le bouton flottant (bottom:90px + marge)
+    const overlaps = avoidSelectors.some(sel => {
+      const el = document.querySelector(sel);
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return r.bottom > fabTop && r.top < vh;
+    });
+    btn.classList.toggle('fab360-hidden', overlaps);
+  }
+  window.addEventListener('scroll', updateFabVisibility, { passive: true });
+  window.addEventListener('resize', updateFabVisibility);
+  setInterval(updateFabVisibility, 400);
+  updateFabVisibility();
 })();
 });
 
