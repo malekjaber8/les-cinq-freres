@@ -380,12 +380,17 @@
 }
 </style>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="showcase.js"></script>
 <script>
 (function() {
   Promise.all([
     fetch('catalogue-data.js').then(r => r.text()),
     fetch('catalogue.html').then(r => r.text()),
-  ]).then(([catalogueDataSrc, html]) => {
+    (typeof db !== 'undefined' && typeof ShowcaseShared !== 'undefined') ? ShowcaseShared.loadShowcaseEntries(db) : Promise.resolve({}),
+  ]).then(([catalogueDataSrc, html, showcaseMap]) => {
     function extractLiteral(src, marker, endPattern) {
       const startIdx = src.indexOf(marker);
       if (startIdx === -1) return null;
@@ -404,14 +409,9 @@
       toolCategoriesData = toolsSrc ? new Function('return ' + toolsSrc)() : [];
     } catch (e) { console.warn('Promo home: parse error', e.message); return; }
 
-    const promoItems = [];
-    Object.keys(catalogueData).forEach(catId => {
-      const cat = catalogueData[catId];
-      (cat.products || []).forEach(p => { if (p.promo) promoItems.push(Object.assign({}, p, { catId })); });
-    });
-    (toolCategoriesData || []).forEach(tc => {
-      (tc.items || []).forEach(p => { if (p.promo) promoItems.push(Object.assign({}, p, { catId: 'outils' })); });
-    });
+    const promoItems = typeof ShowcaseShared !== 'undefined'
+      ? ShowcaseShared.buildHomeShowcase(catalogueData, toolCategoriesData, showcaseMap)
+      : [];
 
     if (!promoItems.length) return;
 
@@ -429,12 +429,13 @@
       const oldP = toNum(p.oldPrice);
       const newP = toNum(p.price);
       const pct = (oldP && newP && oldP > newP) ? Math.round((oldP - newP) / oldP * 100) : null;
+      const isNew = p.type === 'nouveaute';
       return `
       <div class="hp-slide-img${i === 0 ? ' active' : ''}">
         <div class="hp-photo-card"><img src="${p.img || ''}" alt="${p.name}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
         <div class="hp-badge-slot">
-          <div class="hp-ribbon active"><img src="images/promo/ribbon-offre-speciale-transparent.png" alt="Offre Spéciale"></div>
-          <div class="hp-badge-new"><img src="images/promo/badge-nouveaute-transparent.png" alt="Nouveauté"></div>
+          <div class="hp-ribbon${isNew ? '' : ' active'}"><img src="images/promo/ribbon-offre-speciale-transparent.png" alt="Offre Spéciale"></div>
+          <div class="hp-badge-new${isNew ? ' active' : ''}"><img src="images/promo/badge-nouveaute-transparent.png" alt="Nouveauté"></div>
         </div>
         ${pct ? `<div class="hp-pct-badge">Jusqu'à<b>-${pct}%</b></div>` : ''}
       </div>`;
@@ -451,8 +452,9 @@
       const oldP = toNum(p.oldPrice);
       const newP = toNum(p.price);
       const pct = (oldP && newP && oldP > newP) ? Math.round((oldP - newP) / oldP * 100) : null;
+      const isNew = p.type === 'nouveaute';
       info.innerHTML = `
-        <span class="hp-tag">🔥 En Promotion !</span>
+        <span class="hp-tag">${isNew ? '✨ Nouveauté !' : '🔥 En Promotion !'}</span>
         <div class="hp-name">${p.name}</div>
         <div class="hp-prices">
           ${p.oldPrice ? `<span class="hp-old">${p.oldPrice}</span>` : ''}
@@ -476,14 +478,6 @@
 
     document.getElementById('homePromoSection').style.display = '';
     if (items.length > 1) setInterval(() => window.goHomePromo(_cur + 1), 3500);
-
-    // Alterne régulièrement le badge du coin entre "Offre Spéciale" et "Nouveauté"
-    let _badgeIsNew = false;
-    setInterval(() => {
-      _badgeIsNew = !_badgeIsNew;
-      document.querySelectorAll('.hp-ribbon').forEach(el => el.classList.toggle('active', !_badgeIsNew));
-      document.querySelectorAll('.hp-badge-new').forEach(el => el.classList.toggle('active', _badgeIsNew));
-    }, 2800);
   }).catch(e => console.warn('Promo home: fetch error', e.message));
 })();
 </script>
