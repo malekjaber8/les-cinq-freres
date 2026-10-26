@@ -544,6 +544,11 @@
 
         <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-100);box-shadow:var(--shadow-sm);padding:28px;max-width:640px;margin-bottom:28px">
 
+          <div id="artEditBanner" style="display:none;margin-bottom:18px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 14px;align-items:center;justify-content:space-between;gap:10px">
+            <span style="font-size:.8rem;font-weight:700;color:#9a3412">✏️ Modification d'un article existant</span>
+            <button type="button" onclick="cancelEditArticle()" style="background:none;border:1px solid #fed7aa;color:#9a3412;font-size:.75rem;font-weight:700;padding:5px 10px;border-radius:7px;cursor:pointer">✕ Annuler</button>
+          </div>
+
           <div style="margin-bottom:18px">
             <label style="display:block;font-size:.78rem;font-weight:700;color:var(--gray-700);margin-bottom:6px">1. Catégorie cible *</label>
             <select id="artCatSelect" onchange="renderArticleFields()"
@@ -1168,15 +1173,16 @@
   function resetArticleBtn() {
     const btn = document.getElementById('artSubmitBtn');
     btn.disabled = false;
-    btn.textContent = '✅ Créer cet article';
+    btn.textContent = _editingArticle ? '💾 Enregistrer les modifications' : '✅ Créer cet article';
   }
 
   async function submitNewArticle() {
     const cat = document.getElementById('artCatSelect').value;
     if (!cat) { showArtMsg('error','Veuillez choisir une catégorie.'); return; }
+    const isEdit = !!_editingArticle;
     const btn = document.getElementById('artSubmitBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Création en cours…';
+    btn.textContent = isEdit ? '⏳ Enregistrement...' : '⏳ Création en cours…';
 
     try {
       if (cat === 'outils') {
@@ -1187,11 +1193,11 @@
         let subcat  = document.getElementById('artToolSubcat').value;
         if (subcat === '__new__') subcat = document.getElementById('artToolSubcatNew').value.trim();
         if (!code || !name || !price || !subcat) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
-        const img = getArticlePhotoPath();
-        await db.collection('admin_products').add({
-          kind:'tool', catId:'outils', toolSubcat: subcat, code, name, ref, price, img: img || null, createdAt: Date.now()
-        });
-        showArtMsg('success', '✅ Article "' + name + '" ajouté avec succès au catalogue !');
+        const img = getArticlePhotoPath() || (isEdit ? _editingArticle.img || null : null);
+        const payload = { kind:'tool', catId:'outils', toolSubcat: subcat, code, name, ref, price, img: img || null };
+        if (isEdit) await db.collection('admin_products').doc(_editingArticle._id).update(payload);
+        else await db.collection('admin_products').add({ ...payload, createdAt: Date.now() });
+        showArtMsg('success', isEdit ? '✅ Article "' + name + '" mis à jour !' : '✅ Article "' + name + '" ajouté avec succès au catalogue !');
 
       } else if (ART_STANDARD_LABELS[cat]) {
         const code  = document.getElementById('artCode').value.trim();
@@ -1202,11 +1208,11 @@
         const sub = subcatEl ? subcatEl.value : '';
         if (!code || !name || !price) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
         if (subcatEl && !sub) { showArtMsg('error','Veuillez choisir une sous-catégorie.'); resetArticleBtn(); return; }
-        const img = getArticlePhotoPath();
-        await db.collection('admin_products').add({
-          kind:'standard', catId: cat, code, name, desc, price, sub: sub || null, img: img || null, createdAt: Date.now()
-        });
-        showArtMsg('success', '✅ Article "' + name + '" ajouté avec succès au catalogue !');
+        const img = getArticlePhotoPath() || (isEdit ? _editingArticle.img || null : null);
+        const payload = { kind:'standard', catId: cat, code, name, desc, price, sub: sub || null, img: img || null };
+        if (isEdit) await db.collection('admin_products').doc(_editingArticle._id).update(payload);
+        else await db.collection('admin_products').add({ ...payload, createdAt: Date.now() });
+        showArtMsg('success', isEdit ? '✅ Article "' + name + '" mis à jour !' : '✅ Article "' + name + '" ajouté avec succès au catalogue !');
 
       } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
         const typeSel = document.getElementById('artTypeSelect').value;
@@ -1251,6 +1257,8 @@
         showArtMsg('success', '✅ Qualité "' + typeLabel + '" ajoutée avec succès !');
       }
 
+      _editingArticle = null;
+      document.getElementById('artEditBanner').style.display = 'none';
       document.getElementById('artCatSelect').value = '';
       document.getElementById('articleDynamicFields').innerHTML = '';
       loadArticleList();
@@ -1266,6 +1274,51 @@
   }
 
   let _artListCache = [];
+  let _editingArticle = null; // article admin_products en cours de modification (null = creation)
+
+  /* Pre-remplit le formulaire avec un article existant (admin_products uniquement : standard ou outil). */
+  function editArticle(col, id) {
+    if (col !== 'admin_products') {
+      showToast('error', 'Modification non disponible', 'Les dimensions mousse/TABKA/ressort doivent être supprimées puis recréées pour l\'instant.');
+      return;
+    }
+    const a = _artListCache.find(x => x._col === col && x._id === id);
+    if (!a) return;
+    _editingArticle = a;
+
+    const catSelect = document.getElementById('artCatSelect');
+    catSelect.value = a.kind === 'tool' ? 'outils' : a.catId;
+    renderArticleFields();
+
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v ?? ''; };
+    if (a.kind === 'tool') {
+      const subSel = document.getElementById('artToolSubcat');
+      if (subSel && a.toolSubcat && [...subSel.options].some(o => o.value === a.toolSubcat)) subSel.value = a.toolSubcat;
+      setVal('artCode', a.code);
+      setVal('artName', a.name);
+      setVal('artRef', a.ref);
+      setVal('artPrice', a.price);
+    } else {
+      setVal('artCode', a.code);
+      setVal('artName', a.name);
+      setVal('artDesc', a.desc);
+      setVal('artPrice', a.price);
+      setVal('artSubcat', a.sub);
+    }
+    setVal('artPhotoPath', a.img);
+
+    document.getElementById('artEditBanner').style.display = 'flex';
+    resetArticleBtn();
+    document.getElementById('artEditBanner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function cancelEditArticle() {
+    _editingArticle = null;
+    document.getElementById('artEditBanner').style.display = 'none';
+    document.getElementById('artCatSelect').value = '';
+    document.getElementById('articleDynamicFields').innerHTML = '';
+    resetArticleBtn();
+  }
 
   function loadArticleList() {
     if (typeof db === 'undefined') return;
@@ -1306,6 +1359,7 @@
           <div style="font-size:.75rem;color:var(--gray-500)">${catLabel||''}${a.code?(' · '+a.code):''}</div>
         </div>
         <div style="font-size:.85rem;font-weight:700;color:var(--teal-dark);white-space:nowrap">${price||'—'}</div>
+        ${!isSpecial ? `<button onclick="editArticle('${a._col}','${a._id}')" style="background:rgba(43,190,200,.1);border:none;color:var(--teal-dark);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">✏️ Modifier</button>` : ''}
         <button onclick="requestDeleteArticle('${a._col}','${a._id}')" style="background:rgba(229,62,62,.08);border:none;color:var(--error);font-size:.78rem;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">🗑️ Supprimer</button>
       </div>`;
     }).join('');
