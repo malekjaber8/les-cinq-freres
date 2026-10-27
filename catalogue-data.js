@@ -412,6 +412,10 @@ const catalogue = {
       { id:'ACC013', name:'Support Goblet pour Salon', desc:'Porte-gobelet encastrable pour accoudoir de canapé.', variants:['20,000 DT / pièce'], price:'20,000 DT', img:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png', gallery:['images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png','images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%202.png'], video:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%20video.mp4' },
       { id:'ACC014', name:'Chargeur Encastrable Sans Fil', desc:'Module de charge sans fil encastrable dans un meuble — 2 sorties USB.', variants:['60,000 DT / pièce'], price:'60,000 DT', img:'images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%20.jpg', gallery:['images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%20.jpg','images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%201%20.jpg'] },
       { id:'ACC015', name:'Plaque de Recharge Sans Fil "Top Plate"', desc:'Plaque de recharge sans fil à intégrer sur meuble — 47×38cm, 3 coloris.', variants:['47x38cm — 120,000 DT'], price:'120,000 DT', img:'images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%20.jpg', gallery:['images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%20.jpg','images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%202.jpg'] },
+      { id:'ACC016', name:'Punaise', desc:'Punaise de tapisserie pour fixation et finition.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/punaise.jpg' },
+      { id:'ACC017', name:'Aplique Murale B0010', desc:'Applique murale orientable avec lampe LED et prise USB.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/aplique%20b0010%201.jpg', gallery:['images/outil%20de%20tapissserie/aplique%20b0010%201.jpg','images/outil%20de%20tapissserie/aplique%20b0010%202.jpg'] },
+      { id:'ACC018', name:'Support Téléphone pour Salon', desc:'Support téléphone flexible à fixer sur meuble de salon — bras orientable 800mm.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg', gallery:['images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg','images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%202.jpg'] },
+      { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
     ]
   },
 
@@ -667,6 +671,7 @@ const toolCategories = [
     {code:'OUT003', name:'Agraphe 12',    ref:'Réf. QNR 002', price:'10,300 DT', img:'images/outils/agr.png'},
     {code:'OUT004', name:'Agraphe 14',    ref:'Réf. QNR 003', price:'11,800 DT', img:'images/outils/agr.png'},
     {code:'OUT005', name:'Agraphe 90/40', ref:'Réf. QNR 005', price:'25,000 DT', img:'images/outils/agr.png'},
+    {code:'OUT034', name:'Agrafeuse à Air', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/agrafeuse%20a%20air.jpg'},
   ]},
   { icon:'🔩', name:'Pointes Têtes & Clous', desc:'Pointes H14 + Clou F10 — boîte de 12 barettes', items:[
     {code:'OUT006', name:'Pointe Tête H14/T20 (boîte 12)', ref:'Réf. QNR0409', price:'8,500 DT', img:'images/outils/t20.png'},
@@ -695,6 +700,7 @@ const toolCategories = [
   { icon:'🛝', name:'Curseur & Patin-Glisseur', desc:'Accessoires de glissement pour pieds de meubles', items:[
     {code:'OUT018', name:'Curseur',        ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Curseur.jpg'},
     {code:'OUT019', name:'Patin-Glisseur', ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Patin-glisseur.jpg'},
+    {code:'OUT035', name:'Patin Marron', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/pattin%20marron.jpg'},
   ]},
   { icon:'📦', name:'Fermeture, Film & Sangle', desc:'Fermeture éclair au rouleau, film étirable et sangle de protection', items:[
     {code:'OUT020', name:'Fermeture Éclair (rouleau)', ref:'', price:'38,000 DT', img:'images/outil%20de%20tapissserie/fermeture.jpg'},
@@ -713,5 +719,11 @@ const toolCategories = [
   { icon:'💨', name:"Soufflette d'Air", desc:"Soufflettes pneumatiques ANI — Made in Italy", items:[
     {code:'OUT030', name:"Soufflette d'Air ANI 25/B2 (buse longue)", ref:'Cod. AH050301', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%201.jpg"},
     {code:'OUT031', name:"Soufflette d'Air ANI 25/B1", ref:'Cod. AH050101', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%202.jpg"},
+  ]},
+  { icon:'🔩', name:'Plaques de Fixation', desc:'Plaques de fixation à écrou pour pieds et sabots de meuble', items:[
+    {code:'OUT036', name:'Plaque de Fixation Écrou', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/plaque%20de%20fixation%20ecrou.jpg'},
+  ]},
+  { icon:'🪢', name:'Canage (Rotin)', desc:'Cannage en rotin tissé pour chaises et meubles — vendu au rouleau', items:[
+    {code:'OUT037', name:'Canage Rotin', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg']},
   ]},
 ];
