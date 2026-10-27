@@ -364,6 +364,7 @@ const catalogue = {
       { id:'PP019', name:'Sabot Italia',       desc:'Pied plastique rond bulbeux, 2 coloris.', variants:['Champagne — 1,500 DT','Cuivre — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20italia.jpg', sub:'plastique' },
       { id:'PP020', name:'Sabot Italia 2',     desc:'Pied plastique forme cloche, finition chromée.', variants:['Chromé — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20iatlia2.jpg', sub:'plastique' },
       { id:'PP021', name:'Sabot Italia 3',     desc:'Support rectangulaire chromé avec embase plastique.', variants:['Chromé/Marron — 1,500 DT'], price:'1,500 DT', img:'images/pietement-plastique/sabot%20italia3.jpg', sub:'plastique' },
+      { id:'PP022', name:'Sabot Évasé',        desc:'Pied plastique évasé à base carrée, finition marron chocolat.', variants:['Marron — Sur devis'], price:'Sur devis', img:'images/pietement-plastique/07ed9af5-c62f-4200-a3f7-df25e5b4fe97.jpg', sub:'plastique' },
     ]
   },
 
@@ -417,6 +418,21 @@ const catalogue = {
       { id:'ACC018', name:'Support Téléphone pour Salon', desc:'Support téléphone flexible à fixer sur meuble de salon — bras orientable 800mm.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg', gallery:['images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg','images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%202.jpg'] },
       { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
       { id:'ACC020', name:'Porte Gobelet', desc:'Anneau porte-gobelet encastrable pour accoudoir de canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/porte%20goblet%201.jpg', gallery:['images/outil%20de%20tapissserie/porte%20goblet%201.jpg','images/outil%20de%20tapissserie/porte%20goblet%202.jpg'] },
+    ]
+  },
+
+  quincaillerie:{
+    label:'Quincaillerie', icon:'🔩',
+    desc:'Vis, écrous, plaques et roulettes pour l\'assemblage et la fixation de meubles.',
+    products:[
+      { id:'QC001', name:'Boulon à Double Tête', desc:'Vis à double filetage pour assemblage de pieds et structures de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/boulon%20a%20double%20tete%20.jpg' },
+      { id:'QC002', name:'Cache-Vis', desc:'Cache-vis décoratif Ø14mm — 2 finitions disponibles.', variants:['Doré — Sur devis','Chromé — Sur devis'], price:'Sur devis', img:'images/quinquillerie/cage%20vis.jpg' },
+      { id:'QC003', name:'Écrou à Griffes', desc:'Écrou à griffes pour fixation dans le bois.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/ecrou%20a%20griffe%20.jpg' },
+      { id:'QC004', name:'Écrou de Fixation', desc:'Écrou de fixation pour pieds et sabots de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/ecrou%20de%20fixation%20.jpg' },
+      { id:'QC005', name:'Plaque de Fixation Inclinée', desc:'Plaque de fixation inclinée avec écrou intégré pour pied de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/plaque%20de%20fixation%20inclin%C3%A9%20.jpg' },
+      { id:'QC006', name:'Plaque de Montage', desc:'Plaque de montage perforée pour assemblage de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/plaque%20de%20montage.jpg' },
+      { id:'QC007', name:'Rondelle de Fixation', desc:'Rondelle de fixation avec vis intégrée.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/rondelle%20de%20fixation%20.jpg' },
+      { id:'QC008', name:'Roue Pivot AP038 Poly', desc:'Roulette pivotante avec frein, revêtement polyuréthane — modèle AP038.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/roue%20pivot%20ap%20038%20poly.jpg' },
     ]
   },
 
@@ -594,6 +610,7 @@ const catalogue = {
       { id:'MC025', name:'Plaque Tournante 360°', desc:'Plaque tournante rotative 360° pour fauteuil et meubles pivotants — 2 tailles disponibles.', variants:['30cm — Sur devis','35cm — Sur devis'], price:'Sur devis', img:'images/mecanismes/plaque%20tournanate%20360%201.jpg', gallery:['images/mecanismes/plaque%20tournanate%20360%201.jpg','images/mecanismes/plaque%20tournanate%20360%202.jpg'] },
       { id:'MC026', name:'Plateau Pivotant pour Canapé 90°', desc:'Plateau pivotant 90° pour canapé modulable.', variants:['Sur devis'], price:'Sur devis', img:'images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%201.jpg', gallery:['images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%201.jpg','images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%202.jpg'] },
       { id:'MC027', name:'Plateau Tournant Carré', desc:'Embase pivotante carrée pour meubles rotatifs (table, présentoir, support TV...) — 3 tailles disponibles.', variants:['7cm — Sur devis','9.5cm — Sur devis','16cm — Sur devis'], price:'Sur devis', img:'images/mecanismes/support%20tv%201.jpg', gallery:['images/mecanismes/support%20tv%201.jpg','images/mecanismes/support%20tv%202.jpg'] },
+      { id:'MC028', name:'Support Mécanisme d\'Assise', desc:'Châssis métallique support de mécanisme pour assise de fauteuil ou canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/mecanismes/mecanisme.png' },
     ]
   },
 
@@ -683,6 +700,7 @@ const toolCategories = [
     {code:'OUT009', name:'Pointe Tête H14/T40 (boîte 12)', ref:'Réf. QNR0412', price:'14,000 DT', img:'images/outils/t40.png'},
     {code:'OUT010', name:'Pointe Tête H14/T50 (boîte 12)', ref:'Réf. QNR0413', price:'17,000 DT', img:'images/outils/t50.png'},
     {code:'OUT011', name:'Clou F10', ref:'Réf. QNR0290', price:'4,200 DT', img:'images/outils/f10.png'},
+    {code:'OUT039', name:'Bande à Clou', ref:'Chaîne de clous décoratifs — vendue au rouleau', price:'Sur devis', img:'images/outil%20de%20tapissserie/bande%20a%20clou%20.jpg'},
   ]},
   { icon:'🔫', name:'Pistolets', desc:'Pistolets pour capitonnage professionnel — pneumatique et manuel', items:[
     {code:'OUT012', name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
