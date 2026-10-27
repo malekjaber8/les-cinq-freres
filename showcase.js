@@ -63,26 +63,31 @@
 
   // Fusionne les articles marqués promo:true dans le catalogue avec la sélection admin
   // (home_showcase) pour produire la liste finale affichée dans la bannière d'accueil.
+  // Les choix admin passent en premier (la bannière n'affiche que les ~12 premiers items
+  // : s'ils arrivaient après les promo:true statiques, un article marqué "Nouveauté"
+  // pouvait ne jamais s'afficher faute de place).
   function buildHomeShowcase(catalogue, toolCategories, showcaseMap) {
     const byKey = new Map();
-
-    Object.keys(catalogue || {}).forEach(catId => {
-      const cat = catalogue[catId];
-      (cat.products || []).forEach(p => {
-        if (p.promo) byKey.set(catId + '::' + p.id, Object.assign({}, p, { catId, type: 'promo' }));
-      });
-    });
-    (toolCategories || []).forEach(tc => {
-      (tc.items || []).forEach(it => {
-        if (it.promo) byKey.set('outils::' + it.code, Object.assign({}, it, { catId: 'outils', id: it.code, type: 'promo' }));
-      });
-    });
 
     Object.keys(showcaseMap || {}).forEach(key => {
       const entry = showcaseMap[key];
       if (!entry || !entry.catId || !entry.itemId) return;
       const item = findCatalogueItem(catalogue, toolCategories, entry.catId, entry.itemId);
       if (item) byKey.set(key, Object.assign({}, item, { type: entry.type === 'nouveaute' ? 'nouveaute' : 'promo' }));
+    });
+
+    Object.keys(catalogue || {}).forEach(catId => {
+      const cat = catalogue[catId];
+      (cat.products || []).forEach(p => {
+        const key = catId + '::' + p.id;
+        if (p.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, p, { catId, type: 'promo' }));
+      });
+    });
+    (toolCategories || []).forEach(tc => {
+      (tc.items || []).forEach(it => {
+        const key = 'outils::' + it.code;
+        if (it.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, it, { catId: 'outils', id: it.code, type: 'promo' }));
+      });
     });
 
     return [...byKey.values()];
