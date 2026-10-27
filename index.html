@@ -382,7 +382,7 @@
 }
 .hp-perk-txt .t1 { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: .8rem; color: var(--navy-dark); }
 .hp-perk-txt .t2 { font-size: .7rem; color: var(--gray-400); }
-.hp-dots { display: flex; justify-content: center; gap: 7px; margin-top: 28px; }
+.hp-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 28px; max-width: 320px; margin-left: auto; margin-right: auto; }
 .hp-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--gray-200, #d8dee6); cursor: pointer; padding: 0; transition: .25s; }
 .hp-dot.active { background: #c1121f; width: 22px; border-radius: 4px; }
 @media (max-width: 860px) {
@@ -461,7 +461,7 @@
       return parseFloat(String(str).replace(/[^\d,.-]/g, '').replace(',', '.'));
     }
 
-    const items = promoItems.slice(0, 12);
+    const items = promoItems;
     const visual = document.getElementById('hpVisual');
     const info = document.getElementById('hpInfo');
     const dotsEl = document.getElementById('hpDots');
