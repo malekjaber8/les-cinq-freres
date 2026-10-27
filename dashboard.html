@@ -1755,7 +1755,9 @@
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border:1px solid var(--gray-100);border-radius:12px;margin-bottom:8px;flex-wrap:wrap">
         <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
           <button onclick="moveShowcaseItem('${safeKey}',-1)" ${idx===0?'disabled':''} title="Monter" style="width:22px;height:18px;border:1px solid var(--gray-200);background:${idx===0?'var(--gray-50)':'#fff'};color:${idx===0?'var(--gray-300)':'var(--navy-dark)'};border-radius:5px;cursor:${idx===0?'default':'pointer'};font-size:.65rem;line-height:1;padding:0">▲</button>
-          <div style="font-size:.68rem;font-weight:800;color:var(--teal-dark);width:20px;text-align:center">${idx+1}</div>
+          <input type="number" value="${idx+1}" min="1" max="${keys.length}" title="Taper la position puis Entrée"
+            onkeydown="if(event.key==='Enter'){this.blur();}" onchange="setShowcasePosition('${safeKey}', this.value)"
+            style="width:30px;font-size:.72rem;font-weight:800;color:var(--teal-dark);text-align:center;border:1px solid var(--gray-200);border-radius:5px;padding:1px 0;-moz-appearance:textfield">
           <button onclick="moveShowcaseItem('${safeKey}',1)" ${idx===keys.length-1?'disabled':''} title="Descendre" style="width:22px;height:18px;border:1px solid var(--gray-200);background:${idx===keys.length-1?'var(--gray-50)':'#fff'};color:${idx===keys.length-1?'var(--gray-300)':'var(--navy-dark)'};border-radius:5px;cursor:${idx===keys.length-1?'default':'pointer'};font-size:.65rem;line-height:1;padding:0">▼</button>
         </div>
         ${showcaseThumb(img)}
@@ -1780,6 +1782,25 @@
     const j = i + dir;
     if (i === -1 || j < 0 || j >= keys.length) return;
     [keys[i], keys[j]] = [keys[j], keys[i]];
+    Promise.all(keys.map((k, idx) => {
+      const entry = _showcaseMap[k];
+      _showcaseMap[k] = Object.assign({}, entry, { order: idx });
+      return ShowcaseShared.saveShowcaseEntry(db, k, { catId: entry.catId, itemId: entry.itemId, type: entry.type, order: idx });
+    })).then(() => {
+      renderShowcaseSelected();
+    }).catch(e => showToast('error', 'Erreur', e.message));
+  }
+
+  // Déplace `key` directement à la position tapée (1-indexée), puis renumérote tout.
+  function setShowcasePosition(key, newPosStr) {
+    const keys = _showcaseSortedKeys();
+    const i = keys.indexOf(key);
+    if (i === -1) return;
+    let j = parseInt(newPosStr, 10) - 1;
+    if (isNaN(j)) { renderShowcaseSelected(); return; }
+    j = Math.max(0, Math.min(keys.length - 1, j));
+    if (j === i) { renderShowcaseSelected(); return; }
+    keys.splice(j, 0, keys.splice(i, 1)[0]);
     Promise.all(keys.map((k, idx) => {
       const entry = _showcaseMap[k];
       _showcaseMap[k] = Object.assign({}, entry, { order: idx });
