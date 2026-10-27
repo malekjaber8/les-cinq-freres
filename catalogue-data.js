@@ -416,6 +416,7 @@ const catalogue = {
       { id:'ACC017', name:'Aplique Murale B0010', desc:'Applique murale orientable avec lampe LED et prise USB.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/aplique%20b0010%201.jpg', gallery:['images/outil%20de%20tapissserie/aplique%20b0010%201.jpg','images/outil%20de%20tapissserie/aplique%20b0010%202.jpg'] },
       { id:'ACC018', name:'Support Téléphone pour Salon', desc:'Support téléphone flexible à fixer sur meuble de salon — bras orientable 800mm.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg', gallery:['images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg','images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%202.jpg'] },
       { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
+      { id:'ACC020', name:'Porte Gobelet', desc:'Anneau porte-gobelet encastrable pour accoudoir de canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/porte%20goblet%201.jpg', gallery:['images/outil%20de%20tapissserie/porte%20goblet%201.jpg','images/outil%20de%20tapissserie/porte%20goblet%202.jpg'] },
     ]
   },
 
