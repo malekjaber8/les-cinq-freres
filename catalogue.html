@@ -177,6 +177,7 @@
     .prod-card-img {
       height:140px;
       background:var(--white);
+      border-bottom:1px solid var(--gray-100);
       display:flex; align-items:center; justify-content:center;
       position:relative; overflow:hidden;
     }
@@ -211,9 +212,9 @@
     .prod-card-body .p-desc { font-size:.71rem; color:var(--gray-600); line-height:1.4; margin-bottom:6px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; min-height:2em; }
     .prod-card-body .p-variants { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
     .p-var { background:var(--gray-100); color:var(--gray-600); font-size:.64rem; font-weight:500; padding:2px 7px; border-radius:50px; }
-    .prod-card-footer { padding:8px 13px 11px; border-top:1px solid var(--gray-100); display:flex; align-items:center; justify-content:space-between; }
+    .prod-card-footer { padding:10px 13px; border-top:1px solid var(--gray-200); display:flex; align-items:center; justify-content:space-between; }
     /* ── Stock badges ── */
-    .stock-wrap { display:inline-flex; align-items:center; gap:4px; flex-wrap:nowrap; }
+    .stock-wrap { display:flex; align-items:center; gap:4px; flex-wrap:nowrap; padding:0 13px 8px; }
     .stock-badge { font-size:.65rem; font-weight:700; padding:3px 8px; border-radius:50px; white-space:nowrap; display:inline-flex; align-items:center; gap:3px; }
     .stock-ok   { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
     .stock-low  { background:#fff3e0; color:#e65100; border:1px solid #ffcc80; }
