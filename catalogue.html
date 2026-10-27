@@ -164,7 +164,7 @@
 
     /* Product card */
     .prod-card {
-      background:var(--white);
+      background:#FBF5EC;
       border:1.5px solid rgba(43,190,200,.35);
       border-radius:16px;
       overflow:hidden;
@@ -176,8 +176,8 @@
     .prod-card:hover { transform:translateY(-4px); box-shadow:0 10px 24px rgba(43,190,200,.2); border-color:var(--teal); }
     .prod-card-img {
       height:140px;
-      background:var(--white);
-      border-bottom:1px solid var(--gray-100);
+      background:#FBF5EC;
+      border-bottom:1px solid #EFE2CC;
       display:flex; align-items:center; justify-content:center;
       position:relative; overflow:hidden;
     }
@@ -211,8 +211,8 @@
     .prod-card-body .p-name { font-size:.85rem; font-weight:700; color:var(--navy-dark); margin-bottom:3px; line-height:1.28; overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; line-clamp:1; -webkit-box-orient:vertical; }
     .prod-card-body .p-desc { font-size:.71rem; color:var(--gray-600); line-height:1.4; margin-bottom:6px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; min-height:2em; }
     .prod-card-body .p-variants { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
-    .p-var { background:var(--gray-100); color:var(--gray-600); font-size:.64rem; font-weight:500; padding:2px 7px; border-radius:50px; }
-    .prod-card-footer { padding:10px 13px; border-top:1px solid var(--gray-200); display:flex; align-items:center; justify-content:space-between; }
+    .p-var { background:#F2E7D5; color:#8A7558; font-size:.64rem; font-weight:500; padding:2px 7px; border-radius:50px; }
+    .prod-card-footer { padding:10px 13px; border-top:1px solid #EFE2CC; display:flex; align-items:center; justify-content:space-between; }
     /* ── Stock badges ── */
     .stock-wrap { display:flex; align-items:center; gap:4px; flex-wrap:nowrap; padding:0 13px 8px; }
     .stock-badge { font-size:.65rem; font-weight:700; padding:3px 8px; border-radius:50px; white-space:nowrap; display:inline-flex; align-items:center; gap:3px; }
@@ -1238,7 +1238,7 @@ function productCard(p, catId) {
     <div class="prod-card-body">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
         <div class="p-cat">${cat.label||''}</div>
-        <div style="font-size:.58rem;font-weight:600;color:#b8c2cf;background:#f8fafc;border-radius:4px;padding:1px 5px;letter-spacing:.03em">${p.id}</div>
+        <div style="font-size:.58rem;font-weight:600;color:#b3a68f;background:#F6EEDF;border-radius:4px;padding:1px 5px;letter-spacing:.03em">${p.id}</div>
       </div>
       ${rouleauBadge}
       <div class="p-name">${p.name}</div>
