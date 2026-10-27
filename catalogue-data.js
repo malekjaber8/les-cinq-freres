@@ -387,8 +387,6 @@ const catalogue = {
       { id:'ST010', name:'Socle de Table Bas Inox SMI 06', desc:'Socle de table bas en inox — modèle SMI 06.', variants:['180 DT'], price:'180 DT', img:'images/socle%20table/socle%20table%20bas%20inox%20smi%2006.jpg', sub:'metal' },
       { id:'ST011', name:'Socle de Table Inox SMI 02', desc:'Socle de table en inox — modèle SMI 02.', variants:['150 DT'], price:'150 DT', img:'images/socle%20table/socle%20table%20inox%20smi%2002%20.jpg', sub:'metal' },
       { id:'ST012', name:'Socle de Table Inox SMI 03', desc:'Socle de table en inox — modèle SMI 03.', variants:['300 DT'], price:'300 DT', img:'images/socle%20table/socle%20table%20inox%20smi%2003%20.jpg', sub:'metal' },
-      { id:'ST013', name:'Socle Chaise avec Mécanisme', desc:'Socle pivotant 4 pieds avec mécanisme rotatif 90° pour chaise — 2 tailles, 2 coloris disponibles.', variants:['42cm — Beige — Sur devis','42cm — Noir — Sur devis','40cm — Beige — Sur devis','40cm — Noir — Sur devis'], price:'Sur devis', img:'images/carcasses/socle%20chaise%20avec%20mécanisme.jpg', sub:'metal' },
-      { id:'ST014', name:'Socle Plateau', desc:'Plateau socle pour chaise ou table — Ø55cm, 2 finitions disponibles.', variants:['Noir — Sur devis','Chrome — Sur devis'], price:'Sur devis', img:'images/carcasses/socle%20plateau.jpg', sub:'metal' },
     ]
   },
 
@@ -498,6 +496,8 @@ const catalogue = {
       { id:'CI008', name:'Socle de Fauteuil', desc:'Socle structure de fauteuil — base solide pour tapisserie.', variants:['80,000 DT / pièce'], price:'80,000 DT', img:'images/carcasses/socle%20de%20fouteuille%20.jpg', gallery:['images/carcasses/socle%20de%20fouteuille%20.jpg','images/carcasses/socle%20de%20fouteuille-exemple%20.jpg'], sub:'inox' },
       { id:'CI007', name:'Chaise Inox Haute', desc:'Carcasse de chaise en inox haute — modèle haut de gamme.', variants:['400,000 DT / pièce'], price:'400,000 DT', img:'images/carcasses/chaise%20inoxe%20haute%20%20.png', sub:'inox' },
       { id:'CI006', name:'Carcasse Inox SMI 01', desc:'Carcasse de chaise en inox — modèle SMI 01.', variants:['65,000 DT / pièce'], price:'65,000 DT', img:'images/carcasses/socle%20de%20chaise%20inoxe%20smi%2001.jpg', sub:'inox' },
+      { id:'CI009', name:'Socle Chaise avec Mécanisme', desc:'Socle pivotant 4 pieds avec mécanisme rotatif 90° pour chaise — 2 tailles, 2 coloris disponibles.', variants:['42cm — Beige — Sur devis','42cm — Noir — Sur devis','40cm — Beige — Sur devis','40cm — Noir — Sur devis'], price:'Sur devis', img:'images/carcasses/socle%20chaise%20avec%20mécanisme.jpg', sub:'inox' },
+      { id:'CI010', name:'Socle Plateau', desc:'Plateau socle pour chaise ou table — Ø55cm, 2 finitions disponibles.', variants:['Noir — Sur devis','Chrome — Sur devis'], price:'Sur devis', img:'images/carcasses/socle%20plateau.jpg', sub:'inox' },
     ]
   },
 
