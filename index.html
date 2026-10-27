@@ -1208,169 +1208,181 @@
       </p>
     </div>
 
-    <!-- Categories showcase — grille image avec rotation automatique -->
+    <!-- Categories showcase — cartes claires avec rotation automatique -->
     <style>
     .cat-showcase { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-    .cat-sc-card { position:relative; border-radius:18px; overflow:hidden; cursor:pointer; height:220px; box-shadow:0 4px 16px rgba(27,78,122,.1); border:1px solid var(--gray-100); transition:transform .35s ease, box-shadow .35s ease; background:#f3f6f8; }
-    .cat-sc-card:hover { transform:translateY(-6px); box-shadow:0 18px 38px rgba(27,78,122,.22); }
-    .cat-sc-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .9s ease, transform .6s ease; transform:scale(1.02); }
+    .cat-sc-card { display:flex; flex-direction:column; background:#fff; border-radius:18px; overflow:hidden; cursor:pointer; border:1px solid var(--gray-100); box-shadow:0 2px 10px rgba(27,78,122,.07); transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+    .cat-sc-card:hover { transform:translateY(-5px); box-shadow:0 16px 32px rgba(27,78,122,.16); border-color:var(--teal); }
+    .cat-sc-imgwrap { position:relative; height:148px; background:linear-gradient(135deg,#f2f7f9,#eaf2f4); border-bottom:1px solid var(--gray-100); overflow:hidden; }
+    .cat-sc-img { position:absolute; inset:9%; width:82%; height:82%; object-fit:contain; opacity:1; transition:opacity .8s ease, transform .5s ease; }
     .cat-sc-img.hidden { opacity:0; }
-    .cat-sc-card:hover .cat-sc-img:not(.hidden) { transform:scale(1.1); }
-    .cat-sc-body { position:absolute; bottom:0; left:0; right:0; padding:20px 20px 18px; background:linear-gradient(transparent 0%, rgba(13,36,58,.68) 45%, rgba(13,36,58,.96) 100%); }
-    .cat-sc-icon { font-size:1.4rem; display:block; margin-bottom:6px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
-    .cat-sc-name { font-family:'Raleway',sans-serif; font-size:1rem; font-weight:800; color:#fff; margin-bottom:3px; line-height:1.2; letter-spacing:-.01em; }
-    .cat-sc-sub { font-size:.72rem; color:rgba(255,255,255,.75); font-weight:500; }
-    .cat-sc-btn { position:absolute; bottom:16px; right:16px; width:32px; height:32px; background:var(--teal); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.85rem; color:#fff; opacity:0; transform:scale(.7) translateX(4px); transition:opacity .25s, transform .25s; box-shadow:0 4px 10px rgba(43,190,200,.4); }
-    .cat-sc-card:hover .cat-sc-btn { opacity:1; transform:scale(1) translateX(0); }
-    .cat-sc-dots { position:absolute; top:14px; right:14px; display:flex; gap:4px; z-index:2; }
-    .cat-sc-dot { width:5px; height:5px; border-radius:50px; background:rgba(255,255,255,.5); transition:background .4s ease, width .4s ease; }
-    .cat-sc-dot.on { background:var(--teal); width:14px; }
-    @media(max-width:900px){ .cat-showcase { grid-template-columns:repeat(2,1fr); gap:14px; } .cat-sc-card { height:185px; } }
-    @media(max-width:480px){ .cat-showcase { grid-template-columns:repeat(2,1fr); gap:10px; } .cat-sc-card { height:150px; border-radius:14px; } .cat-sc-name { font-size:.85rem; } .cat-sc-icon { font-size:1.15rem; } .cat-sc-body { padding:14px 14px 12px; } }
+    .cat-sc-card:hover .cat-sc-img:not(.hidden) { transform:scale(1.06); }
+    .cat-sc-dots { position:absolute; top:10px; right:10px; display:flex; gap:4px; z-index:2; }
+    .cat-sc-dot { width:5px; height:5px; border-radius:50px; background:rgba(27,78,122,.18); transition:background .4s ease, width .4s ease; }
+    .cat-sc-dot.on { background:var(--teal); width:13px; }
+    .cat-sc-body { padding:14px 16px 16px; display:flex; flex-direction:column; gap:2px; flex:1; }
+    .cat-sc-icon { font-size:1.3rem; display:block; margin-bottom:4px; }
+    .cat-sc-name { font-family:'Raleway',sans-serif; font-size:.95rem; font-weight:800; color:var(--navy-dark); line-height:1.2; letter-spacing:-.01em; }
+    .cat-sc-sub { font-size:.72rem; color:var(--gray-600); font-weight:500; margin-bottom:10px; }
+    .cat-sc-btn { margin-top:auto; align-self:flex-start; font-size:.72rem; font-weight:700; color:var(--teal-dark,#1A99A3); display:inline-flex; align-items:center; gap:4px; }
+    .cat-sc-btn span { transition:transform .25s ease; }
+    .cat-sc-card:hover .cat-sc-btn span { transform:translateX(3px); }
+    @media(max-width:900px){ .cat-showcase { grid-template-columns:repeat(2,1fr); gap:14px; } .cat-sc-imgwrap { height:130px; } }
+    @media(max-width:480px){ .cat-showcase { grid-template-columns:repeat(2,1fr); gap:10px; } .cat-sc-imgwrap { height:105px; } .cat-sc-body { padding:11px 12px 12px; } .cat-sc-name { font-size:.83rem; } .cat-sc-sub { font-size:.66rem; margin-bottom:6px; } .cat-sc-icon { font-size:1.1rem; } }
     </style>
 
     <div class="cat-showcase">
 
       <!-- Carcasses de Chaise -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=chaise'">
-        <img class="cat-sc-img" src="images/carcasses/asya.png" alt="">
-        <img class="cat-sc-img hidden" src="images/carcasses/c003.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/carcasses/c006.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/carcasses/mozart.png" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,#1B4E7A,#2BBEC8)"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/carcasses/c001.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/carcasses/c003.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/carcasses/c006.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/carcasses/c009.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🪑</span>
           <div class="cat-sc-name">Carcasses de Chaise</div>
           <div class="cat-sc-sub">Tapissée, Bois brut, Inox — 15 modèles</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Piètements -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=pietement'">
-        <img class="cat-sc-img" src="images/pietement-metal/em32.png" alt="">
-        <img class="cat-sc-img hidden" src="images/pietement-bois/classique.png" alt="">
-        <img class="cat-sc-img hidden" src="images/pietement-metal/gl102.png" alt="">
-        <img class="cat-sc-img hidden" src="images/pietement-plastique/elina.png" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/pietement-metal/gl8.png" alt="">
+          <img class="cat-sc-img hidden" src="images/pietement-bois/sabot%20en%20bois.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/pietement-plastique/sabot%20italia.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/pietement-bois/boule%20en%20bois.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🦵</span>
           <div class="cat-sc-name">Piètements de Meuble</div>
           <div class="cat-sc-sub">Bois, Métal, Plastique — 50+ modèles</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Miroirs -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=miroirs'">
-        <img class="cat-sc-img" src="images/miroire/miroire-rond-40.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/miroire/genova-doree-d60.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/miroire/miroire-60x180-blanc.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/miroire/miroire-eve-noire-50x70.jpg" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/miroire/miroire-rond-40.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/miroire/genova-doree-d60.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/miroire/miroire-60x180-blanc.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/miroire/miroire-eve-noire-50x70.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🪞</span>
           <div class="cat-sc-name">Miroirs Décoratifs</div>
           <div class="cat-sc-sub">Arche, rond, soleil, pleine longueur</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Mousse & Rembourrage -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=mousse-tabka'">
-        <img class="cat-sc-img" src="images/matelas mousse/HR.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas mousse/20x22.webp" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas mousse/28x30.webp" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas mousse/magic30.webp" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/plaque%20mousse/hr.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/plaque%20mousse/magic.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/plaque%20mousse/13x15.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/plaque%20mousse/20x22.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🛏️</span>
           <div class="cat-sc-name">Mousse & Rembourrage</div>
           <div class="cat-sc-sub">Matelas mousse, TABKA, Polyester, OAT</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Socles de Table -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=socle'">
-        <img class="cat-sc-img" src="images/socle table/ST001.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/socle table/ST002.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/socle table/ST003.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/socle table/ST004.jpg" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy),var(--navy-dark))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/socle table/ST001.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/socle table/ST002.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/socle table/ST003.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/socle table/ST005.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🔲</span>
           <div class="cat-sc-name">Socles de Table</div>
           <div class="cat-sc-sub">Tulipe, cruciforme, en X — Métal & Bois</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Outils de Tapisserie -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=outils'">
-        <img class="cat-sc-img" src="images/outil de tapissserie/accesoire lion.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/outils/t50.png" alt="">
-        <img class="cat-sc-img hidden" src="images/outil de tapissserie/Curseur.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/outil de tapissserie/Patin-glisseur.jpg" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--teal-dark))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/colle/pistolet%20de%20colle1.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/outil de tapissserie/Curseur.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/outil de tapissserie/Patin-glisseur.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/outil%20de%20tapissserie/pistolet%20de%20peinture.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🛠️</span>
           <div class="cat-sc-name">Outils de Tapisserie</div>
           <div class="cat-sc-sub">Pistolets, colles, accessoires — 100+ articles</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Tissus d'Ameublement -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=tissu'">
-        <img class="cat-sc-img" src="images/tissue/aurora.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/tissue/diva.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/tissue/luna.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/tissue/palermo.jpg" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/tissue/aurora.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/tissue/diva.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/tissue/luna.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/tissue/palermo.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🧵</span>
           <div class="cat-sc-name">Tissus d'Ameublement</div>
           <div class="cat-sc-sub">Velours, microfibre, simili cuir — 12 types</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Matelas Ressort -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=ressort'">
-        <img class="cat-sc-img" src="images/matelas ressort/medico.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas ressort/relax.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas ressort/soft.jpg" alt="">
-        <img class="cat-sc-img hidden" src="images/matelas ressort/venise.jpg" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy),var(--teal-dark))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/matelas ressort/medico.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/matelas ressort/relax.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/matelas ressort/soft.jpg" alt="">
+          <img class="cat-sc-img hidden" src="images/matelas ressort/venise.jpg" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">🔩</span>
           <div class="cat-sc-name">Matelas Ressort</div>
           <div class="cat-sc-sub">Bonnell, ensaché, plateau — Acier anti-rouille</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
       <!-- Agrafes & Clous -->
       <div class="cat-sc-card" onclick="location.href='catalogue.html?cat=agrafes'">
-        <img class="cat-sc-img" src="images/outils/agr.png" alt="">
-        <img class="cat-sc-img hidden" src="images/outils/t25.png" alt="">
-        <img class="cat-sc-img hidden" src="images/outils/t50.png" alt="">
-        <div class="cat-sc-color" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light))"></div>
-        <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        <div class="cat-sc-imgwrap">
+          <img class="cat-sc-img" src="images/outils/agr.png" alt="">
+          <img class="cat-sc-img hidden" src="images/outils/t25.png" alt="">
+          <img class="cat-sc-img hidden" src="images/outils/t30.png" alt="">
+          <img class="cat-sc-img hidden" src="images/outils/t50.png" alt="">
+          <div class="cat-sc-dots"><span class="cat-sc-dot on"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span><span class="cat-sc-dot"></span></div>
+        </div>
         <div class="cat-sc-body">
           <span class="cat-sc-icon">📌</span>
           <div class="cat-sc-name">Agrafes & Clous</div>
           <div class="cat-sc-sub">Séries 53, 80, 71 — Galvanisé, doré, nickelé</div>
-          <span class="cat-sc-btn">Voir tout →</span>
+          <span class="cat-sc-btn">Voir tout <span>→</span></span>
         </div>
       </div>
 
