@@ -18,11 +18,16 @@ function parsePriceStr(str) {
   return parseFloat(m[1].replace(',', '.')) || 0;
 }
 
-/* Remplace le prix (dernier "X,XXX DT") dans une étiquette de variante, en gardant le reste du texte. */
+/* Remplace le prix dans une étiquette de variante, en gardant le libellé ("Gold — Sur devis" -> "Gold — 5,500 DT"). */
 function replaceVariantPrice(variantStr, newPrice) {
   const formatted = formatDT(newPrice);
-  if (/\d[\d,]*\s*DT/.test(variantStr)) {
-    return variantStr.replace(/\d[\d,]*\s*DT/, formatted);
+  const str = String(variantStr);
+  const sepIdx = str.lastIndexOf(' — ');
+  if (sepIdx !== -1) {
+    return str.slice(0, sepIdx) + ' — ' + formatted;
+  }
+  if (/\d[\d,]*\s*DT/.test(str)) {
+    return str.replace(/\d[\d,]*\s*DT/, formatted);
   }
   return formatted;
 }
