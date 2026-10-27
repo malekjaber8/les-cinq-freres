@@ -390,7 +390,8 @@
     fetch('catalogue-data.js').then(r => r.text()),
     fetch('catalogue.html').then(r => r.text()),
     (typeof db !== 'undefined' && typeof ShowcaseShared !== 'undefined') ? ShowcaseShared.loadShowcaseEntries(db) : Promise.resolve({}),
-  ]).then(([catalogueDataSrc, html, showcaseMap]) => {
+    (typeof db !== 'undefined') ? db.collection('admin_products').get().then(s => s.docs.map(d => d.data())).catch(() => []) : Promise.resolve([]),
+  ]).then(([catalogueDataSrc, html, showcaseMap, adminProducts]) => {
     function extractLiteral(src, marker, endPattern) {
       const startIdx = src.indexOf(marker);
       if (startIdx === -1) return null;
@@ -408,6 +409,25 @@
       catalogueData = new Function('return ' + catSrc)();
       toolCategoriesData = toolsSrc ? new Function('return ' + toolsSrc)() : [];
     } catch (e) { console.warn('Promo home: parse error', e.message); return; }
+
+    // Fusionne les articles ajoutes par l'admin (admin_products) — sinon un article
+    // cree depuis le dashboard et marque "Nouveauté"/"Promo" n'apparaîtrait jamais ici.
+    (adminProducts || []).forEach(p => {
+      if (p.kind === 'tool') {
+        let tc = toolCategoriesData.find(t => t.name === p.toolSubcat);
+        if (!tc) { tc = { icon:'🔧', name: p.toolSubcat, items: [] }; toolCategoriesData.push(tc); }
+        tc.items.push({ code: p.code, name: p.name, ref: p.ref || '', price: p.price, img: p.img || null });
+      } else {
+        const cat = catalogueData[p.catId];
+        if (!cat) return;
+        if (!Array.isArray(cat.products)) cat.products = [];
+        cat.products.push({
+          id: p.code, name: p.name, desc: p.desc || '',
+          variants: (p.variants && p.variants.length) ? p.variants : [p.price],
+          price: p.price, img: p.img || null, sub: p.sub || undefined
+        });
+      }
+    });
 
     const promoItems = typeof ShowcaseShared !== 'undefined'
       ? ShowcaseShared.buildHomeShowcase(catalogueData, toolCategoriesData, showcaseMap)

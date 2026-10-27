@@ -819,6 +819,57 @@
 <script src="pricing.js"></script>
 <script src="showcase.js"></script>
 <script>
+  /* ══════════════════════════════════════════
+     Outils (toolCategories) + fusion des articles admin
+     dashboard.html ne charge que catalogue-data.js (categories standards).
+     On recupere toolCategories depuis catalogue.html (meme technique qu'index.html),
+     puis on fusionne les articles ajoutes par l'admin (admin_products) dans
+     catalogue/toolCategories — sinon "Gestion des Prix" et "Vitrine Accueil"
+     ne voient jamais les articles ajoutes depuis le dashboard.
+  ══════════════════════════════════════════ */
+  let toolCategories = [];
+
+  function mergeAdminProductsIntoDashboard(docs) {
+    docs.forEach(p => {
+      if (p.kind === 'tool') {
+        let tc = toolCategories.find(t => t.name === p.toolSubcat);
+        if (!tc) {
+          tc = { icon:'🔧', name: p.toolSubcat, desc: 'Articles ajoutés par l\'administrateur', items: [] };
+          toolCategories.push(tc);
+        }
+        tc.items.push({ code: p.code, name: p.name, ref: p.ref || '', price: p.price, img: p.img || null });
+      } else {
+        const cat = catalogue[p.catId];
+        if (!cat) return;
+        if (!Array.isArray(cat.products)) cat.products = [];
+        cat.products.push({
+          id: p.code, name: p.name, desc: p.desc || '',
+          variants: (p.variants && p.variants.length) ? p.variants : [p.price],
+          price: p.price, img: p.img || null, sub: p.sub || undefined
+        });
+      }
+    });
+  }
+
+  function loadToolsAndMergeAdmin() {
+    return fetch('catalogue.html').then(r => r.text()).then(html => {
+      const marker = 'const toolCategories = ', endPattern = '\n];';
+      const startIdx = html.indexOf(marker);
+      if (startIdx === -1) return;
+      const afterMarker = startIdx + marker.length;
+      const endIdx = html.indexOf(endPattern, afterMarker);
+      if (endIdx === -1) return;
+      try { toolCategories = new Function('return ' + html.slice(afterMarker, endIdx + endPattern.length))(); }
+      catch (e) { console.warn('toolCategories parse error:', e.message); }
+    }).catch(() => {}).then(() => {
+      if (typeof db === 'undefined') return;
+      return db.collection('admin_products').get()
+        .then(snap => mergeAdminProductsIntoDashboard(snap.docs.map(d => d.data())))
+        .catch(() => {});
+    });
+  }
+  const _adminMergeReady = loadToolsAndMergeAdmin();
+
   let currentUser = null;
   let editMode = false;
 
@@ -1511,16 +1562,19 @@
       document.getElementById('priceList').innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Données catalogue indisponibles — rechargez la page.</div>`;
       return;
     }
-    if (!_priceMgmtInited) {
-      _priceMgmtInited = true;
-      _priceItems = PricingShared.flattenPriceableItems(catalogue, typeof toolCategories !== 'undefined' ? toolCategories : []);
-      const cats = [...new Map(_priceItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
-      const sel = document.getElementById('priceCatSelect');
-      cats.forEach(([id, label]) => {
-        const opt = document.createElement('option'); opt.value = id; opt.textContent = label; sel.appendChild(opt);
-      });
-    }
-    loadPriceOverridesList();
+    document.getElementById('priceList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--gray-400)">⏳ Chargement des prix…</div>`;
+    _adminMergeReady.then(() => {
+      if (!_priceMgmtInited) {
+        _priceMgmtInited = true;
+        _priceItems = PricingShared.flattenPriceableItems(catalogue, typeof toolCategories !== 'undefined' ? toolCategories : []);
+        const cats = [...new Map(_priceItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
+        const sel = document.getElementById('priceCatSelect');
+        cats.forEach(([id, label]) => {
+          const opt = document.createElement('option'); opt.value = id; opt.textContent = label; sel.appendChild(opt);
+        });
+      }
+      loadPriceOverridesList();
+    });
   }
 
   function loadPriceOverridesList() {
@@ -1656,16 +1710,19 @@
       document.getElementById('showcaseList').innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:40px;text-align:center;color:var(--gray-400)">Données catalogue indisponibles — rechargez la page.</div>`;
       return;
     }
-    if (!_showcaseInited) {
-      _showcaseInited = true;
-      _showcaseAllItems = ShowcaseShared.flattenShowcaseItems(catalogue, typeof toolCategories !== 'undefined' ? toolCategories : []);
-      const cats = [...new Map(_showcaseAllItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
-      const sel = document.getElementById('showcaseCatSelect');
-      cats.forEach(([id, label]) => {
-        const opt = document.createElement('option'); opt.value = id; opt.textContent = label; sel.appendChild(opt);
-      });
-    }
-    loadShowcaseList();
+    document.getElementById('showcaseList').innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-400)">⏳ Chargement…</div>`;
+    _adminMergeReady.then(() => {
+      if (!_showcaseInited) {
+        _showcaseInited = true;
+        _showcaseAllItems = ShowcaseShared.flattenShowcaseItems(catalogue, typeof toolCategories !== 'undefined' ? toolCategories : []);
+        const cats = [...new Map(_showcaseAllItems.map(i => [i.catId, i.catLabel])).entries()].sort((a,b) => a[1].localeCompare(b[1]));
+        const sel = document.getElementById('showcaseCatSelect');
+        cats.forEach(([id, label]) => {
+          const opt = document.createElement('option'); opt.value = id; opt.textContent = label; sel.appendChild(opt);
+        });
+      }
+      loadShowcaseList();
+    });
   }
 
   function loadShowcaseList() {
