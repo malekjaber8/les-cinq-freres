@@ -1144,9 +1144,21 @@
         <div style="${gS}"><label style="${lS}">${n.code}. Code article *</label><input id="artCode" placeholder="Ex: PM056" style="${fS}"></div>
         <div style="${gS}"><label style="${lS}">${n.name}. Nom de l'article *</label><input id="artName" placeholder="Ex: Sabot Gl 250" style="${fS}"></div>
         <div style="${gS}"><label style="${lS}">${n.desc}. Désignation / Description</label><textarea id="artDesc" rows="2" style="${fS};resize:none" placeholder="Ex: Pied métal incliné, 15cm"></textarea></div>
-        <div style="${gS}"><label style="${lS}">${n.price}. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
+        <div id="artPriceRow" style="${gS}"><label style="${lS}">${n.price}. Prix *</label><input id="artPrice" placeholder="Ex: 10,500 DT" style="${fS}"></div>
+        <div style="${gS}">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;${lS}">
+            <input type="checkbox" id="artHasVariants" onchange="toggleArtVariants()" style="width:16px;height:16px;margin:0">
+            Cet article a plusieurs dimensions / variantes, chacune avec son prix
+          </label>
+          <div id="artVariantsBox" style="display:none;background:var(--gray-50);border-radius:10px;padding:14px;margin-top:10px">
+            <div id="artVariantsRows"></div>
+            <button type="button" onclick="addArtVariantRow()" style="background:rgba(43,190,200,.12);border:none;color:var(--teal-dark);font-size:.78rem;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;margin-top:4px">+ Ajouter une dimension</button>
+          </div>
+        </div>
         <div style="${gS}"><label style="${lS}">${n.photo}. Chemin de l'image</label><input id="artPhotoPath" placeholder="Ex: images/dossier/photo.jpg (optionnel)" style="${fS}"></div>
       `;
+      addArtVariantRow();
+      addArtVariantRow();
     } else if (cat === 'mousse-matelas' || cat === 'mousse-tabka') {
       const types = cat === 'mousse-matelas' ? ART_MOUSSE_TYPES : ART_TABKA_TYPES;
       const isTabka = cat === 'mousse-tabka';
@@ -1189,6 +1201,46 @@
         </div>
       `;
     }
+  }
+
+  /* ── Variantes / dimensions multiples (catégories standard uniquement) ── */
+  let _artVariantRowSeq = 0;
+  function addArtVariantRow(label, price) {
+    const rows = document.getElementById('artVariantsRows');
+    if (!rows) return;
+    const rid = 'avr' + (_artVariantRowSeq++);
+    const fS2 = "padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;outline:none";
+    const row = document.createElement('div');
+    row.id = rid;
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
+    const safeLabel = label ? String(label).replace(/"/g, '&quot;') : '';
+    row.innerHTML = `
+      <input class="art-variant-label" placeholder="Dimension (ex: 15cm, Petit...)" value="${safeLabel}" style="${fS2};flex:1">
+      <input class="art-variant-price" type="number" step="0.001" placeholder="Prix DT" value="${price != null ? price : ''}" style="${fS2};width:110px">
+      <button type="button" onclick="document.getElementById('${rid}').remove()" style="background:rgba(220,38,38,.08);border:none;color:#dc2626;padding:8px 10px;border-radius:8px;cursor:pointer">🗑️</button>
+    `;
+    rows.appendChild(row);
+  }
+
+  function toggleArtVariants() {
+    const checked = document.getElementById('artHasVariants').checked;
+    document.getElementById('artVariantsBox').style.display = checked ? '' : 'none';
+    const priceRow = document.getElementById('artPriceRow');
+    if (priceRow) priceRow.style.display = checked ? 'none' : '';
+  }
+
+  function collectArtVariants() {
+    const rows = document.querySelectorAll('#artVariantsRows > div');
+    const out = [];
+    rows.forEach(r => {
+      const label = r.querySelector('.art-variant-label').value.trim();
+      const priceVal = r.querySelector('.art-variant-price').value;
+      if (label && priceVal !== '') {
+        const num = parseFloat(priceVal);
+        if (!isNaN(num)) out.push({ label, price: num });
+      }
+    });
+    return out;
   }
 
   function showArtMsg(type, text) {
@@ -1237,13 +1289,22 @@
         const code  = document.getElementById('artCode').value.trim();
         const name  = document.getElementById('artName').value.trim();
         const desc  = document.getElementById('artDesc').value.trim();
-        const price = document.getElementById('artPrice').value.trim();
         const subcatEl = document.getElementById('artSubcat');
         const sub = subcatEl ? subcatEl.value : '';
+        const hasVariants = document.getElementById('artHasVariants') && document.getElementById('artHasVariants').checked;
+        let price, variants = null;
+        if (hasVariants) {
+          const rows = collectArtVariants();
+          if (rows.length < 2) { showArtMsg('error','Ajoutez au moins deux dimensions avec leur prix, ou décochez la case "plusieurs dimensions".'); resetArticleBtn(); return; }
+          variants = rows.map(r => r.label + ' — ' + PricingShared.formatDT(r.price));
+          price = variants[0];
+        } else {
+          price = document.getElementById('artPrice').value.trim();
+        }
         if (!code || !name || !price) { showArtMsg('error','Veuillez remplir tous les champs obligatoires (*).'); resetArticleBtn(); return; }
         if (subcatEl && !sub) { showArtMsg('error','Veuillez choisir une sous-catégorie.'); resetArticleBtn(); return; }
         const img = getArticlePhotoPath() || (isEdit ? _editingArticle.img || null : null);
-        const payload = { kind:'standard', catId: cat, code, name, desc, price, sub: sub || null, img: img || null };
+        const payload = { kind:'standard', catId: cat, code, name, desc, price, sub: sub || null, img: img || null, variants: variants || null };
         if (isEdit) await db.collection('admin_products').doc(_editingArticle._id).update(payload);
         else await db.collection('admin_products').add({ ...payload, createdAt: Date.now() });
         showArtMsg('success', isEdit ? '✅ Article "' + name + '" mis à jour !' : '✅ Article "' + name + '" ajouté avec succès au catalogue !');
@@ -1336,8 +1397,21 @@
       setVal('artCode', a.code);
       setVal('artName', a.name);
       setVal('artDesc', a.desc);
-      setVal('artPrice', a.price);
       setVal('artSubcat', a.sub);
+      if (a.variants && a.variants.length > 1) {
+        document.getElementById('artHasVariants').checked = true;
+        toggleArtVariants();
+        document.getElementById('artVariantsRows').innerHTML = '';
+        a.variants.forEach(v => {
+          const parts = String(v).split(' — ');
+          const label = parts.length > 1 ? parts.slice(0, -1).join(' — ') : v;
+          const priceStr = parts[parts.length - 1];
+          const num = parseFloat(String(priceStr).replace(/[^\d.,]/g, '').replace(',', '.'));
+          addArtVariantRow(label, isNaN(num) ? '' : num);
+        });
+      } else {
+        setVal('artPrice', a.price);
+      }
     }
     setVal('artPhotoPath', a.img);
 
