@@ -383,6 +383,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="firebase-init.js"></script>
+<script src="pricing.js"></script>
 <script src="showcase.js"></script>
 <script>
 (function() {
@@ -391,7 +392,8 @@
     fetch('catalogue.html').then(r => r.text()),
     (typeof db !== 'undefined' && typeof ShowcaseShared !== 'undefined') ? ShowcaseShared.loadShowcaseEntries(db) : Promise.resolve({}),
     (typeof db !== 'undefined') ? db.collection('admin_products').get().then(s => s.docs.map(d => d.data())).catch(() => []) : Promise.resolve([]),
-  ]).then(([catalogueDataSrc, html, showcaseMap, adminProducts]) => {
+    (typeof db !== 'undefined' && typeof PricingShared !== 'undefined') ? PricingShared.loadPriceOverrides(db) : Promise.resolve({}),
+  ]).then(([catalogueDataSrc, html, showcaseMap, adminProducts, priceOverrides]) => {
     function extractLiteral(src, marker, endPattern) {
       const startIdx = src.indexOf(marker);
       if (startIdx === -1) return null;
@@ -428,6 +430,12 @@
         });
       }
     });
+
+    // Applique les prix modifiés depuis "Gestion des Prix" (dashboard) — sinon la
+    // bannière affichait toujours le prix d'origine du catalogue statique.
+    if (typeof PricingShared !== 'undefined') {
+      PricingShared.applyPriceOverrides(catalogueData, priceOverrides, toolCategoriesData);
+    }
 
     const promoItems = typeof ShowcaseShared !== 'undefined'
       ? ShowcaseShared.buildHomeShowcase(catalogueData, toolCategoriesData, showcaseMap)

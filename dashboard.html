@@ -1725,15 +1725,26 @@
       : `<div style="width:44px;height:44px;border-radius:8px;background:var(--gray-50);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem">📦</div>`;
   }
 
+  // Ordre d'affichage courant (trié par .order, puis par cle en repli pour les anciennes
+  // entrees sans ordre explicite) — utilise pour le rendu et pour les fleches ▲▼.
+  function _showcaseSortedKeys() {
+    return Object.keys(_showcaseMap).sort((ka, kb) => {
+      const oa = typeof _showcaseMap[ka].order === 'number' ? _showcaseMap[ka].order : Infinity;
+      const ob = typeof _showcaseMap[kb].order === 'number' ? _showcaseMap[kb].order : Infinity;
+      if (oa !== ob) return oa - ob;
+      return ka.localeCompare(kb);
+    });
+  }
+
   function renderShowcaseSelected() {
     const wrap = document.getElementById('showcaseSelectedList');
-    const keys = Object.keys(_showcaseMap);
+    const keys = _showcaseSortedKeys();
     document.getElementById('showcaseSelCount').textContent = keys.length;
     if (!keys.length) {
       wrap.innerHTML = `<div style="background:#fff;border:1px solid var(--gray-100);border-radius:14px;padding:30px;text-align:center;color:var(--gray-400)">Aucun article en vitrine pour l'instant. Recherchez un article ci-dessous pour l'ajouter.</div>`;
       return;
     }
-    wrap.innerHTML = keys.map(key => {
+    wrap.innerHTML = keys.map((key, idx) => {
       const entry = _showcaseMap[key];
       const it = _showcaseAllItems.find(i => i.key === key);
       const label = it ? it.label : (entry.itemId || key);
@@ -1742,6 +1753,11 @@
       const isNew = entry.type === 'nouveaute';
       const safeKey = key.replace(/'/g, "\\'");
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border:1px solid var(--gray-100);border-radius:12px;margin-bottom:8px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
+          <button onclick="moveShowcaseItem('${safeKey}',-1)" ${idx===0?'disabled':''} title="Monter" style="width:22px;height:18px;border:1px solid var(--gray-200);background:${idx===0?'var(--gray-50)':'#fff'};color:${idx===0?'var(--gray-300)':'var(--navy-dark)'};border-radius:5px;cursor:${idx===0?'default':'pointer'};font-size:.65rem;line-height:1;padding:0">▲</button>
+          <div style="font-size:.68rem;font-weight:800;color:var(--teal-dark);width:20px;text-align:center">${idx+1}</div>
+          <button onclick="moveShowcaseItem('${safeKey}',1)" ${idx===keys.length-1?'disabled':''} title="Descendre" style="width:22px;height:18px;border:1px solid var(--gray-200);background:${idx===keys.length-1?'var(--gray-50)':'#fff'};color:${idx===keys.length-1?'var(--gray-300)':'var(--navy-dark)'};border-radius:5px;cursor:${idx===keys.length-1?'default':'pointer'};font-size:.65rem;line-height:1;padding:0">▼</button>
+        </div>
         ${showcaseThumb(img)}
         <div style="flex:1;min-width:140px">
           <div style="font-size:.84rem;font-weight:700;color:var(--navy-dark)">${label}</div>
@@ -1754,6 +1770,23 @@
         <button onclick="removeShowcaseItem('${safeKey}')" style="background:rgba(220,38,38,.08);border:none;color:#dc2626;font-size:.76rem;padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">🗑️ Retirer</button>
       </div>`;
     }).join('');
+  }
+
+  // Echange la position de `key` avec son voisin (dir -1 = monter, +1 = descendre),
+  // puis renumerote tous les items (0,1,2,...) pour que l'ordre reste toujours sequentiel.
+  function moveShowcaseItem(key, dir) {
+    const keys = _showcaseSortedKeys();
+    const i = keys.indexOf(key);
+    const j = i + dir;
+    if (i === -1 || j < 0 || j >= keys.length) return;
+    [keys[i], keys[j]] = [keys[j], keys[i]];
+    Promise.all(keys.map((k, idx) => {
+      const entry = _showcaseMap[k];
+      _showcaseMap[k] = Object.assign({}, entry, { order: idx });
+      return ShowcaseShared.saveShowcaseEntry(db, k, { catId: entry.catId, itemId: entry.itemId, type: entry.type, order: idx });
+    })).then(() => {
+      renderShowcaseSelected();
+    }).catch(e => showToast('error', 'Erreur', e.message));
   }
 
   let _showcaseSearchHadText = false;
@@ -1820,8 +1853,9 @@
   function addShowcaseItem(key, type) {
     const it = _showcaseAllItems.find(i => i.key === key);
     if (!it) return;
-    ShowcaseShared.saveShowcaseEntry(db, key, { catId: it.catId, itemId: it.itemId, type }).then(() => {
-      _showcaseMap[key] = { catId: it.catId, itemId: it.itemId, type };
+    const order = Object.keys(_showcaseMap).length; // ajouté en dernière position
+    ShowcaseShared.saveShowcaseEntry(db, key, { catId: it.catId, itemId: it.itemId, type, order }).then(() => {
+      _showcaseMap[key] = { catId: it.catId, itemId: it.itemId, type, order };
       showToast('success', 'Ajouté à la vitrine', it.label + ' — ' + (type === 'nouveaute' ? 'Nouveauté' : 'Promo'));
       renderShowcaseSelected();
       renderShowcaseList();

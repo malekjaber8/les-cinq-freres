@@ -73,24 +73,29 @@
       const entry = showcaseMap[key];
       if (!entry || !entry.catId || !entry.itemId) return;
       const item = findCatalogueItem(catalogue, toolCategories, entry.catId, entry.itemId);
-      if (item) byKey.set(key, Object.assign({}, item, { type: entry.type === 'nouveaute' ? 'nouveaute' : 'promo' }));
+      if (item) byKey.set(key, Object.assign({}, item, {
+        type: entry.type === 'nouveaute' ? 'nouveaute' : 'promo',
+        order: typeof entry.order === 'number' ? entry.order : Infinity,
+      }));
     });
 
     Object.keys(catalogue || {}).forEach(catId => {
       const cat = catalogue[catId];
       (cat.products || []).forEach(p => {
         const key = catId + '::' + p.id;
-        if (p.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, p, { catId, type: 'promo' }));
+        if (p.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, p, { catId, type: 'promo', order: Infinity }));
       });
     });
     (toolCategories || []).forEach(tc => {
       (tc.items || []).forEach(it => {
         const key = 'outils::' + it.code;
-        if (it.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, it, { catId: 'outils', id: it.code, type: 'promo' }));
+        if (it.promo && !byKey.has(key)) byKey.set(key, Object.assign({}, it, { catId: 'outils', id: it.code, type: 'promo', order: Infinity }));
       });
     });
 
-    return [...byKey.values()];
+    // Tri stable par "order" (choisi par l'admin) — les items sans ordre explicite
+    // (Infinity) gardent leur ordre d'insertion et passent après les items ordonnés.
+    return [...byKey.values()].sort((a, b) => a.order - b.order);
   }
 
   global.ShowcaseShared = {
