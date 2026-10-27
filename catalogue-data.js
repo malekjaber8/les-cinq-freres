@@ -412,7 +412,7 @@ const catalogue = {
       { id:'ACC013', name:'Support Goblet pour Salon', desc:'Porte-gobelet encastrable pour accoudoir de canapé.', variants:['20,000 DT / pièce'], price:'20,000 DT', img:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png', gallery:['images/outil%20de%20tapissserie/support%20goblet%20pour%20salon.png','images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%202.png'], video:'images/outil%20de%20tapissserie/support%20goblet%20pour%20salon%20video.mp4' },
       { id:'ACC014', name:'Chargeur Encastrable Sans Fil', desc:'Module de charge sans fil encastrable dans un meuble — 2 sorties USB.', variants:['60,000 DT / pièce'], price:'60,000 DT', img:'images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%20.jpg', gallery:['images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%20.jpg','images/outil%20de%20tapissserie/charge%20no%20bleutooth%20noir%201%20.jpg'] },
       { id:'ACC015', name:'Plaque de Recharge Sans Fil "Top Plate"', desc:'Plaque de recharge sans fil à intégrer sur meuble — 47×38cm, 3 coloris.', variants:['47x38cm — 120,000 DT'], price:'120,000 DT', img:'images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%20.jpg', gallery:['images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%20.jpg','images/outil%20de%20tapissserie/top%20plate%20wifi%203%20colors%2047x38cm%202.jpg'] },
-      { id:'ACC016', name:'Punaise', desc:'Punaise de tapisserie pour fixation et finition.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/punaise.jpg' },
+      { id:'ACC016', name:'Punaise', desc:'Punaise de tapisserie 17mm — disponible en 3 couleurs.', variants:['Gold — Sur devis','Silver — Sur devis','Bronze — Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/punaise.jpg' },
       { id:'ACC017', name:'Aplique Murale B0010', desc:'Applique murale orientable avec lampe LED et prise USB.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/aplique%20b0010%201.jpg', gallery:['images/outil%20de%20tapissserie/aplique%20b0010%201.jpg','images/outil%20de%20tapissserie/aplique%20b0010%202.jpg'] },
       { id:'ACC018', name:'Support Téléphone pour Salon', desc:'Support téléphone flexible à fixer sur meuble de salon — bras orientable 800mm.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg', gallery:['images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg','images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%202.jpg'] },
       { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
@@ -700,7 +700,8 @@ const toolCategories = [
   { icon:'🛝', name:'Curseur & Patin-Glisseur', desc:'Accessoires de glissement pour pieds de meubles', items:[
     {code:'OUT018', name:'Curseur',        ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Curseur.jpg'},
     {code:'OUT019', name:'Patin-Glisseur', ref:'', price:'0,150 DT', img:'images/outil%20de%20tapissserie/Patin-glisseur.jpg'},
-    {code:'OUT035', name:'Patin Marron', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/pattin%20marron.jpg'},
+    {code:'OUT035', name:'Patin Marron 19mm', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/pattin%20marron.jpg'},
+    {code:'OUT038', name:'Patin Marron 22mm', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/pattin%20marron.jpg'},
   ]},
   { icon:'📦', name:'Fermeture, Film & Sangle', desc:'Fermeture éclair au rouleau, film étirable et sangle de protection', items:[
     {code:'OUT020', name:'Fermeture Éclair (rouleau)', ref:'', price:'38,000 DT', img:'images/outil%20de%20tapissserie/fermeture.jpg'},
@@ -724,6 +725,6 @@ const toolCategories = [
     {code:'OUT036', name:'Plaque de Fixation Écrou', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/plaque%20de%20fixation%20ecrou.jpg'},
   ]},
   { icon:'🪢', name:'Canage (Rotin)', desc:'Cannage en rotin tissé pour chaises et meubles — vendu au rouleau', items:[
-    {code:'OUT037', name:'Canage Rotin', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg']},
+    {code:'OUT037', name:'Canage Rotin', ref:'Couleur naturel beige', price:'Sur devis / m', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg']},
   ]},
 ];
