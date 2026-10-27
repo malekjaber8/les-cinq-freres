@@ -820,18 +820,15 @@
 <script src="showcase.js"></script>
 <script>
   /* ══════════════════════════════════════════
-     Outils (toolCategories) + fusion des articles admin
-     dashboard.html ne charge que catalogue-data.js (categories standards).
-     On recupere toolCategories depuis catalogue.html (meme technique qu'index.html),
-     puis on fusionne les articles ajoutes par l'admin (admin_products) dans
-     catalogue/toolCategories — sinon "Gestion des Prix" et "Vitrine Accueil"
-     ne voient jamais les articles ajoutes depuis le dashboard.
+     Fusion des articles ajoutes par l'admin (admin_products) dans
+     catalogue/toolCategories (deja charges via catalogue-data.js) — sinon
+     "Gestion des Prix" et "Vitrine Accueil" ne voient jamais les articles
+     ajoutes depuis le dashboard.
   ══════════════════════════════════════════ */
-  let toolCategories = [];
-
   function mergeAdminProductsIntoDashboard(docs) {
     docs.forEach(p => {
       if (p.kind === 'tool') {
+        if (typeof toolCategories === 'undefined') return;
         let tc = toolCategories.find(t => t.name === p.toolSubcat);
         if (!tc) {
           tc = { icon:'🔧', name: p.toolSubcat, desc: 'Articles ajoutés par l\'administrateur', items: [] };
@@ -851,24 +848,11 @@
     });
   }
 
-  function loadToolsAndMergeAdmin() {
-    return fetch('catalogue.html').then(r => r.text()).then(html => {
-      const marker = 'const toolCategories = ', endPattern = '\n];';
-      const startIdx = html.indexOf(marker);
-      if (startIdx === -1) return;
-      const afterMarker = startIdx + marker.length;
-      const endIdx = html.indexOf(endPattern, afterMarker);
-      if (endIdx === -1) return;
-      try { toolCategories = new Function('return ' + html.slice(afterMarker, endIdx + endPattern.length))(); }
-      catch (e) { console.warn('toolCategories parse error:', e.message); }
-    }).catch(() => {}).then(() => {
-      if (typeof db === 'undefined') return;
-      return db.collection('admin_products').get()
+  const _adminMergeReady = (typeof db === 'undefined')
+    ? Promise.resolve()
+    : db.collection('admin_products').get()
         .then(snap => mergeAdminProductsIntoDashboard(snap.docs.map(d => d.data())))
         .catch(() => {});
-    });
-  }
-  const _adminMergeReady = loadToolsAndMergeAdmin();
 
   let currentUser = null;
   let editMode = false;
