@@ -418,6 +418,7 @@ const catalogue = {
       { id:'ACC018', name:'Support Téléphone pour Salon', desc:'Support téléphone flexible à fixer sur meuble de salon — bras orientable 800mm.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg', gallery:['images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%201.jpg','images/outil%20de%20tapissserie/support%20telephone%20pour%20salon%202.jpg'] },
       { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
       { id:'ACC020', name:'Porte Gobelet', desc:'Anneau porte-gobelet encastrable pour accoudoir de canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/porte%20goblet%201.jpg', gallery:['images/outil%20de%20tapissserie/porte%20goblet%201.jpg','images/outil%20de%20tapissserie/porte%20goblet%202.jpg'] },
+      { id:'ACC021', name:'Bande à Clou', desc:'Bande à clou décorative — 1 mètre, disponible en 3 coloris.', variants:['Gold — Sur devis','Silver — Sur devis','Bronze — Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/bande%20a%20clou%20.jpg' },
     ]
   },
 
@@ -700,7 +701,6 @@ const toolCategories = [
     {code:'OUT009', name:'Pointe Tête H14/T40 (boîte 12)', ref:'Réf. QNR0412', price:'14,000 DT', img:'images/outils/t40.png'},
     {code:'OUT010', name:'Pointe Tête H14/T50 (boîte 12)', ref:'Réf. QNR0413', price:'17,000 DT', img:'images/outils/t50.png'},
     {code:'OUT011', name:'Clou F10', ref:'Réf. QNR0290', price:'4,200 DT', img:'images/outils/f10.png'},
-    {code:'OUT039', name:'Bande à Clou', ref:'Chaîne de clous décoratifs — vendue au rouleau', price:'Sur devis', img:'images/outil%20de%20tapissserie/bande%20a%20clou%20.jpg'},
   ]},
   { icon:'🔫', name:'Pistolets', desc:'Pistolets pour capitonnage professionnel — pneumatique et manuel', items:[
     {code:'OUT012', name:'Pistolet de capitonnage (spray)',               ref:'', price:'60,000 DT',  img:'images/outils/pistolet.png'},
