@@ -419,6 +419,7 @@ const catalogue = {
       { id:'ACC019', name:'Pousse-Lâche', desc:'Loqueteau push pour ouverture sans poignée de porte de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/pousse%20lache.jpg' },
       { id:'ACC020', name:'Porte Gobelet', desc:'Anneau porte-gobelet encastrable pour accoudoir de canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/porte%20goblet%201.jpg', gallery:['images/outil%20de%20tapissserie/porte%20goblet%201.jpg','images/outil%20de%20tapissserie/porte%20goblet%202.jpg'] },
       { id:'ACC021', name:'Bande à Clou', desc:'Bande à clou décorative — 1 mètre, disponible en 3 coloris.', variants:['Gold — Sur devis','Silver — Sur devis','Bronze — Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/bande%20a%20clou%20.jpg' },
+      { id:'OUT037', name:'Canage Rotin', desc:'Cannage en rotin tissé — couleur naturel beige, vendu au rouleau.', variants:['Sur devis / m'], price:'Sur devis / m', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg'] },
     ]
   },
 
@@ -741,8 +742,5 @@ const toolCategories = [
   { icon:'💨', name:"Soufflette d'Air", desc:"Soufflettes pneumatiques ANI — Made in Italy", items:[
     {code:'OUT030', name:"Soufflette d'Air ANI 25/B2 (buse longue)", ref:'Cod. AH050301', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%201.jpg"},
     {code:'OUT031', name:"Soufflette d'Air ANI 25/B1", ref:'Cod. AH050101', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%202.jpg"},
-  ]},
-  { icon:'🪢', name:'Canage (Rotin)', desc:'Cannage en rotin tissé pour chaises et meubles — vendu au rouleau', items:[
-    {code:'OUT037', name:'Canage Rotin', ref:'Couleur naturel beige', price:'Sur devis / m', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg']},
   ]},
 ];
