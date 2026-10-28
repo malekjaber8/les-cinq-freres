@@ -37,8 +37,8 @@ const catalogue = {
         badge:'Économique',
         img:null,
         dims:[
-          {code:'MM001', d:'190×65×13', prix:46.000},
-          {code:'MM002', d:'190×70×13', prix:47.000},
+          {code:'MM001', d:'190×65×13', prix:49.500},
+          {code:'MM002', d:'190×70×13', prix:53.000},
         ]
       },
       {
@@ -48,8 +48,8 @@ const catalogue = {
         badge:'Renforcée',
         img:null,
         dims:[
-          {code:'MM003', d:'190×65×13', prix:48.000},
-          {code:'MM004', d:'190×70×13', prix:49.000},
+          {code:'MM003', d:'190×65×13', prix:53.000},
+          {code:'MM004', d:'190×70×13', prix:56.500},
         ]
       },
       {
@@ -76,7 +76,7 @@ const catalogue = {
         badge:'Souple+',
         img:null,
         dims:[
-          {code:'MM013', d:'190×70×13', prix:62.000},
+          {code:'MM013', d:'190×70×13', prix:70.500},
         ]
       },
       {
@@ -88,21 +88,21 @@ const catalogue = {
         dims:[
           {code:'MM014', d:'190×60×13', prix:null},
           {code:'MM015', d:'190×60×14', prix:null},
-          {code:'MM016', d:'190×65×13', prix:67.000},
+          {code:'MM016', d:'190×65×13', prix:70.500},
           {code:'MM017', d:'190×65×14', prix:null},
           {code:'MM018', d:'190×65×15', prix:null},
           {code:'MM019', d:'190×65×10', prix:null},
-          {code:'MM020', d:'190×70×10', prix:58.000},
-          {code:'MM021', d:'190×70×13', prix:72.000},
-          {code:'MM022', d:'190×70×14', prix:82.000},
+          {code:'MM020', d:'190×70×10', prix:61.000},
+          {code:'MM021', d:'190×70×13', prix:75.500},
+          {code:'MM022', d:'190×70×14', prix:86.000},
           {code:'MM023', d:'190×70×20', prix:null},
           {code:'MM024', d:'190×75×13', prix:null},
           {code:'MM025', d:'190×75×14', prix:null},
           {code:'MM026', d:'190×80×10', prix:null},
-          {code:'MM027', d:'190×80×13', prix:93.000},
-          {code:'MM028', d:'190×80×14', prix:100.000},
-          {code:'MM029', d:'190×80×20', prix:150.000},
-          {code:'MM030', d:'190×90×14', prix:126.000},
+          {code:'MM027', d:'190×80×13', prix:98.000},
+          {code:'MM028', d:'190×80×14', prix:105.000},
+          {code:'MM029', d:'190×80×20', prix:160.000},
+          {code:'MM030', d:'190×90×14', prix:135.000},
           {code:'MM031', d:'190×95×14', prix:null},
         ]
       },
@@ -115,9 +115,9 @@ const catalogue = {
         dims:[
           {code:'MM032', d:'190×65×13', prix:null},
           {code:'MM033', d:'190×65×14', prix:null},
-          {code:'MM034', d:'190×70×10', prix:77.000},
-          {code:'MM035', d:'190×70×13', prix:96.000},
-          {code:'MM036', d:'190×70×14', prix:107.000},
+          {code:'MM034', d:'190×70×10', prix:81.000},
+          {code:'MM035', d:'190×70×13', prix:101.000},
+          {code:'MM036', d:'190×70×14', prix:116.000},
           {code:'MM037', d:'190×75×13', prix:null},
           {code:'MM038', d:'190×75×14', prix:null},
           {code:'MM039', d:'190×80×14', prix:null},
@@ -132,8 +132,8 @@ const catalogue = {
         badge:'Pro',
         img:'images/matelas%20mousse/HR.jpg',
         dims:[
-          {code:'MM042', d:'190×70×13', prix:152.000},
-          {code:'MM043', d:'190×70×14', prix:180.000},
+          {code:'MM042', d:'190×70×13', prix:175.000},
+          {code:'MM043', d:'190×70×14', prix:210.000},
           {code:'MM044', d:'190×80×13', prix:null},
           {code:'MM045', d:'190×80×14', prix:null},
         ]
@@ -145,7 +145,7 @@ const catalogue = {
         badge:'Confort',
         img:'images/matelas%20mousse/HR.jpg',
         dims:[
-          {code:'MM046', d:'190×70×14', prix:190.000},
+          {code:'MM046', d:'190×70×14', prix:200.000},
         ]
       },
     ]
@@ -158,19 +158,19 @@ const catalogue = {
     types:[
       { id:'12-14', label:'12/14',       color:'#26A69A', bgColor:'#E0F2F1', desc:'Densité économique — dossiers et accoudoirs',       badge:'Économique',    img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { code:'MT001', ep:'0.5 cm', prix:4.500,  dim:'180×130 cm' },
-          { code:'MT002', ep:'0.8 cm', prix:6.500,  dim:'180×130 cm' },
+          { code:'MT001', ep:'0.5 cm', prix:5.000,  dim:'180×130 cm' },
+          { code:'MT002', ep:'0.8 cm', prix:7.000,  dim:'180×130 cm' },
           { code:'MT003', ep:'2 cm',   prix:13.500, dim:'180×130 cm' },
-          { code:'MT004', ep:'3 cm',   prix:20.500, dim:'180×130 cm' },
-          { code:'MT005', ep:'4 cm',   prix:27.500, dim:'180×130 cm' },
+          { code:'MT004', ep:'3 cm',   prix:21.500, dim:'180×130 cm' },
+          { code:'MT005', ep:'4 cm',   prix:29.000, dim:'180×130 cm' },
           { code:'MT006', ep:'5 cm',   prix:34.000, dim:'180×130 cm' },
         ]},
       { id:'13-15', label:'13/15',       color:'#607D8B', bgColor:'#ECEFF1', desc:'Densité légère — dossiers et accoudoirs',          badge:'Légère',       img:'images/plaque%20mousse/13x15.jpg',
         thicknesses:[{ code:'MT007', ep:'0.8 cm', prix:5.500 }] },
       { id:'15-17', label:'15/17',       color:'#5C6BC0', bgColor:'#E8EAF6', desc:'Densité standard — usage général tapisserie',       badge:'Standard',     img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { code:'MT008', ep:'0.9 cm', prix:8.500 }, { code:'MT009', ep:'1 cm', prix:9.500 }, { code:'MT010', ep:'2 cm', prix:19.000 },
-          { code:'MT011', ep:'3 cm', prix:28.500 },  { code:'MT012', ep:'4 cm', prix:37.000 }, { code:'MT013', ep:'5 cm', prix:46.500 }
+          { code:'MT008', ep:'0.9 cm', prix:9.000 }, { code:'MT009', ep:'1 cm', prix:10.000 }, { code:'MT010', ep:'2 cm', prix:20.000 },
+          { code:'MT011', ep:'3 cm', prix:30.000 },  { code:'MT012', ep:'4 cm', prix:37.000 }, { code:'MT013', ep:'5 cm', prix:46.500 }
         ]},
       { id:'20-22', label:'20/22 Souple',color:'#43A047', bgColor:'#E8F5E9', desc:'Densité souple — assises confortables',            badge:'Souple',       img:'images/plaque%20mousse/20x22.jpg',
         thicknesses:[
@@ -179,13 +179,13 @@ const catalogue = {
         ]},
       { id:'22-24', label:'22/24',       color:'#8D6E63', bgColor:'#EFEBE9', desc:'Densité intermédiaire — confort et durabilité équilibrés', badge:'Intermédiaire', img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
-          { code:'MT019', ep:'2 cm', prix:25.500 }, { code:'MT020', ep:'3 cm', prix:36.000 },
-          { code:'MT021', ep:'4 cm', prix:47.000 }, { code:'MT022', ep:'5 cm', prix:60.000 }
+          { code:'MT019', ep:'2 cm', prix:27.000 }, { code:'MT020', ep:'3 cm', prix:38.000 },
+          { code:'MT021', ep:'4 cm', prix:50.000 }, { code:'MT022', ep:'5 cm', prix:63.000 }
         ]},
       { id:'28-30', label:'28/30',       color:'#FB8C00', bgColor:'#FFF3E0', desc:'Haute densité — assises et sièges durables',        badge:'Haute densité', img:'images/plaque%20mousse/28x30.jpg',
         thicknesses:[
-          { code:'MT023', ep:'1 cm', prix:11.000 }, { code:'MT024', ep:'2 cm', prix:27.500 }, { code:'MT025', ep:'3 cm', prix:42.500 },
-          { code:'MT026', ep:'4 cm', prix:54.500 }, { code:'MT027', ep:'5 cm', prix:71.000 }
+          { code:'MT023', ep:'1 cm', prix:11.000 }, { code:'MT024', ep:'2 cm', prix:29.000 }, { code:'MT025', ep:'3 cm', prix:45.000 },
+          { code:'MT026', ep:'4 cm', prix:57.500 }, { code:'MT027', ep:'5 cm', prix:71.000 }
         ]},
       { id:'hr',    label:'HR',          color:'#E53935', bgColor:'#FFEBEE', desc:'Haute résilience — usage intensif professionnel',   badge:'HR Premium',   img:'images/plaque%20mousse/hr.jpg',
         thicknesses:[
@@ -194,7 +194,7 @@ const catalogue = {
         ]},
       { id:'magic30', label:'Magic 30',  color:'#7B5EA7', bgColor:'#F3E5F5', desc:'Qualité Magic 30 — confort premium haut de gamme',  badge:'Premium',      img:'images/plaque%20mousse/magic.jpg',
         thicknesses:[
-          { code:'MT033', ep:'5 cm', prix:85.000 }
+          { code:'MT033', ep:'5 cm', prix:90.000 }
         ]},
     ]
   },
