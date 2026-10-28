@@ -163,10 +163,9 @@ const catalogue = {
           { code:'MT003', ep:'2 cm',   prix:13.500, dim:'180×130 cm' },
           { code:'MT004', ep:'3 cm',   prix:21.500, dim:'180×130 cm' },
           { code:'MT005', ep:'4 cm',   prix:29.000, dim:'180×130 cm' },
-          { code:'MT006', ep:'5 cm',   prix:34.000, dim:'180×130 cm' },
         ]},
       { id:'13-15', label:'13/15',       color:'#607D8B', bgColor:'#ECEFF1', desc:'Densité légère — dossiers et accoudoirs',          badge:'Légère',       img:'images/plaque%20mousse/13x15.jpg',
-        thicknesses:[{ code:'MT007', ep:'0.8 cm', prix:5.500 }] },
+        thicknesses:[{ code:'MT007', ep:'0.8 cm', prix:7.000 }] },
       { id:'15-17', label:'15/17',       color:'#5C6BC0', bgColor:'#E8EAF6', desc:'Densité standard — usage général tapisserie',       badge:'Standard',     img:'images/plaque%20mousse/15x17.jpg',
         thicknesses:[
           { code:'MT008', ep:'0.9 cm', prix:9.000 }, { code:'MT009', ep:'1 cm', prix:10.000 }, { code:'MT010', ep:'2 cm', prix:20.000 },
@@ -189,8 +188,7 @@ const catalogue = {
         ]},
       { id:'hr',    label:'HR',          color:'#E53935', bgColor:'#FFEBEE', desc:'Haute résilience — usage intensif professionnel',   badge:'HR Premium',   img:'images/plaque%20mousse/hr.jpg',
         thicknesses:[
-          { code:'MT028', ep:'1 cm', prix:24.000 }, { code:'MT029', ep:'2 cm', prix:48.000 }, { code:'MT030', ep:'3 cm', prix:72.000 },
-          { code:'MT031', ep:'4 cm', prix:96.000 }, { code:'MT032', ep:'5 cm', prix:115.000 }
+          { code:'MT029', ep:'2 cm', prix:55.400 }, { code:'MT030', ep:'3 cm', prix:80.000 }, { code:'MT032', ep:'5 cm', prix:133.000 }
         ]},
       { id:'magic30', label:'Magic 30',  color:'#7B5EA7', bgColor:'#F3E5F5', desc:'Qualité Magic 30 — confort premium haut de gamme',  badge:'Premium',      img:'images/plaque%20mousse/magic.jpg',
         thicknesses:[
