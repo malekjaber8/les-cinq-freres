@@ -434,6 +434,7 @@ const catalogue = {
       { id:'QC006', name:'Plaque de Montage', desc:'Plaque de montage perforée pour assemblage de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/plaque%20de%20montage.jpg' },
       { id:'QC007', name:'Rondelle de Fixation', desc:'Rondelle de fixation avec vis intégrée.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/rondelle%20de%20fixation%20.jpg' },
       { id:'QC008', name:'Roue Pivot AP038 Poly', desc:'Roulette pivotante avec frein, revêtement polyuréthane — modèle AP038.', variants:['Sur devis'], price:'Sur devis', img:'images/quinquillerie/roue%20pivot%20ap%20038%20poly.jpg' },
+      { id:'OUT036', name:'Plaque de Fixation Écrou', desc:'Plaque de fixation à écrou pour pieds et sabots de meuble.', variants:['Sur devis'], price:'Sur devis', img:'images/outil%20de%20tapissserie/plaque%20de%20fixation%20ecrou.jpg' },
     ]
   },
 
@@ -740,9 +741,6 @@ const toolCategories = [
   { icon:'💨', name:"Soufflette d'Air", desc:"Soufflettes pneumatiques ANI — Made in Italy", items:[
     {code:'OUT030', name:"Soufflette d'Air ANI 25/B2 (buse longue)", ref:'Cod. AH050301', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%201.jpg"},
     {code:'OUT031', name:"Soufflette d'Air ANI 25/B1", ref:'Cod. AH050101', price:'39,000 DT', img:"images/outil%20de%20tapissserie/souflette%20d'aire%202.jpg"},
-  ]},
-  { icon:'🔩', name:'Plaques de Fixation', desc:'Plaques de fixation à écrou pour pieds et sabots de meuble', items:[
-    {code:'OUT036', name:'Plaque de Fixation Écrou', ref:'', price:'Sur devis', img:'images/outil%20de%20tapissserie/plaque%20de%20fixation%20ecrou.jpg'},
   ]},
   { icon:'🪢', name:'Canage (Rotin)', desc:'Cannage en rotin tissé pour chaises et meubles — vendu au rouleau', items:[
     {code:'OUT037', name:'Canage Rotin', ref:'Couleur naturel beige', price:'Sur devis / m', img:'images/outil%20de%20tapissserie/canage%201.jpg', gallery:['images/outil%20de%20tapissserie/canage%201.jpg','images/outil%20de%20tapissserie/canage%202.jpg']},
