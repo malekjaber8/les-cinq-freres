@@ -1231,10 +1231,14 @@ function productCard(p, catId) {
        </div>`
     : isPromo
     ? `<div class="p-price" style="color:#e53e3e">${p.price}</div>`
+    : p.price === 'En arrivage'
+    ? `<div style="display:inline-flex;align-items:center;gap:4px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:50px;font-size:.68rem;font-weight:700;padding:3px 10px">📦 En arrivage</div>`
     : `<div class="${p.price==='À confirmer'||p.price==='Sur devis'?'p-price na':'p-price'}">${p.price}</div>`;
 
   const hasMultipleVariants = p.variants && p.variants.length > 1;
-  const addBtn = isRouleau
+  const addBtn = p.price === 'En arrivage'
+    ? `<button class="add-btn" disabled title="Pas encore disponible à la commande" style="opacity:.5;cursor:not-allowed" onclick="event.stopPropagation()">📦 Bientôt</button>`
+    : isRouleau
     ? `<button class="add-btn" title="Commander ce rouleau"
         onclick="event.stopPropagation();confirmRouleauOAT('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}','${firstVariant}','${icon}')">🛒 Ajouter</button>`
     : hasMultipleVariants
@@ -2403,9 +2407,11 @@ function openModal(pid, catId) {
       </table>
 
       <div style="display:flex;gap:10px">
-        <button class="btn btn-primary" style="flex:1;justify-content:center;padding:13px" onclick="addToCartFromModal('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}',${priceNum},'${icon}')">
+        ${p.price === 'En arrivage'
+          ? `<button class="btn btn-primary" disabled style="flex:1;justify-content:center;padding:13px;opacity:.5;cursor:not-allowed">📦 Bientôt disponible</button>`
+          : `<button class="btn btn-primary" style="flex:1;justify-content:center;padding:13px" onclick="addToCartFromModal('${p.id}','${catId}','${p.name.replace(/'/g,"\\'")}','${p.price}',${priceNum},'${icon}')">
           🛒 Ajouter au Panier
-        </button>
+        </button>`}
         <button class="btn btn-outline-navy" style="padding:13px 20px" onclick="closeModalBtn()">Fermer</button>
       </div>
     </div>`;
