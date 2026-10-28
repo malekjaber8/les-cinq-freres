@@ -611,7 +611,6 @@ const catalogue = {
       { id:'MC025', name:'Plaque Tournante 360°', desc:'Plaque tournante rotative 360° pour fauteuil et meubles pivotants — 2 tailles disponibles.', variants:['30cm — Sur devis','35cm — Sur devis'], price:'Sur devis', img:'images/mecanismes/plaque%20tournanate%20360%201.jpg', gallery:['images/mecanismes/plaque%20tournanate%20360%201.jpg','images/mecanismes/plaque%20tournanate%20360%202.jpg'] },
       { id:'MC026', name:'Plateau Pivotant pour Canapé 90°', desc:'Plateau pivotant 90° pour canapé modulable.', variants:['Sur devis'], price:'Sur devis', img:'images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%201.jpg', gallery:['images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%201.jpg','images/mecanismes/plateau%20pivotant%20pour%20canapé%2090%202.jpg'] },
       { id:'MC027', name:'Plateau Tournant Carré', desc:'Embase pivotante carrée pour meubles rotatifs (table, présentoir, support TV...) — 3 tailles disponibles.', variants:['7cm — Sur devis','9.5cm — Sur devis','16cm — Sur devis'], price:'Sur devis', img:'images/mecanismes/support%20tv%201.jpg', gallery:['images/mecanismes/support%20tv%201.jpg','images/mecanismes/support%20tv%202.jpg'] },
-      { id:'MC028', name:'Support Mécanisme d\'Assise', desc:'Châssis métallique support de mécanisme pour assise de fauteuil ou canapé.', variants:['Sur devis'], price:'Sur devis', img:'images/mecanismes/mecanisme.png' },
     ]
   },
 
