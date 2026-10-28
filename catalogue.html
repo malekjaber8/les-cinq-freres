@@ -659,11 +659,10 @@
     </div>
 
     <div class="cat-item" onclick="toggleSub('chaise-sub',this,'chaise')">
-      <span class="c-icon">🪑</span> Carcasses de Chaise <span class="c-count">3 sous-cat.</span>
+      <span class="c-icon">🪑</span> Carcasses de Chaise <span class="c-count">2 sous-cat.</span>
     </div>
     <div class="cat-sub" id="chaise-sub">
-      <div class="cat-sub-item" onclick="showCat('chaise-tapissee',event)">🧵 Carcasse Tapissée (8 modèles)</div>
-      <div class="cat-sub-item" onclick="showCat('chaise-bois',event)">🌲 Carcasse Bois (7 modèles)</div>
+      <div class="cat-sub-item" onclick="showCat('chaise-bois',event)">🌲 Carcasse de Chaise en Bois (27 modèles)</div>
       <div class="cat-sub-item" onclick="showCat('chaise-inox',event)">✨ Carcasse Inox</div>
     </div>
 
@@ -1177,7 +1176,6 @@ function renderProductList(content, cat) {
   if (cat.label && cat.label.includes('Chaise')) {
     html += `<div class="sub-tabs">
       <div class="sub-tab active" onclick="filterSub(this,'all')">Tous</div>
-      <div class="sub-tab" onclick="filterSub(this,'tapissee')">🧵 Tapissée</div>
       <div class="sub-tab" onclick="filterSub(this,'bois')">🌲 Bois</div>
       <div class="sub-tab" onclick="filterSub(this,'inox')">✨ Inox</div>
     </div>`;
