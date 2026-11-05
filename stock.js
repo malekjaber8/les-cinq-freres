@@ -26,7 +26,7 @@ const Stock = {
     localStorage.setItem(Stock.LS_KEY, JSON.stringify(all));
     Stock.refreshAll();
     if (typeof showToast === 'function') {
-      const label = qty === 0 ? 'Rupture de stock' : `${qty} unité${qty > 1 ? 's' : ''}`;
+      const label = qty === -1 ? 'Sur commande' : qty === 0 ? 'Rupture de stock' : `${qty} unité${qty > 1 ? 's' : ''}`;
       showToast('success', 'Stock mis à jour', label);
     }
     // Sync Firebase — avec message d'erreur visible si échec
@@ -66,6 +66,9 @@ const Stock = {
     const qty = Stock.get(productId);
     if (qty === undefined || qty === null) {
       return '<span class="stock-badge stock-none">—</span>';
+    }
+    if (qty === -1) {
+      return '<span class="stock-badge stock-order">🛠 Sur commande</span>';
     }
     if (qty === 0) {
       return '<span class="stock-badge stock-out">✕ Rupture</span>';
@@ -115,6 +118,10 @@ const Stock = {
             style="padding:10px;border:2px solid #ef9a9a;border-radius:8px;background:#ffebee;color:#c62828;font-weight:700;cursor:pointer;font-size:.88rem">
             ✕ Rupture de stock
           </button>
+          <button onclick="Stock._setStatus('${productId.replace(/'/g,"\\'")}','order')"
+            style="padding:10px;border:2px solid #90caf9;border-radius:8px;background:#e3f2fd;color:#1565c0;font-weight:700;cursor:pointer;font-size:.88rem">
+            🛠 Sur commande
+          </button>
           <button onclick="Stock.remove('${productId.replace(/'/g,"\\'")}');document.getElementById('stock-edit-popup').remove()"
             style="padding:10px;border:2px solid #e0e0e0;border-radius:8px;background:#f5f5f5;color:#666;font-weight:600;cursor:pointer;font-size:.85rem">
             — Supprimer le statut
@@ -132,8 +139,9 @@ const Stock = {
   },
 
   _setStatus(productId, status) {
-    if (status === 'ok')  Stock.set(productId, 999);
-    if (status === 'out') Stock.set(productId, 0);
+    if (status === 'ok')    Stock.set(productId, 999);
+    if (status === 'out')   Stock.set(productId, 0);
+    if (status === 'order') Stock.set(productId, -1);
     const popup = document.getElementById('stock-edit-popup');
     if (popup) popup.remove();
   },
